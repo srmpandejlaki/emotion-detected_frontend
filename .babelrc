@@ -1,3 +1,4 @@
 {
-  "presets":["@babel/preset-env"]
+  "sourceType": "unambiguous",
+  "presets": ["@babel/preset-env"]
 }
