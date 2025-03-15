@@ -3,6 +3,7 @@ const User = {
     return `
       <div>
         <h2>Klasifikasi Emosi</h2>
+        <p>Program ini merupakan implementasi algoritma Naive Bayes yang didesain untuk melakukan prediksi emosi berdasarkan kata-kata yang dibaca. Masukkan kata-kata yang ingin diprediksi emosi di kotak yang disediakan.</p>
         <input type="text" id="inputText" placeholder="Masukkan teks...">
         <button onclick="predictEmotion()">Prediksi</button>
         <p id="result"></p>
