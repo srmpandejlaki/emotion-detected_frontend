@@ -1,5 +1,11 @@
 const Admin = {
-  async render() {}
+  async render() {
+    return `
+
+    `;
+  }, 
+
+  async afterRender() {}
 };
 
 export default Admin;

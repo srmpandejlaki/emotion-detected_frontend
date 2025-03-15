@@ -8,9 +8,12 @@ const Login = {
           <input type="password" placeholder="Password">
         </form>
         <button>Login</button>
+        <a href="/register">Belum punya akun? Klik disini untuk Register.</a>
       </div>
     `;
-  }
+  },
+
+  async afterRender() {}
 };
 
 export default Login;

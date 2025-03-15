@@ -4,6 +4,7 @@ import Admin from "../view/pages/admin";
 import User from "../view/pages/user";
 
 const routes = {
+  '/': Login,  // Default route to login page if no route specified in URL
   '/login': Login,
   '/register': Register,
   '/admin': Admin,
