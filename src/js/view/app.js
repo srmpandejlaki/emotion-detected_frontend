@@ -3,14 +3,21 @@ import UrlParser from '../routes/url-parser';
 
 class App {
   async renderPage() {
-    const url = UrlParser.parseActiveUrlWithCombiner();
-    const route = routes.find((route) => route.path === url);
-    if (!route) {
-      console.error("route tidak ditemukan!");
-      return;
-    }
+    try {
+      const url = UrlParser.parseActiveUrlWithCombiner();
+      const route = routes.find((route) => route.path === url);
 
-    await route.afterRender();
+      if (!route) {
+        console.error(`Rute "${url}" tidak ditemukan.`);
+        return;
+      }
+
+      if (typeof route.afterRender === "function") {
+        await route.afterRender();
+      }
+    } catch (error) {
+      console.error("Terjadi kesalahan saat merender halaman:", error);
+    }
   }
 }
 
