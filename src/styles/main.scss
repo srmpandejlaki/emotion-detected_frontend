@@ -1,1 +1,33 @@
-// styling disini
+/* color palette */
+$default-text: #fff;
+$default-background: #333;
+
+/* mixins */
+@mixin flexGroup() {
+  display: flex;
+  flex-direction: column;
+}
+
+/* default */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.header, .footer {
+  height: 5rem;
+  background-color: $default-background;
+  color: $default-text;
+}
+
+.sideContainer {
+  @include flexGroup();
+  justify-content: space-between;
+}
+
+.navBar {
+  @include flexGroup();
+  gap: 1rem;
+  text-align: center;
+}
