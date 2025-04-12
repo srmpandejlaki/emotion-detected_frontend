@@ -1,6 +1,7 @@
 import React from 'react';
 import HeaderBar from '../components/headerBar';
 import SideContainer from '../components/sideBar/sideContainer';
+import DataCollectionPage from './pages/dataCollection';
 
 class App extends React.Component {
   constructor(props) {
@@ -9,10 +10,13 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <>
         <HeaderBar />
-        <SideContainer />
-      </div>
+        <div className="main">
+          <SideContainer />
+          <DataCollectionPage />
+        </div>
+      </>
     );
   };
 }

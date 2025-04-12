@@ -8,6 +8,11 @@ $default-background: #333;
   flex-direction: column;
 }
 
+@mixin barColor() {
+  background-color: $default-background;
+  color: $default-text;
+}
+
 /* default */
 * {
   box-sizing: border-box;
@@ -15,19 +20,42 @@ $default-background: #333;
   padding: 0;
 }
 
-.header, .footer {
+.header{
   height: 5rem;
-  background-color: $default-background;
-  color: $default-text;
+  @include barColor();
 }
 
 .sideContainer {
   @include flexGroup();
   justify-content: space-between;
+  border: #707070 1px solid;
 }
 
 .navBar {
   @include flexGroup();
   gap: 1rem;
   text-align: center;
+}
+
+.main {
+  display: flex;
+  width: 100%;
+  height: 90vh;
+}
+
+.container {
+  width: 80%;
+}
+
+.footer {
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include barColor();
+
+  p {
+    font-size: 0.7rem;
+    padding-inline: 1rem;
+  }
 }
