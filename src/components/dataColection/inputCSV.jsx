@@ -2,12 +2,12 @@ import React from "react";
 
 function InputFile() {
   return (
-    <>
-      <div>
+    <div className="inputFile">
+      <div className="box">
         <p>file.csv (contoh)</p>
       </div>
-      <button>Upload File</button>
-    </>
+      <button className="btnUpload">Upload File</button>
+    </div>
   );
 };
 

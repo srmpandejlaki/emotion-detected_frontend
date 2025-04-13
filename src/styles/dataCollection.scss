@@ -5,3 +5,19 @@
   @include main.flexColumn();
   gap: 1rem;
 }
+
+.inputFile {
+  display: flex;
+  gap: 1rem;
+}
+
+.box {
+  width: 15rem;
+  padding: 0.5rem;
+  border: 1px solid main.$dark-text;
+  border-radius: 4px;
+}
+
+.btnUpload {
+  padding: 0.5rem;
+}
