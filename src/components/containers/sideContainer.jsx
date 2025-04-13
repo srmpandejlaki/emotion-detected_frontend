@@ -1,6 +1,6 @@
 import React from "react";
-import NavBar from "./navigationBar";
-import FooterBar from "./footerBar";
+import NavBar from "../navigationBar/navigationBar";
+import FooterBar from "../footerBar";
 
 function SideContainer() {
   return (

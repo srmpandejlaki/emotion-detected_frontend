@@ -23,14 +23,14 @@ $light-background: #fff;
 }
 
 .header{
-  height: 5rem;
+  height: 4rem;
   @include barColor();
   display: flex;
   align-items: center;
   padding-inline: 1rem;
 
   h1 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -56,12 +56,12 @@ $light-background: #fff;
 .main {
   display: flex;
   width: 100%;
-  height: 90vh;
+  min-height: 90vh;
 }
 
 .container {
   width: 80%;
-  padding-inline: 1rem;
+  padding: 1rem;
 }
 
 .footer {
