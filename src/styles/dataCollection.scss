@@ -1,0 +1,7 @@
+// import file
+@use 'main';
+
+.tabel {
+  @include main.flexColumn();
+  gap: 1rem;
+}
