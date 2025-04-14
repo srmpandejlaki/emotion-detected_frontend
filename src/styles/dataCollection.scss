@@ -1,14 +1,26 @@
 // import file
 @use 'main';
 
+.tabelWithCSV {
+  display: flex;
+  gap: 1.5rem;
+}
+
 .tabel {
   @include main.flexColumn();
   gap: 1rem;
+  width: 70%;
+}
+
+.dataset, th {
+  border: 1px solid main.$dark-text;
 }
 
 .inputFile {
   display: flex;
   gap: 1rem;
+  width: 35%;
+  height: 2rem;
 }
 
 .box {
