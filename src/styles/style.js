@@ -1,2 +1,3 @@
 // Import semua file .scss dari subfolder styles
-const scssModules = import.meta.glob('./**/*.module.scss', { eager: true });
+
+const style = import.meta.glob('./**/*.scss', { eager: true });

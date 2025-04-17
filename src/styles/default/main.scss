@@ -1,19 +1,5 @@
-/* color palette */
-$default-text: #fff;
-$dark-text: #333;
-$default-background: #333;
-$light-background: #fff;
-
-/* mixins */
-@mixin flexColumn() {
-  display: flex;
-  flex-direction: column;
-}
-
-@mixin barColor() {
-  background-color: $default-background;
-  color: $default-text;
-}
+// import 
+@use 'custom';
 
 /* default */
 * {
@@ -24,7 +10,7 @@ $light-background: #fff;
 
 .header{
   height: 4rem;
-  @include barColor();
+  @include custom.barColor();
   display: flex;
   align-items: center;
   padding-inline: 1rem;
@@ -35,13 +21,13 @@ $light-background: #fff;
 }
 
 .sideContainer {
-  @include flexColumn();
+  @include custom.flexColumn();
   justify-content: space-between;
   border-right: #707070 1px solid;
 }
 
 .navBar {
-  @include flexColumn();
+  @include custom.flexColumn();
   gap: 1rem;
   text-align: center;
   padding-top: 1rem;
@@ -49,7 +35,7 @@ $light-background: #fff;
   .navItems {
     font-size: 1.2rem;
     text-decoration: none;
-    color: $dark-text;
+    color: custom.$dark-text;
   }
 }
 
@@ -69,7 +55,7 @@ $light-background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  @include barColor();
+  @include custom.barColor();
 
   p {
     font-size: 0.7rem;

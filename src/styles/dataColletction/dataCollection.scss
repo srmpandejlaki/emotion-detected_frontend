@@ -1,5 +1,5 @@
 // import file
-@use 'main';
+@use '../default/custom';
 
 .tabelWithCSV {
   display: flex;
@@ -7,13 +7,13 @@
 }
 
 .tabel {
-  @include main.flexColumn();
+  @include custom.flexColumn();
   gap: 1rem;
   width: 70%;
 }
 
 .dataset, th {
-  border: 1px solid main.$dark-text;
+  border: 1px solid custom.$dark-text;
 }
 
 .inputFile {
@@ -26,7 +26,7 @@
 .box {
   width: 15rem;
   padding: 0.5rem;
-  border: 1px solid main.$dark-text;
+  border: 1px solid custom.$dark-text;
   border-radius: 4px;
 }
 

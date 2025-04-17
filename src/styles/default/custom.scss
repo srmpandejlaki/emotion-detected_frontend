@@ -1,0 +1,17 @@
+/* color palette */
+$default-text: #fff;
+$dark-text: #333;
+$default-background: #333;
+$light-background: #fff;
+
+
+/* mixins */
+@mixin flexColumn() {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin barColor() {
+  background-color: $default-background;
+  color: $default-text;
+}
