@@ -3,13 +3,13 @@ import React from "react";
 function TabelPreprocessing() {
   return (
     <>
-      <table className="dataset">
+      <table className="dataset preprocessing">
         <thead>
           <tr>
-            <th>No.</th>
-            <th>Text</th>
-            <th>Preprocessing Result</th>
-            <th>Emotion</th>
+            <th className="nomor">No.</th>
+            <th className="text1">Text</th>
+            <th className="text1">Preprocessing Result</th>
+            <th className="emotion">Emotion</th>
           </tr>
         </thead>
         <tbody>

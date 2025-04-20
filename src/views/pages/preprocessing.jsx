@@ -7,7 +7,7 @@ function PreprocessingPage() {
   return (
     <div className="container">
       <h1>Preprocessing</h1>
-      <div className="tabelPreprocessing">
+      <div className="tabel">
         <TabelPreprocessing></TabelPreprocessing>
         <ButtonAction></ButtonAction>
       </div>

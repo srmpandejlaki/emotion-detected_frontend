@@ -41,13 +41,30 @@
 
 .main {
   display: flex;
-  width: 100%;
   min-height: 90vh;
 }
 
+main{
+  width: 100%;
+}
+
 .container {
-  width: 80%;
-  padding: 1rem 0 1rem 1rem;
+  width: 100%;
+  padding: 1rem;
+}
+
+.tabel {
+  @include custom.flexColumn();
+  gap: 1rem;
+}
+
+.dataset{
+  border-collapse: collapse;
+}
+
+.dataset th{
+  border: 1px solid custom.$dark-text;
+  padding-block: 0.3rem;
 }
 
 .footer {

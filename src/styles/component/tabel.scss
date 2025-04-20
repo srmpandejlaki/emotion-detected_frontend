@@ -6,14 +6,30 @@
   gap: 1.5rem;
 }
 
-.tabel {
-  @include custom.flexColumn();
-  gap: 1rem;
-  width: 70%;
+.dataset {
+  .nomor {
+    width: 5%;
+  }
+  .text {
+    width: 80%;
+  }
+  .emotion {
+    width: 15%;
+  }
 }
 
-.dataset, th {
-  border: 1px solid custom.$dark-text;
+.collection {
+  width: 70%;
+
+  .text {
+    width: 80%;
+  }
+}
+
+.preprocessing {
+  .text1 {
+    width: 40%;
+  }
 }
 
 .inputFile {
@@ -28,18 +44,4 @@
   padding: 0.5rem;
   border: 1px solid custom.$dark-text;
   border-radius: 4px;
-}
-
-.btnUpload {
-  padding: 0.5rem;
-}
-
-.buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: end;
-
-  button {
-    padding: 0.5rem 1rem;
-  }
 }

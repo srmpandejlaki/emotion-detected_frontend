@@ -1,0 +1,15 @@
+@use '../default//custom.scss';
+
+.btnUpload {
+  padding: 0.5rem;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: end;
+
+  button {
+    padding: 0.5rem 1rem;
+  }
+}

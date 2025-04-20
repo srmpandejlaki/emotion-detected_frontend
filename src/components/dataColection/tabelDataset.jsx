@@ -3,12 +3,12 @@ import React from "react";
 function TabelDataset() {
   return (
     <>
-      <table className="dataset">
+      <table className="dataset collection">
         <thead>
           <tr>
-            <th>No.</th>
-            <th>Text</th>
-            <th>Emotion</th>
+            <th className="nomor">No.</th>
+            <th className="text">Text</th>
+            <th className="emotion">Emotion</th>
           </tr>
         </thead>
         <tbody>
