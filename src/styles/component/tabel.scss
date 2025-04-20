@@ -1,11 +1,6 @@
 // import file
 @use '../default/custom';
 
-.tabelWithCSV {
-  display: flex;
-  gap: 1.5rem;
-}
-
 .tabel {
   @include custom.flexColumn();
   gap: 1rem;

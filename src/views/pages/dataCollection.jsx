@@ -7,13 +7,13 @@ function DataCollectionPage() {
   return (
     <div className="container">
       <h1>Dataset</h1>
-      <div className="tabelWithCSV">
+      <section>
         <div className="tabel">
           <TableDataset></TableDataset>
           <AddSave></AddSave>
         </div>
         <InputFile></InputFile>
-      </div>
+      </section>
     </div>
   );
 }

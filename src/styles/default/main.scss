@@ -55,6 +55,11 @@ main{
   gap: 1rem;
 }
 
+section {
+  display: flex;
+  gap: 1.5rem;
+}
+
 .dataset{
   border-collapse: collapse;
 }

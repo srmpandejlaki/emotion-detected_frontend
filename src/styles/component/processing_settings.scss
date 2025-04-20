@@ -1,0 +1,10 @@
+@use '../default/custom.scss';
+
+.settings {
+  width: 35%;
+}
+
+.totalDataProcessing {
+  @include custom.flexColumn();
+  padding: 0.5rem;
+}
