@@ -3,18 +3,14 @@
 .buttons {
   display: flex;
   gap: 1rem;
+  justify-content: end;
 }
 
 button {
   padding: 0.5rem;
 }
 
-.addSave {
-  justify-content: end;
-}
-
 .btnPreprocessing {
-  position: absolute;
-  right: 1rem;
-  margin-top: 1rem;
+  display: flex;
+  justify-content: end;
 }

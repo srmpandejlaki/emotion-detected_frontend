@@ -3,7 +3,7 @@ import React from "react";
 function TabelDataset() {
   return (
     <>
-      <table className="dataset collection">
+      <table className="dataset">
         <thead>
           <tr>
             <th className="nomor">No.</th>

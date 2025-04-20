@@ -12,28 +12,20 @@
   width: 100%;
 }
 
-.dataset {
-  th {
-    padding-inline: 0.2rem;
-  }
-  .nomor {
-    width: 5%;
-  }
-  .emotion {
-    width: 15%;
-  }
+th {
+  padding-inline: 0.2rem;
 }
-
-.collection {
-  .text {
-    width: 80%;
-  }
+.nomor {
+  width: 5%;
 }
-
-.preprocessing {
-  .text1 {
-    width: 40%;
-  }
+.emotion {
+  width: 15%;
+}
+.text {
+  width: 80%;
+}
+.text1 {
+  width: 40%;
 }
 
 .inputFile {

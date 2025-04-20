@@ -4,7 +4,7 @@ import ButtonAction from './buttonAction';
 function TabelPreprocessing() {
   return (
     <>
-      <table className="dataset preprocessing">
+      <table className="dataset">
         <thead>
           <tr>
             <th className="nomor">No.</th>

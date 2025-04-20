@@ -1,4 +1,5 @@
 import React from "react";
+import ButtonChange from './buttonChange';
 
 function TabelProcessing() {
   return (
@@ -6,10 +7,11 @@ function TabelProcessing() {
       <table className="dataset">
         <thead>
           <tr>
-            <th>No.</th>
-            <th>Preprocessing Result</th>
-            <th>Emotion</th>
-            <th>Emotion Predicted</th>
+            <th className="nomor">No.</th>
+            <th className="text">Preprocessing Result</th>
+            <th className="emotion">Emotion</th>
+            <th className="emotion">Emotion Predicted</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -18,7 +20,7 @@ function TabelProcessing() {
             <th>tess</th>
             <th>tess</th>
             <th>tess</th>
-            <th>tess</th>
+            <th><ButtonChange></ButtonChange></th>
           </tr>
         </tbody>
       </table>
