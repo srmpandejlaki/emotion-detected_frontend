@@ -1,4 +1,5 @@
 import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import HeaderBar from '../components/headerBar';
 import SideContainer from '../components/containers/sideContainer';
 import DataCollectionPage from './pages/dataCollection';
@@ -15,7 +16,12 @@ class App extends React.Component {
         <HeaderBar />
         <div className="main">
           <SideContainer />
-          <DataCollectionPage />
+          <main>
+            <Routes>
+              <Route path="/" element={<DataCollectionPage />} />
+              <Route path="/preprocessing" element={<PreprocessingPage />} />
+            </Routes>
+          </main>
         </div>
       </>
     );
