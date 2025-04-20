@@ -8,9 +8,9 @@ function TabelPreprocessing() {
         <thead>
           <tr>
             <th className="nomor">No.</th>
-            <th className="text1">Text</th>
-            <th className="text1">Preprocessing Result</th>
-            <th className="emotion">Emotion</th>
+            <th className="text2">Text</th>
+            <th className="text2">Preprocessing Result</th>
+            <th className="emotion1">Emotion</th>
             <th className="action">Action</th>
           </tr>
         </thead>

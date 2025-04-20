@@ -7,8 +7,8 @@ function TabelDataset() {
         <thead>
           <tr>
             <th className="nomor">No.</th>
-            <th className="text">Text</th>
-            <th className="emotion">Emotion</th>
+            <th className="text1">Text</th>
+            <th className="emotion1">Emotion</th>
           </tr>
         </thead>
         <tbody>
