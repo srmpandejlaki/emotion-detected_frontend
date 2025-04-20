@@ -6,12 +6,18 @@
   gap: 1.5rem;
 }
 
+.tabel {
+  @include custom.flexColumn();
+  gap: 1rem;
+  width: 100%;
+}
+
 .dataset {
+  th {
+    padding-inline: 0.2rem;
+  }
   .nomor {
     width: 5%;
-  }
-  .text {
-    width: 80%;
   }
   .emotion {
     width: 15%;
@@ -19,8 +25,6 @@
 }
 
 .collection {
-  width: 70%;
-
   .text {
     width: 80%;
   }
@@ -40,7 +44,7 @@
 }
 
 .box {
-  width: 15rem;
+  width: 12rem;
   padding: 0.5rem;
   border: 1px solid custom.$dark-text;
   border-radius: 4px;

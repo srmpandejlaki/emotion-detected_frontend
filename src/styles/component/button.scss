@@ -1,15 +1,20 @@
 @use '../default//custom.scss';
 
-.btnUpload {
-  padding: 0.5rem;
-}
-
 .buttons {
   display: flex;
   gap: 1rem;
-  justify-content: end;
+}
 
-  button {
-    padding: 0.5rem 1rem;
-  }
+button {
+  padding: 0.5rem;
+}
+
+.addSave {
+  justify-content: end;
+}
+
+.btnPreprocessing {
+  position: absolute;
+  right: 1rem;
+  margin-top: 1rem;
 }

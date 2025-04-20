@@ -2,7 +2,7 @@ import React from 'react';
 
 function ButtonAction() {
   return (
-    <div className="btnAction">
+    <div className="buttons">
       <button>Change</button>
       <button>Delete</button>
     </div>
