@@ -1,16 +1,34 @@
 @use '../default//custom.scss';
 
+button {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  color: custom.$white-color;
+}
+
 .buttons {
   display: flex;
   gap: 1rem;
   justify-content: end;
 }
 
-button {
-  padding: 0.5rem;
-}
-
 .btnPreprocessing {
   display: flex;
   justify-content: end;
+}
+
+.btn-upload,
+.btn-add,
+.btn-preprocessing {
+  background-color: custom.$info-color;
+}
+.btn-change {
+  background-color: custom.$warning-color;
+}
+.btn-save {
+  background-color: custom.$success-color;
+}
+.btn-delete {
+  background-color: custom.$error-color;
 }

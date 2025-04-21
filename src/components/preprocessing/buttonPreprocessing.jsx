@@ -3,7 +3,7 @@ import React from "react";
 function ButtonPreprocessing() {
   return (
     <div className="btnPreprocessing">
-      <button>Preprocessing</button>
+      <button className="btn-preprocessing">Preprocessing</button>
     </div>
   );
 };

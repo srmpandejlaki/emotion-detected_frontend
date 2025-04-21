@@ -6,7 +6,7 @@ function InputFile() {
       <div className="box">
         <p>file.csv (contoh)</p>
       </div>
-      <button className="btnUpload">Upload File</button>
+      <button className="btn-upload">Upload File</button>
     </div>
   );
 };
