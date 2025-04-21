@@ -1,0 +1,15 @@
+@use '../default/custom.scss';
+
+.navBar {
+  @include custom.flexColumn();
+  gap: 1rem;
+  text-align: center;
+  padding-top: 1rem;
+
+  .navItems {
+    font-size: 1.1rem;
+    text-decoration: none;
+    color: custom.$white-color;
+    padding: 0.5rem 1rem;
+  }
+}

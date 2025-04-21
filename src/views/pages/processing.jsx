@@ -13,8 +13,10 @@ function ProcessingPage() {
         </div>
         <div className="settings">
           <h2>settings</h2>
-          <TotalData></TotalData>
-          <RatioData></RatioData>
+          <div className="data">
+            <TotalData></TotalData>
+            <RatioData></RatioData>
+          </div>
         </div>
       </section>
     </div>

@@ -4,6 +4,34 @@ $dark-text: #333;
 $default-background: #333;
 $light-background: #fff;
 
+// === WARNA DASAR === //
+$primary-color: #2e2e2d;         // Biru gelap, nuansa profesional (seragam)
+$secondary-color: #7C1D1D;       // Merah marun, simbol keberanian
+$accent-color: #D4AF37;          // Emas, simbol kehormatan dan lambang resmi
+$neutral-color: #E5E7EB;         // Abu terang, background tabel
+$text-color: #111827;            // Hitam keabu-abuan, teks utama
+$white-color: #FFFFFF;
+
+// === WARNA EMOSI === //
+$happy-color: #FFD700;           // Kuning emas
+$sad-color: #374151;             // Abu gelap
+$angry-color: #991B1B;           // Merah darah
+$fear-color: #4B5563;            // Abu kehitaman
+$disgust-color: #6B7280;         // Abu pucat
+$surprise-color: #2563EB;        // Biru cerah
+$neutral-emotion-color: #9CA3AF; // Abu netral
+
+// === STATUS / UI === //
+$success-color: #16A34A;
+$error-color: #DC2626;
+$warning-color: #F59E0B;
+$info-color: #3B82F6;
+
+// === BACKGROUND & BORDER === //
+$background-light: #F3F4F6;
+$border-color: #D1D5DB;
+$button-side-color: #965518;
+
 
 /* mixins */
 @mixin flexColumn() {
@@ -11,7 +39,12 @@ $light-background: #fff;
   flex-direction: column;
 }
 
+@mixin columnGap() {
+  @include flexColumn();
+  gap: 1rem
+}
+
 @mixin barColor() {
-  background-color: $default-background;
+  background-color: $primary-color;
   color: $default-text;
 }

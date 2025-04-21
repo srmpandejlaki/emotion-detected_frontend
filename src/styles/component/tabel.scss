@@ -1,6 +1,15 @@
 // import file
 @use '../default/custom';
 
+.dataset{
+  border-collapse: collapse;
+}
+
+.dataset th{
+  border: 1px solid custom.$primary-color;
+  padding-block: 0.3rem;
+}
+
 .tabel {
   @include custom.flexColumn();
   gap: 1rem;
@@ -39,6 +48,6 @@ th {
 .box {
   width: 12rem;
   padding: 0.5rem;
-  border: 1px solid custom.$dark-text;
+  border: 1px solid custom.$primary-color;
   border-radius: 4px;
 }

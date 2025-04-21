@@ -1,10 +1,18 @@
 @use '../default/custom.scss';
 
 .settings {
-  width: 35%;
+  width: 30%;
+}
+
+.data {
+  @include custom.columnGap();
 }
 
 .totalDataProcessing {
-  @include custom.flexColumn();
+  @include custom.columnGap();
   padding: 0.5rem;
+}
+
+.ratioData {
+  @include custom.columnGap();
 }
