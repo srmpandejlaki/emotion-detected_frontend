@@ -2,6 +2,7 @@ import React from "react";
 import TabelProcessing from '../../components/processing/tabelProcessing';
 import TotalData from '../../components/processing/totalData';
 import RatioData from '../../components/processing/ratioData';
+import ButtonProcess from "../../components/processing/buttonProcess";
 
 function ProcessingPage() {
   return (
@@ -19,6 +20,7 @@ function ProcessingPage() {
           </div>
         </div>
       </section>
+      <ButtonProcess></ButtonProcess>
     </div>
   );
 };

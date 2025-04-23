@@ -13,14 +13,16 @@ button {
   justify-content: end;
 }
 
-.btnPreprocessing {
+.btnPreprocessing,
+.btn-process {
   display: flex;
   justify-content: end;
 }
 
 .btn-upload,
 .btn-add,
-.btn-preprocessing {
+.btn-preprocessing,
+.btn-process {
   background-color: custom.$info-color;
 }
 .btn-change {
