@@ -1,30 +1,32 @@
 import React from "react";
-import TabelProcessing from '../../components/processing/tabelProcessing';
-import TotalData from '../../components/processing/totalData';
-import RatioData from '../../components/processing/ratioData';
-import ButtonProcess from "../../components/processing/buttonProcess";
 import NavProcessing from "../../components/navigationBar/navigationProcessing";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-function ProcessingPage() {
-  return (
-    <div className="container">
-      <h1>Processing</h1>
-      <NavProcessing></NavProcessing>
-      <section>
-        <div className="tabel">
-          <TabelProcessing></TabelProcessing>
-        </div>
-        <div className="settings">
-          <h2>settings</h2>
-          <div className="data">
-            <TotalData></TotalData>
-            <RatioData></RatioData>
-          </div>
-        </div>
-      </section>
-      <ButtonProcess></ButtonProcess>
-    </div>
-  );
-};
+// pages
+import HomeProcessingPage from "../processingPages/homeProcessing";
+import PriorPage from '../processingPages/probabilitasPrior';
+import KondisiPage from "../processingPages/probabilitasKondisi";
+import MatricsPage from "../processingPages/classMatrics";
+import MetrixPage from "../processingPages/confusionMetrix";
+
+class ProcessingPage extends React.Component {
+  render() {
+    return (
+      <div className="container">
+        <h1>Processing</h1>
+        <NavProcessing />
+        <section>
+          <Routes>
+            <Route path="/" element={<HomeProcessingPage />} />
+            <Route path="prob-prior" element={<PriorPage />} />
+            <Route path="prob-kondisi" element={<KondisiPage />} />
+            <Route path="class-matrics" element={<MatricsPage />} />
+            <Route path="confusion-metrix" element={<MetrixPage />} />
+          </Routes>
+        </section>
+      </div>
+    );
+  };
+}
 
 export default ProcessingPage;
