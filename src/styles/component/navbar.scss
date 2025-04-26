@@ -17,4 +17,9 @@
 .navProcessing {
   display: flex;
   gap: 1rem;
+
+  .navItem {
+    color: custom.$dark-text;
+    text-decoration: none;
+  }
 }

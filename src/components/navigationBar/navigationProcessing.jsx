@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 function NavProcessing() {
   return (
     <div className="navProcessing">
-      <Link to="/processing">Home</Link>
-      <Link to="/prob-prior">Probabilitas Prior</Link>
-      <Link to="/prob-kondisi">Probabilitas Kondisi</Link>
-      <Link to="/prob-kondisi">Accuracy, Precision, Recall</Link>
-      <Link to="/prob-kondisi">Confusion Matrix</Link>
+      <Link to="/processing" className="navItem">Home</Link>
+      <Link to="/prob-prior" className="navItem">Probabilitas Prior</Link>
+      <Link to="/prob-kondisi" className="navItem">Probabilitas Kondisi</Link>
+      <Link to="/class-matrics" className="navItem">Accuracy, Precision, Recall</Link>
+      <Link to="/confusion-metrix" className="navItem">Confusion Matrix</Link>
     </div>
   );
 };
