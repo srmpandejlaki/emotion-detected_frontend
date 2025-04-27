@@ -1,0 +1,16 @@
+import React from 'react';
+import { Link } from "react-router-dom";
+
+function NavValidation() {
+  return (
+    <div className="navValidation">
+      <Link to="/validation" className="navItem">Home</Link>
+      <Link to="/validation/prob-prior" className="navItem">Probabilitas Prior</Link>
+      <Link to="/validation/prob-kondisi" className="navItem">Probabilitas Kondisi</Link>
+      <Link to="/validation/class-matrics" className="navItem">Accuracy, Precision, Recall</Link>
+      <Link to="/validation/confusion-metrix" className="navItem">Confusion Matrix</Link>
+    </div>
+  );
+};
+
+export default NavValidation;

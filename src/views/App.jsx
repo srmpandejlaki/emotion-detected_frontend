@@ -25,7 +25,7 @@ class App extends React.Component {
               <Route path="/" element={<DataCollectionPage />} />
               <Route path="/preprocessing" element={<PreprocessingPage />} />
               <Route path="/processing/*" element={<ProcessingPage />} />
-              <Route path="/validation" element={<ValidationPage />} />
+              <Route path="/validation/*" element={<ValidationPage />} />
             </Routes>
           </main>
         </div>

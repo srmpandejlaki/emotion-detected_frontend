@@ -1,10 +1,10 @@
 import React from "react";
 import NavProcessing from "../../components/navigationBar/navigationProcessing";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 // pages
 import HomeProcessingPage from "../processingPages/homeProcessing";
-import PriorPage from '../processingPages/probabilitasPrior';
+import PriorPage from "../processingPages/probabilitasPrior";
 import KondisiPage from "../processingPages/probabilitasKondisi";
 import MatricsPage from "../processingPages/classMatrics";
 import MetrixPage from "../processingPages/confusionMetrix";
