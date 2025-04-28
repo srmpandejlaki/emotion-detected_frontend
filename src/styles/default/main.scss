@@ -44,6 +44,24 @@ section {
   gap: 1.5rem;
 }
 
+input {
+  width: 20rem;
+  height: 2rem;
+  padding-inline: 0.5rem;
+}
+
+.inputText {
+  @include custom.flexColumn();
+  align-items: center;
+  margin-top: 5rem;
+  gap: 3rem;
+}
+
+.formClassifier {
+  display: flex;
+  gap: 1rem;
+}
+
 .footer {
   height: 2.5rem;
   align-content: center;

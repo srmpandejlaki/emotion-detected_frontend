@@ -12,6 +12,16 @@
   font-size: 1.4rem;
 }
 
+.outputContainer {
+  @include custom.columnGap();
+  text-align: center;
+}
+
+.output {
+  padding: 0.8rem 3rem;
+  background-color: custom.$border-color;
+}
+
 .footer p {
   font-size: 0.7rem;
   padding-inline: 1rem;
