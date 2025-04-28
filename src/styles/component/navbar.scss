@@ -14,9 +14,9 @@
   }
 }
 
-.navProcessing {
+.navProcessing, .navValidation {
   display: flex;
-  gap: 1rem;
+  gap: 1.3rem;
 
   .navItem {
     color: custom.$dark-text;

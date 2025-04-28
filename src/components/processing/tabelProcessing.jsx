@@ -1,5 +1,5 @@
 import React from "react";
-import ButtonChange from './buttonChange';
+import ButtonChange from '../buttonChange';
 
 function TabelProcessing() {
   return (

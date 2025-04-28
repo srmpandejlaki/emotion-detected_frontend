@@ -1,11 +1,11 @@
 import React from "react";
-import TabelProcessing from '../../components/processing/tabelProcessing';
-import ButtonProcess from "../../components/processing/buttonProcess";
+import TabelProcessing from '../../components/validation/tabelValidation';
+import ButtonProcess from "../../components/validation/buttonProcess";
 
 function HomeValidationPage() {
   return (
     <div className="container">
-      <h1>Validation</h1>
+      <h1>Data Testing</h1>
       <section>
         <div className="tabel">
           <TabelProcessing></TabelProcessing>
