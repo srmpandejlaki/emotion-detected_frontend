@@ -16,10 +16,10 @@ function ValidationPage() {
       <section>
         <Routes>
           <Route path="/" element={<HomeValidationPage />} />
-          <Route path="/" element={<PriorValidationPage />} />
-          <Route path="/" element={<KondisiValidationPage />} />
-          <Route path="/" element={<MatricsValidationPage />} />
-          <Route path="/" element={<MetrixValidationPage />} />
+          <Route path="prob-prior" element={<PriorValidationPage />} />
+          <Route path="prob-kondisi" element={<KondisiValidationPage />} />
+          <Route path="matrics" element={<MatricsValidationPage />} />
+          <Route path="metrix" element={<MetrixValidationPage />} />
         </Routes>
       </section>
     </div>

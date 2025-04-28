@@ -7,8 +7,8 @@ function NavValidation() {
       <Link to="/validation" className="navItem">Home</Link>
       <Link to="/validation/prob-prior" className="navItem">Probabilitas Prior</Link>
       <Link to="/validation/prob-kondisi" className="navItem">Probabilitas Kondisi</Link>
-      <Link to="/validation/class-matrics" className="navItem">Accuracy, Precision, Recall</Link>
-      <Link to="/validation/confusion-metrix" className="navItem">Confusion Matrix</Link>
+      <Link to="/validation/matrics" className="navItem">Accuracy, Precision, Recall</Link>
+      <Link to="/validation/metrix" className="navItem">Confusion Matrix</Link>
     </div>
   );
 };
