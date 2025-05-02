@@ -5,7 +5,7 @@ import OutputClassifier from "../../components/validation/outputText";
 function ClasifierPage() {
   return (
     <div className="container">
-      <h1>Clasifikasi</h1>
+      <h1>Classification</h1>
       <section className="inputText">
         <InputText></InputText>
         <div className="outputContainer">

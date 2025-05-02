@@ -8,7 +8,7 @@ function NavBar() {
       <Link to="/preprocessing" className="navItems">Preprocessing</Link>
       <Link to="/processing" className="navItems">Processing</Link>
       <Link to="/validation" className="navItems">Validation</Link>
-      <Link to="/clasifier" className="navItems">Clasification</Link>
+      <Link to="/clasifier" className="navItems">Classification</Link>
     </div>
   )
 };
