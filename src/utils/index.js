@@ -30,6 +30,7 @@ async function fetchWithToken(url, options = {}) {
 
 export {
   showFormattedDate,
+  BASE_URL,
   getAccessToken,
   putAccessToken,
   fetchWithToken
