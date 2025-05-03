@@ -8,7 +8,7 @@ const showFormattedDate = (date) => {
   return new Date(date).toLocaleDateString('id-ID', options);
 };
 
-const BASE_URL = 'http://127.0.0.1:8000/';
+const BASE_URL = 'http://127.0.0.1:8000';
 
 function getAccessToken() {
   return localStorage.getItem('accessToken');
