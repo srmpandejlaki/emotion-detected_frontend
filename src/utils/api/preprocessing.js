@@ -1,96 +1,56 @@
-import { BASE_URL } from '../index';
+import { BASE_URL } from '../config';
 
-export const preprocessDataset = async (raw_dataset_id) =>  {
+export const fetchPreprocessingData = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/dataset/${raw_dataset_id}/preprocess`, {
-      method: 'POST',
+    const response = await fetch(`${BASE_URL}/preprocessing/list`);
+    return await response.json();
+  } catch {
+    return { error: 'Failed to fetch preprocessing data.' };
+  }
+};
+
+export const fetchAllPreprocessing = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/preprocessing/list`);
+    return await response.json();
+  } catch {
+    return { error: 'Failed to fetch preprocessing data.' };
+  }
+};
+
+export const runPreprocessing = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/preprocessing/process`, {
+      method: 'POST'
     });
     return await response.json();
   } catch {
-    return { error: 'Failed to preprocess dataset.' };
+    return { error: 'Failed to run preprocessing.' };
   }
 };
 
-export const fetchAllPreprocessedDatasets = async () =>  {
+export const updatePreprocessingEmotion = async (id, newEmotion) => {
   try {
-    const response = await fetch(`${BASE_URL}/dataset/preprocesseds/list`);
+    const response = await fetch(`${BASE_URL}/preprocessing/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ emotion: newEmotion }),
+    });
     return await response.json();
   } catch {
-    return { error: 'Failed to fetch dataset.' };
+    return { error: 'Failed to update emotion.' };
   }
 };
 
-export const fetchPreprocessedDatasets = async (raw_dataset_id) =>  {
+export const deletePreprocessingData = async (id) => {
   try {
-    const response = await fetch(`${BASE_URL}/dataset/${raw_dataset_id}/preprocessed/list`);
-    return await response.json();
-  } catch {
-    return { error: 'Failed to fetch dataset.' };
-  }
-};
-
-export const fetchPreprocessedDataset = async (dataset_id, page = 1, limit = 10) => {
-  try {
-    const response = await fetch(`${BASE_URL}/dataset/preprocessed/${dataset_id}?page=${page}&limit=${limit}`);
-    return await response.json();
-  } catch {
-    return { error: 'Failed to fetch dataset.' };
-  }
-};
-
-export const deletePreprocessedDataset = async (dataset_id) => {
-  try {
-    const response = await fetch(`${BASE_URL}/dataset/preprocessed/${dataset_id}`, {
+    const response = await fetch(`${BASE_URL}/preprocessing/${id}`, {
       method: 'DELETE',
     });
     return await response.json();
   } catch {
-    return { error: 'Failed to delete dataset.' };
+    return { error: 'Failed to delete preprocessing data.' };
   }
-};
-
-export const updatePreprocessedData = async (dataset_id, index, newLabel, newPreprocessedContent) =>{
-  try {
-    const response = await fetch(`${BASE_URL}/dataset/preprocessed/${dataset_id}/data`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ index: index, topik: newLabel, preprocessedContent: newPreprocessedContent }),
-    });
-    return await response.json();
-  } catch {
-    return { error: 'Failed to update preprocessed data.' };
-  }
-};
-
-export const deleteData = async (dataset_id, index) =>{
-  try {
-    const response = await fetch(`${BASE_URL}/dataset/preprocessed/${dataset_id}/data`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ index: index }),
-    });
-    return await response.json();
-  } catch {
-    return { error: 'Failed to delete data.' };
-  }
-};
-
-export const addData = async (dataset_id, contentSnippet, topik) => {
-  try {
-    const response = await fetch(`${BASE_URL}/dataset/preprocessed/${dataset_id}/data`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ contentSnippet: contentSnippet, topik: topik }),
-    });
-    return await response.json();
-  } catch {
-    return { error: 'Failed to add data.' };
-  }
-
 };
