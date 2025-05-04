@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TableDataset from "../../components/dataColection/tabelDataset";
 import InputFile from "../../components/dataColection/inputCSV";
 import AddSave from "../../components/dataColection/addSave";
+import { saveManualDataset } from "../../utils/api/dataCollection";
 
 function DataCollectionPage() {
   const [dataset, setDataset] = useState([]);
@@ -17,14 +18,12 @@ function DataCollectionPage() {
     setDataset(updated);
   };
 
-  const handleSave = async (data) => {
-    // Simulasi POST ke backend
+  const handleSave = async () => {
     try {
-      console.log("Saving data:", data);
-      // await fetch('/api/dataset', { method: 'POST', body: JSON.stringify(data) })
-      setDataset([]);
+      await saveManualDataset(dataset);
       alert("Data berhasil disimpan!");
-    } catch (err) {
+      setDataset([]); // reset isi tabel
+    } catch {
       alert("Gagal menyimpan data.");
     }
   };
@@ -39,7 +38,7 @@ function DataCollectionPage() {
         return { text: text.trim(), label: label.trim() };
       });
       setDataset([...dataset, ...parsed]);
-    } catch (err) {
+    } catch {
       alert("Gagal membaca file.");
     } finally {
       setUploading(false);
