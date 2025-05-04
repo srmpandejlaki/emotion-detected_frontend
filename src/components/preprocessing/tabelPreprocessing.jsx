@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ButtonAction from './buttonAction';
-import { fetchAllPreprocessing } from '../../api/preprocessing';
+import { fetchAllPreprocessing } from '../../utils/api/preprocessing';
 
 function TabelPreprocessing() {
   const [data, setData] = useState([]);
