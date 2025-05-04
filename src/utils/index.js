@@ -8,6 +8,26 @@ const showFormattedDate = (date) => {
   return new Date(date).toLocaleDateString('id-ID', options);
 };
 
+const mapLabelResult = (result) => {
+  const mapping = {
+    1: 'Joy',
+    2: 'Trust',
+    3: 'Shock',
+    4: 'Netral',
+    5: 'Fear',
+    6: 'Sadness',
+    7: 'Anger',
+    joy: 'Joy',
+    trust: 'Trust',
+    shock: 'Shock',
+    netral: 'Netral',
+    fear: 'Fear',
+    sadness: 'Sadness',
+    anger: 'Anger'
+  };
+  return mapping[result] || result;
+};
+
 const BASE_URL = 'http://127.0.0.1:8000';
 
 function getAccessToken() {
@@ -30,6 +50,7 @@ async function fetchWithToken(url, options = {}) {
 
 export {
   showFormattedDate,
+  mapLabelResult,
   BASE_URL,
   getAccessToken,
   putAccessToken,
