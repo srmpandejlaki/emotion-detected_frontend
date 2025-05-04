@@ -1,10 +1,10 @@
 import React from "react";
 
-function RatioData() {
+function RatioData({ trainRatio, testRatio }) {
   return (
     <div className="ratioData">
-      <p>data training :</p>
-      <p>data testing  :</p>
+      <p>Data Training: {trainRatio}%</p>
+      <p>Data Testing: {testRatio}%</p>
     </div>
   );
 };

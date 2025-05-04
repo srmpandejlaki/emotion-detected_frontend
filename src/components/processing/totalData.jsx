@@ -1,11 +1,11 @@
 import React from "react";
 
-function TotalData() {
+function TotalData({ newData, oldData, totalData }) {
   return (
     <div className="totalDataProcessing">
-      <p>data baru  :</p>
-      <p>data lama  :</p>
-      <p>total data :</p>
+      <p>Data Baru: {newData}</p>
+      <p>Data Lama: {oldData}</p>
+      <p>Total Data: {totalData}</p>
     </div>
   );
 };

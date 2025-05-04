@@ -1,9 +1,9 @@
 import React from 'react';
 
-function ButtonProcess() {
+function ButtonProcess({ onProcess }) {
   return (
     <div className="btnProcess">
-      <button className='btn-process'>Process Data</button>
+      <button className="btn-process" onClick={onProcess}>Process Data</button>
     </div>
   );
 };

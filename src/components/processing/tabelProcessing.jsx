@@ -1,31 +1,31 @@
 import React from "react";
 import ButtonChange from '../buttonChange';
 
-function TabelProcessing() {
+function TabelProcessing({ data }) {
   return (
-    <>
-      <table className="dataset">
-        <thead>
-          <tr>
-            <th className="nomor">No.</th>
-            <th className="text3">Preprocessing Result</th>
-            <th className="emotion2">Emotion</th>
-            <th className="emotion2">Emotion Predicted</th>
-            <th>Action</th>
+    <table className="dataset">
+      <thead>
+        <tr>
+          <th className="nomor">No.</th>
+          <th className="text3">Preprocessing Result</th>
+          <th className="emotion2">Emotion</th>
+          <th className="emotion2">Emotion Predicted</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data?.map((item, index) => (
+          <tr key={index}>
+            <th>{item.no}</th>
+            <th>{item.preprocessedText}</th>
+            <th>{item.emotion}</th>
+            <th>{item.predictedEmotion}</th>
+            <th><ButtonChange /></th>
           </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>tess</th>
-            <th>tess</th>
-            <th>tess</th>
-            <th>tess</th>
-            <th><ButtonChange></ButtonChange></th>
-          </tr>
-        </tbody>
-      </table>
-    </>
+        ))}
+      </tbody>
+    </table>
   );
-};
+}
 
 export default TabelProcessing;
