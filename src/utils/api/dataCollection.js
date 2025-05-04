@@ -23,7 +23,7 @@ export const uploadDataset = async (file) => {
   formData.append('file', file);
 
   try {
-    const response = await fetch(`${BASE_URL}/dataset/upload`, {
+    const response = await fetch(`${BASE_URL}/dataset/csv`, {
       method: 'POST',
       body: formData,
     });

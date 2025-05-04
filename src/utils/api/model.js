@@ -19,32 +19,6 @@ export const getModel = async (modelId) => {
   }
 };
 
-export const editModelName = async (modelId, newName) => {
-  try {
-    const response = await fetch(`${BASE_URL}/process/model/${modelId}/name`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ new_name: newName }),
-    });
-    return await response.json();
-  } catch {
-    return { error: 'Failed to edit model name.' };
-  }
-};
-
-export const deleteModel = async (modelId) => {
-  try {
-    const response = await fetch(`${BASE_URL}/process/model/${modelId}`, {
-      method: 'DELETE',
-    });
-    return await response.json();
-  } catch {
-    return { error: 'Failed to delete model.' };
-  }
-};
-
 export const getModelParameters = async (modelId) => {
   try {
     const response = await fetch(`${BASE_URL}/process/model/${modelId}/parameters`);
@@ -72,23 +46,14 @@ export const getWordStats = async (modelId, page = 1, limit = 10) => {
   }
 };
 
-export const getTfidfStats = async (modelId, page = 1, limit = 10) => {
-  try {
-    const response = await fetch(`${BASE_URL}/process/model/${modelId}/tfidf-stats?page=${page}&limit=${limit}`);
-    return await response.json();
-  } catch {
-    return { error: 'Failed to get TF-IDF stats.' };
-  }
-};
-
-export const getNeighbors = async (modelId, page = 1, limit = 10) => {
-  try {
-    const response = await fetch(`${BASE_URL}/process/model/${modelId}/neighbors?page=${page}&limit=${limit}`);
-    return await response.json();
-  } catch {
-    return { error: 'Failed to get nearest neighbors.' };
-  }
-};
+// export const getTfidfStats = async (modelId, page = 1, limit = 10) => {
+//   try {
+//     const response = await fetch(`${BASE_URL}/process/model/${modelId}/tfidf-stats?page=${page}&limit=${limit}`);
+//     return await response.json();
+//   } catch {
+//     return { error: 'Failed to get TF-IDF stats.' };
+//   }
+// };
 
 export const getPredictResults = async (modelId, page = 1, limit = 10, predictBy = null) => {
   try {
