@@ -4,60 +4,45 @@ import TotalData from '../../components/processing/totalData';
 import RatioData from '../../components/processing/ratioData';
 import ButtonProcess from "../../components/processing/buttonProcess";
 
+import { fetchProcessingData, processData } from "../../utils/api/processing";
+
 function HomeProcessingPage() {
   const [totalData, setTotalData] = useState({ new: 0, old: 0, total: 0 });
-  const [dataRatio, setDataRatio] = useState({ train: 70, test: 30 }); // default 70:30
+  const [dataRatio, setDataRatio] = useState({ train: 70, test: 30 });
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fungsi ambil data awal
-  const fetchData = async () => {
+  const loadInitialData = async () => {
     setIsLoading(true);
-    try {
-      const res = await fetch('/api/processing-data'); // Ganti dengan endpoint API kamu
-      const data = await res.json();
+    const result = await fetchProcessingData();
 
+    if (result.success) {
+      const data = result.data;
       setTotalData({
         new: data.newDataCount,
         old: data.oldDataCount,
         total: data.totalDataCount
       });
-
-      setTableData(data.dataset); // array of { no, preprocessedText, emotion, predictedEmotion }
-    } catch (error) {
-      console.error("Gagal mengambil data:", error);
+      setTableData(data.dataset);
     }
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchData();
+    loadInitialData();
   }, []);
 
-  // Fungsi untuk proses data
   const handleProcess = async () => {
     setIsLoading(true);
-    try {
-      const response = await fetch('/api/process', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          trainRatio: dataRatio.train,
-          testRatio: dataRatio.test
-        })
-      });
+    const result = await processData(dataRatio.train, dataRatio.test);
 
-      const result = await response.json();
-
-      if (response.ok) {
-        alert("Proses berhasil!");
-        fetchData(); // perbarui data tabel
-      } else {
-        alert("Gagal memproses data: " + result.message);
-      }
-    } catch (err) {
-      console.error("Error saat proses:", err);
+    if (result.success) {
+      alert("Proses berhasil!");
+      loadInitialData();
+    } else {
+      alert("Gagal memproses data: " + (result.message || "Terjadi kesalahan"));
     }
+
     setIsLoading(false);
   };
 

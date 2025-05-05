@@ -29,3 +29,44 @@ export const trainModel = async (rawDatasetId, preprocessedDatasetId, name, spli
     return { error: 'Failed to train model.' };
   }
 };
+
+export async function fetchProcessingData() {
+  try {
+    const res = await fetch('/api/processing-data');
+    const data = await res.json();
+
+    return {
+      success: true,
+      data: {
+        newDataCount: data.newDataCount,
+        oldDataCount: data.oldDataCount,
+        totalDataCount: data.totalDataCount,
+        dataset: data.dataset
+      }
+    };
+  } catch (error) {
+    console.error("Gagal mengambil data:", error);
+    return { success: false, error };
+  }
+}
+
+export async function processData(trainRatio, testRatio) {
+  try {
+    const response = await fetch('/api/process', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ trainRatio, testRatio })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      return { success: true, result };
+    } else {
+      return { success: false, message: result.message };
+    }
+  } catch (error) {
+    console.error("Error saat proses:", error);
+    return { success: false, error };
+  }
+}
