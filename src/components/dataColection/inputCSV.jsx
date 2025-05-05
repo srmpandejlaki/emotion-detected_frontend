@@ -1,42 +1,47 @@
 import React, { useState } from "react";
 
 function InputFile({ onUpload, uploading, selectedDataset }) {
-  const [file, getFile] = useState(null);
+  const [fileName, setFileName] = useState("");
 
-  const handleChange = (e) => {
-    getFile(e.target.files[0]);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (file) {
-      await onUpload(file);
-      getFile(null);
+  const handleChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFileName(selectedFile.name);
+      await onUpload(selectedFile); // langsung upload setelah pilih file
     }
   };
 
   return (
-    <form className="inputFile" onSubmit={handleSubmit}>
-      <div className="box">
-        <label htmlFor="fileUpload">file.csv (contoh)</label>
-        <input
-          id="fileUpload"
-          type="file"
-          accept=".csv"
-          onChange={handleChange}
-        />
-      </div>
+    <div className="inputFile">
+      {/* Kolom untuk menampilkan nama file */}
+      <input
+        className="box"
+        type="text"
+        value={fileName}
+        placeholder="Belum ada file dipilih"
+        readOnly
+      />
 
-      {file && <p>File dipilih: {file.name}</p>}
+      {/* Tombol untuk memilih file */}
+      <label htmlFor="fileUpload" className="btn-upload">
+        {uploading ? "Uploading..." : "Pilih File"}
+      </label>
 
+      {/* Input file disembunyikan */}
+      <input
+        id="fileUpload"
+        type="file"
+        accept=".csv"
+        onChange={handleChange}
+        style={{ display: "none" }}
+        disabled={uploading}
+      />
+
+      {/* Menampilkan dataset terpilih (jika ada) */}
       {selectedDataset && (
         <p className="info">Dataset terpilih: {selectedDataset}</p>
       )}
-
-      <button className="btn-upload" type="submit" disabled={uploading || !file}>
-        {uploading ? "Uploading..." : "Upload File"}
-      </button>
-    </form>
+    </div>
   );
 }
 
