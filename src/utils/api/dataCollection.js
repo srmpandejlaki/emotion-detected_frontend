@@ -2,7 +2,7 @@ import { BASE_URL } from '../index';
 
 export const saveManualDataset = async (data) => {
   try {
-    const response = await fetch(`${BASE_URL}/dataset/csv`, {
+    const response = await fetch(`${BASE_URL}/dataset/manual`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,55 +1,37 @@
-import React, { useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
-import DataTable from '../components/DataTable';
-import CSVUploader from '../components/CSVUploader';
-import ProcessingPanel from '../components/ProcessingPanel';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import HeaderBar from '../components/headerBar';
+import SideContainer from '../components/containers/sideContainer';
+import DataCollectionPage from './pages/dataCollection';
+import PreprocessingPage from './pages/preprocessing';
+import ProcessingPage from './pages/processing';
+import ValidationPage from './pages/validation';
+import ClasifierPage from './pages/clasifier';
 
-const App = () => {
-  const [selectedDataId, setSelectedDataId] = useState(null);
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+  };
 
-  return (
-    <div className="app">
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/data">Data Collection</Link>
-          </li>
-          <li>
-            <Link to="/upload">Upload CSV</Link>
-          </li>
-          <li>
-            <Link to="/processing">Processing</Link>
-          </li>
-        </ul>
-      </nav>
-
-      <main>
-        <Routes>
-          <Route path="/" element={<h1>Welcome to Data Processing App</h1>} />
-          <Route 
-            path="/data" 
-            element={
-              <DataTable 
-                onSelectData={(id) => setSelectedDataId(id)} 
-              />
-            } 
-          />
-          <Route path="/upload" element={<CSVUploader />} />
-          <Route 
-            path="/processing" 
-            element={
-              <ProcessingPanel 
-                dataId={selectedDataId} 
-              />
-            } 
-          />
-        </Routes>
-      </main>
-    </div>
-  );
-};
+  render() {
+    return (
+      <>
+        <HeaderBar />
+        <div className="main">
+          <SideContainer />
+          <main>
+            <Routes>
+              <Route path='/clasifier' element={<ClasifierPage />} ></Route>
+              <Route path="/" element={<DataCollectionPage />} />
+              <Route path="/preprocessing" element={<PreprocessingPage />} />
+              <Route path="/processing/*" element={<ProcessingPage />} />
+              <Route path="/validation/*" element={<ValidationPage />} />
+            </Routes>
+          </main>
+        </div>
+      </>
+    );
+  };
+}
 
 export default App;
