@@ -4,7 +4,6 @@ import { Routes, Route } from "react-router-dom";
 
 import HomeValidationPage from "../validationPages/homeValidation";
 import MatricsValidationPage from "../validationPages/classMatrics";
-import MetrixValidationPage from "../validationPages/confusionMetrix";
 
 function ValidationPage() {
   return (
@@ -15,7 +14,6 @@ function ValidationPage() {
         <Routes>
           <Route path="/" element={<HomeValidationPage />} />
           <Route path="matrics" element={<MatricsValidationPage />} />
-          <Route path="metrix" element={<MetrixValidationPage />} />
         </Routes>
       </section>
     </div>

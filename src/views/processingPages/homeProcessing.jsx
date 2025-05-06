@@ -48,8 +48,6 @@ function HomeProcessingPage() {
 
   return (
     <div className="container">
-      <h1>Processing</h1>
-
       {isLoading && <p>Memuat data...</p>}
 
       <section>

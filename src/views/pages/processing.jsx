@@ -6,7 +6,6 @@ import { Routes, Route } from 'react-router-dom';
 import HomeProcessingPage from "../processingPages/homeProcessing";
 import PriorPage from "../processingPages/probabilitasPrior";
 import KondisiPage from "../processingPages/probabilitasKondisi";
-import MatricsPage from "../processingPages/classMatrics";
 import MetrixPage from "../processingPages/confusionMetrix";
 
 class ProcessingPage extends React.Component {
@@ -20,7 +19,6 @@ class ProcessingPage extends React.Component {
             <Route path="/" element={<HomeProcessingPage />} />
             <Route path="prob-prior" element={<PriorPage />} />
             <Route path="prob-kondisi" element={<KondisiPage />} />
-            <Route path="class-matrics" element={<MatricsPage />} />
             <Route path="confusion-metrix" element={<MetrixPage />} />
           </Routes>
         </section>
