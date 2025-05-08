@@ -4,9 +4,12 @@ function TabelDataset({ dataset, onUpdate }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const reversedDataset = [...dataset].reverse(); // data terbaru di atas
-  const totalPages = Math.ceil(reversedDataset.length / itemsPerPage);
+  const hasData = dataset && dataset.length > 0;
 
+  // Data terbaru di atas
+  const reversedDataset = [...dataset].reverse();
+
+  const totalPages = Math.ceil(reversedDataset.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = reversedDataset.slice(indexOfFirstItem, indexOfLastItem);
@@ -21,61 +24,71 @@ function TabelDataset({ dataset, onUpdate }) {
 
   return (
     <div className="tabel-dataset-wrapper">
-      <table className="data-table">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Teks</th>
-            <th>Label Emosi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentItems.map((item, index) => {
-            const realIndex = dataset.length - 1 - (indexOfFirstItem + index); // index asli di array awal
-            const nomorTabel = dataset.length - (indexOfFirstItem + index); // nomor sesuai data asli
-            return (
-              <tr key={realIndex}>
-                <td>{nomorTabel}</td>
-                <td>
-                  <input
-                    type="text"
-                    value={item.text}
-                    onChange={(e) => onUpdate(realIndex, "text", e.target.value)}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    value={item.label}
-                    onChange={(e) => onUpdate(realIndex, "label", e.target.value)}
-                  />
-                </td>
+      {hasData ? (
+        <>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Teks</th>
+                <th>Label Emosi</th>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {currentItems.map((item, index) => {
+                const realIndex = dataset.findIndex((d) => d.id === item.id || d === item);
+                const nomorTabel = reversedDataset.length - (indexOfFirstItem + index);
+                return (
+                  <tr key={item.id || index}>
+                    <td>{nomorTabel}</td>
+                    <td>
+                      <input
+                        type="text"
+                        value={item.text || item.text_data || ""}
+                        onChange={(e) =>
+                          onUpdate(realIndex, "text", e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        value={item.label || item.id_label || ""}
+                        onChange={(e) =>
+                          onUpdate(realIndex, "label", e.target.value)
+                        }
+                      />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
 
-      {totalPages > 1 && (
-        <div className="pagination-controls">
-          <button
-            onClick={goToPreviousPage}
-            disabled={currentPage === 1}
-            className="btn-pagination"
-          >
-            &laquo; Kembali
-          </button>
-          <span className="page-info">
-            Halaman {currentPage} dari {totalPages}
-          </span>
-          <button
-            onClick={goToNextPage}
-            disabled={currentPage === totalPages}
-            className="btn-pagination"
-          >
-            Selanjutnya &raquo;
-          </button>
-        </div>
+          {totalPages > 1 && (
+            <div className="pagination-controls">
+              <button
+                onClick={goToPreviousPage}
+                disabled={currentPage === 1}
+                className="btn-pagination"
+              >
+                &laquo; Kembali
+              </button>
+              <span className="page-info">
+                Halaman {currentPage} dari {totalPages}
+              </span>
+              <button
+                onClick={goToNextPage}
+                disabled={currentPage === totalPages}
+                className="btn-pagination"
+              >
+                Selanjutnya &raquo;
+              </button>
+            </div>
+          )}
+        </>
+      ) : (
+        <p className="no-data-message">Belum ada data, silakan masukkan data baru.</p>
       )}
     </div>
   );

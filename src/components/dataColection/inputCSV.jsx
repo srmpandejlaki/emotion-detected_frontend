@@ -1,46 +1,31 @@
-import React, { useState } from "react";
+import React from "react";
+import Papa from "papaparse";
 
-function InputFile({ onUpload, uploading, selectedDataset }) {
-  const [fileName, setFileName] = useState("");
+function InputFile({ onCSVParsed }) {
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-  const handleChange = async (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      setFileName(selectedFile.name);
-      await onUpload(selectedFile); // langsung upload setelah pilih file
-    }
+    Papa.parse(file, {
+      skipEmptyLines: true,
+      complete: function (results) {
+        // Skip baris pertama (header), ambil kolom 0 dan 1 dari setiap baris
+        const parsedData = results.data.slice(1).map((row) => {
+          return {
+            text: row[0] || "", // kolom pertama
+            label: row[1] || "", // kolom kedua
+          };
+        });
+
+        // Panggil fungsi parent
+        onCSVParsed(parsedData);
+      },
+    });
   };
 
   return (
-    <div className="inputFile">
-      {/* Kolom untuk menampilkan nama file */}
-      <input
-        className="box"
-        type="text"
-        value={fileName}
-        placeholder="Belum ada file dipilih"
-        readOnly
-      />
-
-      {/* Tombol untuk memilih file */}
-      <label htmlFor="fileUpload" className="btn-upload">
-        {uploading ? "Uploading..." : "Pilih File"}
-      </label>
-
-      {/* Input file disembunyikan */}
-      <input
-        id="fileUpload"
-        type="file"
-        accept=".csv"
-        onChange={handleChange}
-        style={{ display: "none" }}
-        disabled={uploading}
-      />
-
-      {/* Menampilkan dataset terpilih (jika ada) */}
-      {selectedDataset && (
-        <p className="info">Dataset terpilih: {selectedDataset}</p>
-      )}
+    <div>
+      <input type="file" accept=".csv" onChange={handleFileUpload} />
     </div>
   );
 }
