@@ -109,3 +109,13 @@ export const deleteAllDatasets = async () => {
     return { error: 'Failed to delete all datasets.' };
   }
 };
+
+// Get label name by id_label
+export const fetchLabelDatasetById = async (id_label) => {
+  try {
+    const response = await fetch(`${BASE_URL}/dataset/${id_label}`);
+    return await response.json();
+  } catch {
+    return { error: 'Failed to fetch dataset.' };
+  }
+};

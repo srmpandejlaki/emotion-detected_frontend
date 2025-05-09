@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function TabelDataset({ dataset, onUpdate }) {
+function TabelDataset({ dataset, onUpdate, labelOptions }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -38,6 +38,8 @@ function TabelDataset({ dataset, onUpdate }) {
               {currentItems.map((item, index) => {
                 const realIndex = dataset.findIndex((d) => d.id === item.id || d === item);
                 const nomorTabel = reversedDataset.length - (indexOfFirstItem + index);
+                const isEditable = !!item.id; // Cek apakah item berasal dari dataset baru
+
                 return (
                   <tr key={item.id || index}>
                     <td>{nomorTabel}</td>
@@ -46,19 +48,29 @@ function TabelDataset({ dataset, onUpdate }) {
                         type="text"
                         value={item.text || item.text_data || ""}
                         onChange={(e) =>
-                          onUpdate(realIndex, "text", e.target.value)
+                          isEditable && onUpdate(realIndex, "text", e.target.value)
                         }
+                        disabled={!isEditable}
                       />
                     </td>
                     <td>
-                      <input
-                        type="text"
-                        value={item.label || item.id_label || ""}
-                        onChange={(e) =>
-                          onUpdate(realIndex, "label", e.target.value)
-                        }
-                      />
+                      {isEditable ? (
+                        <select
+                          value={item.label}
+                          onChange={(e) => onUpdate(realIndex, "label", e.target.value)}
+                        >
+                          <option value="">Pilih Label</option>
+                          {labelOptions.map((label) => (
+                            <option key={label.id} value={label.id}>
+                              {label.name}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        labelOptions.find((label) => label.id === (item.label || item.id_label))?.name || "-"
+                      )}
                     </td>
+
                   </tr>
                 );
               })}

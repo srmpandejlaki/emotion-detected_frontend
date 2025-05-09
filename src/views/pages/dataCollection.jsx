@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import TableDataset from "../../components/dataColection/tabelDataset";
 import InputFile from "../../components/dataColection/inputCSV";
 import AddSave from "../../components/dataColection/addSave";
-import { saveManualDataset, fetchDatasets } from "../../utils/api/dataCollection";
+import { saveManualDataset, fetchDatasets, fetchLabelDatasetById } from "../../utils/api/dataCollection";
+import { v4 as uuidv4 } from "uuid";
 
 function DataCollectionPage() {
   const [dataset, setDataset] = useState([]);
   const [existingData, setExistingData] = useState([]);
+  const [labels, setLabels] = useState([]); // State untuk menyimpan data label
+  const tableRef = useRef(null); // Untuk referensi ke tabel
 
   useEffect(() => {
-    // Ambil semua data awal dari database
     const loadInitialData = async () => {
       try {
         let page = 1;
@@ -32,7 +34,17 @@ function DataCollectionPage() {
       }
     };
 
+    const loadLabels = async (id_label) => {
+      try {
+        const labelsData = await fetchLabelDatasetById(id_label);
+        setLabels(labelsData); // Mengatur state labels dengan data dari API
+      } catch (error) {
+        console.error("Gagal mengambil data label:", error);
+      }
+    };
+
     loadInitialData();
+    loadLabels();
   }, []);
 
   const handleSave = async () => {
@@ -47,19 +59,17 @@ function DataCollectionPage() {
         alert("Ada beberapa data yang sudah ada sebelumnya.");
       }
 
-      // Filter dataset agar hanya yang unik yang dikirim
       const uniqueData = dataset.filter(
         (item) =>
           !existingData.some((existing) => existing.text_data === item.text && existing.id_label === item.label)
       );
 
-      if (uniqueData.length === 0) return; // tidak ada data baru untuk disimpan
+      if (uniqueData.length === 0) return;
 
       try {
         await saveManualDataset(uniqueData);
         alert("Data baru berhasil disimpan!");
         setDataset([]);
-        // refresh data dari database
         const refreshed = await fetchDatasets(1, 1000);
         setExistingData(refreshed?.data || []);
       } catch {
@@ -67,11 +77,12 @@ function DataCollectionPage() {
       }
     } else {
       try {
-        await saveManualDataset(dataset);
-        alert("Data berhasil disimpan!");
-        setDataset([]);
-        const refreshed = await fetchDatasets(1, 1000);
-        setExistingData(refreshed?.data || []);
+        await saveManualDataset(
+          dataset.map((item) => ({
+            text_data: item.text,
+            id_label: item.label,
+          }))
+        );
       } catch {
         alert("Gagal menyimpan data.");
       }
@@ -83,22 +94,47 @@ function DataCollectionPage() {
   };
 
   const handleUpdate = (index, field, value) => {
-    const updated = [...dataset];
-    updated[index][field] = value;
-    setDataset(updated);
+    setDataset((prevData) => {
+      const updated = [...prevData];
+      if (!updated[index]) return prevData;
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
   };
 
   const handleAddRow = () => {
-    setDataset([...dataset, { text: "", label: "" }]);
+    setDataset((prevDataset) => [
+      ...prevDataset,
+      { id: uuidv4(), text: "", label: "" },
+    ]);
+  };
+
+  const handleInputChange = (index, field, value) => {
+    setDataset((prevDataset) => {
+      const updated = [...prevDataset];
+      if (!updated[index]) return prevDataset;
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+
+  const getLabelById = (id) => {
+    const label = labels.find((item) => item.id_label === id); // Menggunakan labels dari state
+    return label ? label.name : "Unknown Label";
   };
 
   return (
     <div className="container">
       <h1>Dataset</h1>
       <section>
-        <div className="tabel">
-          <TableDataset dataset={dataset} onUpdate={handleUpdate} />
-          <AddSave onAdd={handleAddRow} onSave={handleSave} />
+        <div className="tabel" ref={tableRef}>
+          <TableDataset
+            dataset={[...existingData, ...dataset]}
+            onUpdate={handleUpdate}
+            onInputChange={handleInputChange}
+            getLabelById={getLabelById}
+          />
+          <AddSave onAddData={handleAddRow} onSaveData={handleSave} />
         </div>
         <InputFile onCSVParsed={handleCSVParsed} />
       </section>
