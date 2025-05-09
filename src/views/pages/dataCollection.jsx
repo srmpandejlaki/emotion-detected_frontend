@@ -17,47 +17,55 @@ function DataCollectionPage() {
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        let page = 1;
-        let allData = [];
-        let hasMore = true;
-
-        while (hasMore) {
-          const response = await fetchDatasets(page, 50);
-          if (response?.data?.length) {
-            allData = [...allData, ...response.data];
-            page += 1;
-          } else {
-            hasMore = false;
-          }
-        }
-
-        setExistingData(
-          allData.map((item) => ({
-            id: item.id,
-            text: item.text_data,
-            label: item.id_label,
-            isNew: false,
-          }))
-        );
-
-        const labels = await fetchAllLabels();
-        setLabelList(labels);
+        await loadDatasets();
+        await loadLabels();
       } catch (error) {
         console.error("Gagal mengambil data:", error);
       }
     };
-
     loadInitialData();
   }, []);
 
-  const handleSave = async () => {
-    const duplicates = dataset.filter((item) =>
+  const loadDatasets = async () => {
+    let page = 1;
+    let allData = [];
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await fetchDatasets(page, 50);
+      if (response?.data?.length) {
+        allData = [...allData, ...response.data];
+        page += 1;
+      } else {
+        hasMore = false;
+      }
+    }
+
+    setExistingData(
+      allData.map((item) => ({
+        id: item.id,
+        text: item.text_data,
+        label: item.id_label,
+        isNew: false,
+      }))
+    );
+  };
+
+  const loadLabels = async () => {
+    const labels = await fetchAllLabels();
+    setLabelList(labels);
+  };
+
+  const filterDuplicates = (data) =>
+    data.filter((item) =>
       existingData.some(
         (existing) =>
           existing.text === item.text && existing.label === item.label
       )
     );
 
+  const handleSave = async () => {
+    const duplicates = filterDuplicates(dataset);
     const uniqueData = dataset.filter(
       (item) =>
         !existingData.some(
@@ -85,36 +93,51 @@ function DataCollectionPage() {
       );
       alert("Data berhasil disimpan!");
       setDataset([]);
-
-      const refreshed = await fetchDatasets(1, 1000);
-      setExistingData(
-        refreshed?.data?.map((item) => ({
-          id: item.id,
-          text: item.text_data,
-          label: item.id_label,
-          isNew: false,
-        })) || []
-      );
+      await loadDatasets();
     } catch {
       alert("Gagal menyimpan data.");
     }
   };
 
   const handleCSVParsed = (newData) => {
-    const formatted = newData.map((item) => ({
-      id: uuidv4(),
-      text: item.text,
-      label: item.label,
-      isNew: true,
-    }));
-    setDataset((prev) => [...prev, ...formatted]);
+    // const existingNames = labelList.map((label) =>
+    //   label.emotion_name.toLowerCase()
+    // );
+    const updatedLabelList = [...labelList];
+
+    const formattedData = newData.map((item) => {
+      const labelName = item.label.trim().toLowerCase();
+
+      // Cek apakah label sudah ada di labelList
+      let labelObj = updatedLabelList.find(
+        (label) => label.emotion_name.toLowerCase() === labelName
+      );
+
+      // Tambahkan label baru jika belum ada
+      if (!labelObj) {
+        labelObj = {
+          id_label: uuidv4(), // Ganti jika backend tidak pakai UUID
+          emotion_name: labelName,
+        };
+        updatedLabelList.push(labelObj);
+      }
+
+      return {
+        id: uuidv4(),
+        text: item.text,
+        label: labelObj.id_label,
+        label_name: labelObj.emotion_name,
+        isNew: true,
+      };
+    });
+
+    setLabelList(updatedLabelList);
+    setDataset((prev) => [...prev, ...formattedData]);
   };
 
   const handleUpdate = (id, field, value) => {
     setDataset((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, [field]: value } : item
-      )
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
     );
   };
 
