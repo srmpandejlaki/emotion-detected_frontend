@@ -2,7 +2,7 @@ import React from "react";
 import useInput from "../../hooks/useInput";
 
 function InputText({ classify }) {
-  const [ text, onTextChange ] = useInput('');
+  const [text, onTextChange] = useInput("");
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
@@ -11,10 +11,10 @@ function InputText({ classify }) {
 
   return (
     <form className="formClassifier" onSubmit={onSubmitHandler}>
-      <input type="text" value={text} onChange={onTextChange} placeholder="Input your text here" />
-      <button className="btn-process" type="submit">Classify</button>
+      <input type="text" value={text} onChange={onTextChange} placeholder="Masukkan kalimatmu disini" />
+      <button className="btn-process" type="submit">Mulai Klasifikasi</button>
     </form>
   );
-};
+}
 
 export default InputText;
