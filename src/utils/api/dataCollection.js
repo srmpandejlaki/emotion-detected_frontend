@@ -3,7 +3,7 @@ import { BASE_URL } from '../index';
 // Get all labels
 export const fetchAllLabels = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/labels`);
+    const response = await fetch(`${BASE_URL}/dataset/label`);
     return await response.json();
   } catch {
     return { error: "Failed to fetch labels." };
