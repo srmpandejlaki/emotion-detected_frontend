@@ -1,5 +1,15 @@
 import { BASE_URL } from '../index';
 
+// Get all labels
+export const fetchAllLabels = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/labels`);
+    return await response.json();
+  } catch {
+    return { error: "Failed to fetch labels." };
+  }
+};
+
 // Create manual dataset
 export const saveManualDataset = async (data) => {
   try {

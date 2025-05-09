@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function TabelDataset({ dataset, onUpdate, labelOptions }) {
+function TabelDataset({ dataset, onUpdate, editableIds, labelList }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -22,6 +22,11 @@ function TabelDataset({ dataset, onUpdate, labelOptions }) {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
+  const getLabelName = (id_label) => {
+    const found = labelList.find((label) => label.id === id_label);
+    return found ? found.name : id_label;
+  };
+
   return (
     <div className="tabel-dataset-wrapper">
       {hasData ? (
@@ -38,39 +43,42 @@ function TabelDataset({ dataset, onUpdate, labelOptions }) {
               {currentItems.map((item, index) => {
                 const realIndex = dataset.findIndex((d) => d.id === item.id || d === item);
                 const nomorTabel = reversedDataset.length - (indexOfFirstItem + index);
-                const isEditable = !!item.id; // Cek apakah item berasal dari dataset baru
+                const isEditable = editableIds.includes(item.id);
 
                 return (
                   <tr key={item.id || index}>
                     <td>{nomorTabel}</td>
                     <td>
-                      <input
-                        type="text"
-                        value={item.text || item.text_data || ""}
-                        onChange={(e) =>
-                          isEditable && onUpdate(realIndex, "text", e.target.value)
-                        }
-                        disabled={!isEditable}
-                      />
+                      {isEditable ? (
+                        <input
+                          type="text"
+                          value={item.text || item.text_data || ""}
+                          onChange={(e) =>
+                            onUpdate(realIndex, "text", e.target.value)
+                          }
+                        />
+                      ) : (
+                        <span>{item.text_data || item.text}</span>
+                      )}
                     </td>
                     <td>
                       {isEditable ? (
                         <select
-                          value={item.label}
-                          onChange={(e) => onUpdate(realIndex, "label", e.target.value)}
+                          value={item.id_label || ""}
+                          onChange={(e) =>
+                            onUpdate(realIndex, "label", e.target.value)
+                          }
                         >
-                          <option value="">Pilih Label</option>
-                          {labelOptions.map((label) => (
+                          {labelList.map((label) => (
                             <option key={label.id} value={label.id}>
                               {label.name}
                             </option>
                           ))}
                         </select>
                       ) : (
-                        labelOptions.find((label) => label.id === (item.label || item.id_label))?.name || "-"
+                        <span>{getLabelName(item.id_label)}</span>
                       )}
                     </td>
-
                   </tr>
                 );
               })}

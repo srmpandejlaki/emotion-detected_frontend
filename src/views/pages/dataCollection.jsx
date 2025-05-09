@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
-import TableDataset from "../../components/dataColection/tabelDataset";
+import React, { useState, useEffect } from "react";
+import TabelDataset from "../../components/dataColection/tabelDataset";
 import InputFile from "../../components/dataColection/inputCSV";
 import AddSave from "../../components/dataColection/addSave";
-import { saveManualDataset, fetchDatasets, fetchLabelDatasetById } from "../../utils/api/dataCollection";
-import { v4 as uuidv4 } from "uuid";
+import { saveManualDataset, fetchDatasets, fetchAllLabels } from "../../utils/api/dataCollection";
+import { v4 as uuidv4 } from 'uuid';
 
 function DataCollectionPage() {
   const [dataset, setDataset] = useState([]);
   const [existingData, setExistingData] = useState([]);
-  const [labels, setLabels] = useState([]); // State untuk menyimpan data label
-  const tableRef = useRef(null); // Untuk referensi ke tabel
+  const [labelList, setLabelList] = useState([]);
 
   useEffect(() => {
+    // Ambil semua data awal dari database
     const loadInitialData = async () => {
       try {
         let page = 1;
@@ -29,22 +29,15 @@ function DataCollectionPage() {
         }
 
         setExistingData(allData);
+
+        const labelResponse = await fetchAllLabels();
+        setLabelList(labelResponse);
       } catch (error) {
         console.error("Gagal mengambil data dari database:", error);
       }
     };
 
-    const loadLabels = async (id_label) => {
-      try {
-        const labelsData = await fetchLabelDatasetById(id_label);
-        setLabels(labelsData); // Mengatur state labels dengan data dari API
-      } catch (error) {
-        console.error("Gagal mengambil data label:", error);
-      }
-    };
-
     loadInitialData();
-    loadLabels();
   }, []);
 
   const handleSave = async () => {
@@ -59,17 +52,19 @@ function DataCollectionPage() {
         alert("Ada beberapa data yang sudah ada sebelumnya.");
       }
 
+      // Filter dataset agar hanya yang unik yang dikirim
       const uniqueData = dataset.filter(
         (item) =>
           !existingData.some((existing) => existing.text_data === item.text && existing.id_label === item.label)
       );
 
-      if (uniqueData.length === 0) return;
+      if (uniqueData.length === 0) return; // tidak ada data baru untuk disimpan
 
       try {
         await saveManualDataset(uniqueData);
         alert("Data baru berhasil disimpan!");
         setDataset([]);
+        // refresh data dari database
         const refreshed = await fetchDatasets(1, 1000);
         setExistingData(refreshed?.data || []);
       } catch {
@@ -94,12 +89,9 @@ function DataCollectionPage() {
   };
 
   const handleUpdate = (index, field, value) => {
-    setDataset((prevData) => {
-      const updated = [...prevData];
-      if (!updated[index]) return prevData;
-      updated[index] = { ...updated[index], [field]: value };
-      return updated;
-    });
+    const updated = [...dataset];
+    updated[index][field] = value;
+    setDataset(updated);
   };
 
   const handleAddRow = () => {
@@ -109,30 +101,17 @@ function DataCollectionPage() {
     ]);
   };
 
-  const handleInputChange = (index, field, value) => {
-    setDataset((prevDataset) => {
-      const updated = [...prevDataset];
-      if (!updated[index]) return prevDataset;
-      updated[index] = { ...updated[index], [field]: value };
-      return updated;
-    });
-  };
-
-  const getLabelById = (id) => {
-    const label = labels.find((item) => item.id_label === id); // Menggunakan labels dari state
-    return label ? label.name : "Unknown Label";
-  };
+  const editableIds = dataset.map((item) => item.id);
 
   return (
     <div className="container">
       <h1>Dataset</h1>
       <section>
-        <div className="tabel" ref={tableRef}>
-          <TableDataset
-            dataset={[...existingData, ...dataset]}
-            onUpdate={handleUpdate}
-            onInputChange={handleInputChange}
-            getLabelById={getLabelById}
+        <div className="tabel">
+          <TabelDataset dataset={[...existingData, ...dataset]} 
+            onUpdate={handleUpdate} 
+            editableIds={editableIds}
+            labelList={labelList}
           />
           <AddSave onAddData={handleAddRow} onSaveData={handleSave} />
         </div>
