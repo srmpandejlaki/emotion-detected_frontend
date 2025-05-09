@@ -6,7 +6,6 @@ function TabelDataset({ dataset, onUpdate, editableIds, labelList }) {
 
   const hasData = dataset && dataset.length > 0;
 
-  // Data terbaru di atas
   const reversedDataset = [...dataset].reverse();
 
   const totalPages = Math.ceil(reversedDataset.length / itemsPerPage);
@@ -23,8 +22,10 @@ function TabelDataset({ dataset, onUpdate, editableIds, labelList }) {
   };
 
   const getLabelName = (id_label) => {
-    const found = labelList.find((label) => label.id === id_label);
-    return found ? found.name : id_label;
+    const found = labelList.find(
+      (label) => String(label.id_label) === String(id_label)
+    );
+    return found ? found.emotion_name : id_label;
   };
 
   return (
@@ -41,8 +42,11 @@ function TabelDataset({ dataset, onUpdate, editableIds, labelList }) {
             </thead>
             <tbody>
               {currentItems.map((item, index) => {
-                const realIndex = dataset.findIndex((d) => d.id === item.id || d === item);
-                const nomorTabel = reversedDataset.length - (indexOfFirstItem + index);
+                const realIndex = dataset.findIndex(
+                  (d) => d.id === item.id || d === item
+                );
+                const nomorTabel =
+                  reversedDataset.length - (indexOfFirstItem + index);
                 const isEditable = editableIds.includes(item.id);
 
                 return (
@@ -70,8 +74,8 @@ function TabelDataset({ dataset, onUpdate, editableIds, labelList }) {
                           }
                         >
                           {labelList.map((label) => (
-                            <option key={label.id} value={label.id}>
-                              {label.name}
+                            <option key={label.id_label} value={label.id_label}>
+                              {label.emotion_name}
                             </option>
                           ))}
                         </select>
@@ -108,7 +112,9 @@ function TabelDataset({ dataset, onUpdate, editableIds, labelList }) {
           )}
         </>
       ) : (
-        <p className="no-data-message">Belum ada data, silakan masukkan data baru.</p>
+        <p className="no-data-message">
+          Belum ada data, silakan masukkan data baru.
+        </p>
       )}
     </div>
   );
