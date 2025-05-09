@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 
-function TabelDataset({ dataset, onUpdate, editableIds, labelList }) {
+function TabelDataset({ dataset, onUpdate, labelList }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
   const hasData = dataset && dataset.length > 0;
-
   const reversedDataset = [...dataset].reverse();
 
   const totalPages = Math.ceil(reversedDataset.length / itemsPerPage);
@@ -13,13 +12,8 @@ function TabelDataset({ dataset, onUpdate, editableIds, labelList }) {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = reversedDataset.slice(indexOfFirstItem, indexOfLastItem);
 
-  const goToPreviousPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const goToNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
+  const goToPreviousPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+  const goToNextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
 
   const getLabelName = (id_label) => {
     const found = labelList.find(
@@ -42,37 +36,32 @@ function TabelDataset({ dataset, onUpdate, editableIds, labelList }) {
             </thead>
             <tbody>
               {currentItems.map((item, index) => {
-                const realIndex = dataset.findIndex(
-                  (d) => d.id === item.id || d === item
-                );
-                const nomorTabel =
-                  reversedDataset.length - (indexOfFirstItem + index);
-                const isEditable = editableIds.includes(item.id);
+                const nomorTabel = reversedDataset.length - (indexOfFirstItem + index);
+                const isEditable = item.isNew === true;
 
                 return (
-                  <tr key={item.id || index}>
+                  <tr key={item.id}>
                     <td>{nomorTabel}</td>
                     <td>
                       {isEditable ? (
                         <input
                           type="text"
-                          value={item.text || item.text_data || ""}
-                          onChange={(e) =>
-                            onUpdate(realIndex, "text", e.target.value)
-                          }
+                          value={item.text}
+                          onChange={(e) => onUpdate(item.id, "text", e.target.value)}
                         />
                       ) : (
-                        <span>{item.text_data || item.text}</span>
+                        <span>{item.text}</span>
                       )}
                     </td>
                     <td>
                       {isEditable ? (
                         <select
-                          value={item.id_label || ""}
+                          value={item.label}
                           onChange={(e) =>
-                            onUpdate(realIndex, "label", e.target.value)
+                            onUpdate(item.id, "label", parseInt(e.target.value))
                           }
                         >
+                          <option value="">Pilih Emosi</option>
                           {labelList.map((label) => (
                             <option key={label.id_label} value={label.id_label}>
                               {label.emotion_name}
@@ -80,7 +69,7 @@ function TabelDataset({ dataset, onUpdate, editableIds, labelList }) {
                           ))}
                         </select>
                       ) : (
-                        <span>{getLabelName(item.id_label)}</span>
+                        <span>{getLabelName(item.label || item.id_label)}</span>
                       )}
                     </td>
                   </tr>

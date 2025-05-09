@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import TabelDataset from "../../components/dataColection/tabelDataset";
 import InputFile from "../../components/dataColection/inputCSV";
 import AddSave from "../../components/dataColection/addSave";
-import { saveManualDataset, fetchDatasets, fetchAllLabels } from "../../utils/api/dataCollection";
-import { v4 as uuidv4 } from 'uuid';
+import {
+  saveManualDataset,
+  fetchDatasets,
+  fetchAllLabels,
+} from "../../utils/api/dataCollection";
+import { v4 as uuidv4 } from "uuid";
 
 function DataCollectionPage() {
   const [dataset, setDataset] = useState([]);
@@ -11,7 +15,6 @@ function DataCollectionPage() {
   const [labelList, setLabelList] = useState([]);
 
   useEffect(() => {
-    // Ambil semua data awal dari database
     const loadInitialData = async () => {
       try {
         let page = 1;
@@ -28,12 +31,19 @@ function DataCollectionPage() {
           }
         }
 
-        setExistingData(allData);
+        setExistingData(
+          allData.map((item) => ({
+            id: item.id,
+            text: item.text_data,
+            label: item.id_label,
+            isNew: false,
+          }))
+        );
 
-        const labelResponse = await fetchAllLabels();
-        setLabelList(labelResponse);
+        const labels = await fetchAllLabels();
+        setLabelList(labels);
       } catch (error) {
-        console.error("Gagal mengambil data dari database:", error);
+        console.error("Gagal mengambil data:", error);
       }
     };
 
@@ -42,75 +52,87 @@ function DataCollectionPage() {
 
   const handleSave = async () => {
     const duplicates = dataset.filter((item) =>
-      existingData.some((existing) => existing.text_data === item.text && existing.id_label === item.label)
+      existingData.some(
+        (existing) =>
+          existing.text === item.text && existing.label === item.label
+      )
+    );
+
+    const uniqueData = dataset.filter(
+      (item) =>
+        !existingData.some(
+          (existing) =>
+            existing.text === item.text && existing.label === item.label
+        )
     );
 
     if (duplicates.length > 0) {
-      if (duplicates.length === 1) {
-        alert("Data sudah ada, silakan ubah kembali.");
-      } else {
-        alert("Ada beberapa data yang sudah ada sebelumnya.");
-      }
-
-      // Filter dataset agar hanya yang unik yang dikirim
-      const uniqueData = dataset.filter(
-        (item) =>
-          !existingData.some((existing) => existing.text_data === item.text && existing.id_label === item.label)
+      alert(
+        duplicates.length === 1
+          ? "Data sudah ada, silakan ubah kembali."
+          : "Ada beberapa data yang sudah ada sebelumnya."
       );
 
-      if (uniqueData.length === 0) return; // tidak ada data baru untuk disimpan
+      if (uniqueData.length === 0) return;
+    }
 
-      try {
-        await saveManualDataset(uniqueData);
-        alert("Data baru berhasil disimpan!");
-        setDataset([]);
-        // refresh data dari database
-        const refreshed = await fetchDatasets(1, 1000);
-        setExistingData(refreshed?.data || []);
-      } catch {
-        alert("Gagal menyimpan data.");
-      }
-    } else {
-      try {
-        await saveManualDataset(
-          dataset.map((item) => ({
-            text_data: item.text,
-            id_label: item.label,
-          }))
-        );
-      } catch {
-        alert("Gagal menyimpan data.");
-      }
+    try {
+      await saveManualDataset(
+        uniqueData.map((item) => ({
+          text_data: item.text,
+          id_label: item.label,
+        }))
+      );
+      alert("Data berhasil disimpan!");
+      setDataset([]);
+
+      const refreshed = await fetchDatasets(1, 1000);
+      setExistingData(
+        refreshed?.data?.map((item) => ({
+          id: item.id,
+          text: item.text_data,
+          label: item.id_label,
+          isNew: false,
+        })) || []
+      );
+    } catch {
+      alert("Gagal menyimpan data.");
     }
   };
 
   const handleCSVParsed = (newData) => {
-    setDataset((prevData) => [...prevData, ...newData]);
+    const formatted = newData.map((item) => ({
+      id: uuidv4(),
+      text: item.text,
+      label: item.label,
+      isNew: true,
+    }));
+    setDataset((prev) => [...prev, ...formatted]);
   };
 
-  const handleUpdate = (index, field, value) => {
-    const updated = [...dataset];
-    updated[index][field] = value;
-    setDataset(updated);
+  const handleUpdate = (id, field, value) => {
+    setDataset((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, [field]: value } : item
+      )
+    );
   };
 
   const handleAddRow = () => {
-    setDataset((prevDataset) => [
-      ...prevDataset,
-      { id: uuidv4(), text: "", label: "" },
+    setDataset((prev) => [
+      ...prev,
+      { id: uuidv4(), text: "", label: "", isNew: true },
     ]);
   };
-
-  const editableIds = dataset.map((item) => item.id);
 
   return (
     <div className="container">
       <h1>Dataset</h1>
       <section>
         <div className="tabel">
-          <TabelDataset dataset={[...existingData, ...dataset]} 
-            onUpdate={handleUpdate} 
-            editableIds={editableIds}
+          <TabelDataset
+            dataset={[...existingData, ...dataset]}
+            onUpdate={handleUpdate}
             labelList={labelList}
           />
           <AddSave onAddData={handleAddRow} onSaveData={handleSave} />
