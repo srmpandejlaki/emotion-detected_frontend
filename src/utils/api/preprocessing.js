@@ -1,9 +1,9 @@
 import { BASE_URL } from '../index';
 
 // Ambil semua data preprocessing
-export const fetchAllPreprocessing = async () => {
+export const fetchAllPreprocessing = async (page = 1, limit = 10) => {
   try {
-    const response = await fetch(`${BASE_URL}/preprocessing/`);
+    const response = await fetch(`${BASE_URL}/preprocessing/list?page=${page}&limit=${limit}`);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
@@ -15,7 +15,7 @@ export const fetchAllPreprocessing = async () => {
 // Tambahkan data baru dan lakukan preprocessing
 export const runPreprocessing = async (payload) => {
   try {
-    const response = await fetch(`${BASE_URL}preprocessing//preprocess`, {
+    const response = await fetch(`${BASE_URL}/preprocessing/preprocess`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -32,7 +32,7 @@ export const runPreprocessing = async (payload) => {
 // Ambil data preprocessing berdasarkan ID
 export const getPreprocessingById = async (id) => {
   try {
-    const response = await fetch(`${BASE_URL}preprocessing//${id}`);
+    const response = await fetch(`${BASE_URL}/preprocessing//${id}`);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
