@@ -1,56 +1,75 @@
 import { BASE_URL } from '../index';
 
-export const fetchPreprocessingData = async () => {
-  try {
-    const response = await fetch(`${BASE_URL}/preprocessing/list`);
-    return await response.json();
-  } catch {
-    return { error: 'Failed to fetch preprocessing data.' };
-  }
-};
-
+// Ambil semua data preprocessing
 export const fetchAllPreprocessing = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/preprocessing/list`);
-    return await response.json();
-  } catch {
-    return { error: 'Failed to fetch preprocessing data.' };
+    const response = await fetch(`${BASE_URL}/preprocessing/`);
+    const data = await response.json();
+    return { error: false, data };
+  } catch (error) {
+    console.error("Gagal fetch preprocessing:", error);
+    return { error: true, data: [] };
   }
 };
 
-export const runPreprocessing = async () => {
+// Tambahkan data baru dan lakukan preprocessing
+export const runPreprocessing = async (payload) => {
   try {
-    const response = await fetch(`${BASE_URL}/preprocessing/process`, {
-      method: 'POST'
+    const response = await fetch(`${BASE_URL}preprocessing//preprocess`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
-    return await response.json();
-  } catch {
-    return { error: 'Failed to run preprocessing.' };
+
+    const data = await response.json();
+    return { error: false, data };
+  } catch (error) {
+    console.error("Gagal create preprocessing:", error);
+    return { error: true };
   }
 };
 
+// Ambil data preprocessing berdasarkan ID
+export const getPreprocessingById = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}preprocessing//${id}`);
+    const data = await response.json();
+    return { error: false, data };
+  } catch (error) {
+    console.error("Gagal fetch preprocessing by ID:", error);
+    return { error: true };
+  }
+};
+
+// Update emosi di preprocessing
 export const updatePreprocessingEmotion = async (id, newEmotion) => {
   try {
     const response = await fetch(`${BASE_URL}/preprocessing/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ emotion: newEmotion }),
     });
-    return await response.json();
-  } catch {
-    return { error: 'Failed to update emotion.' };
+
+    const data = await response.json();
+    return { error: false, data };
+  } catch (error) {
+    console.error("Gagal update preprocessing:", error);
+    return { error: true };
   }
 };
 
+// Hapus data preprocessing
 export const deletePreprocessingData = async (id) => {
   try {
     const response = await fetch(`${BASE_URL}/preprocessing/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
-    return await response.json();
-  } catch {
-    return { error: 'Failed to delete preprocessing data.' };
+
+    if (!response.ok) throw new Error("Gagal menghapus");
+
+    return { error: false };
+  } catch (error) {
+    console.error("Gagal delete preprocessing:", error);
+    return { error: true };
   }
 };

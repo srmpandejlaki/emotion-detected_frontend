@@ -8,7 +8,9 @@ function PreprocessingPage() {
       <h1>Preprocessing</h1>
       <div className="tabel">
         <TabelPreprocessing></TabelPreprocessing>
-        <ButtonPreprocessing></ButtonPreprocessing>
+        <div className="buttonPreprocessing">
+          <ButtonPreprocessing></ButtonPreprocessing>
+        </div>
       </div>
     </div>
   );

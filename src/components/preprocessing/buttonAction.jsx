@@ -1,17 +1,25 @@
 import React from 'react';
-import { updatePreprocessingEmotion, deletePreprocessingData } from '../../utils/api/preprocessing';
+import {
+  updatePreprocessingEmotion,
+  deletePreprocessingData
+} from '../../utils/api/preprocessing';
 
 function ButtonAction({ id, onActionDone }) {
   const handleChange = async () => {
     const newEmotion = prompt("Masukkan label emosi baru:");
-    if (!newEmotion) return;
+    if (!newEmotion || !newEmotion.trim()) return;
 
-    const result = await updatePreprocessingEmotion(id, newEmotion);
-    if (!result.error) {
-      alert("Label berhasil diubah!");
-      onActionDone?.(); // refresh data tabel
-    } else {
-      alert("Gagal mengubah label.");
+    try {
+      const result = await updatePreprocessingEmotion(id, newEmotion.trim());
+      if (!result.error) {
+        alert("Label berhasil diubah!");
+        onActionDone?.();
+      } else {
+        alert("Gagal mengubah label.");
+      }
+    } catch (error) {
+      console.error("Error saat mengubah label:", error);
+      alert("Terjadi kesalahan saat mengubah label.");
     }
   };
 
@@ -19,19 +27,24 @@ function ButtonAction({ id, onActionDone }) {
     const confirmDelete = confirm("Yakin ingin menghapus data ini?");
     if (!confirmDelete) return;
 
-    const result = await deletePreprocessingData(id);
-    if (!result.error) {
-      alert("Data berhasil dihapus!");
-      onActionDone?.(); // refresh data tabel
-    } else {
-      alert("Gagal menghapus data.");
+    try {
+      const result = await deletePreprocessingData(id);
+      if (!result.error) {
+        alert("Data berhasil dihapus!");
+        onActionDone?.();
+      } else {
+        alert("Gagal menghapus data.");
+      }
+    } catch (error) {
+      console.error("Error saat menghapus data:", error);
+      alert("Terjadi kesalahan saat menghapus data.");
     }
   };
 
   return (
     <div className="buttons">
-      <button className='btn-change' onClick={handleChange}>Change</button>
-      <button className='btn-delete' onClick={handleDelete}>Delete</button>
+      <button className="btn-change" onClick={handleChange}>Change</button>
+      <button className="btn-delete" onClick={handleDelete}>Delete</button>
     </div>
   );
 }
