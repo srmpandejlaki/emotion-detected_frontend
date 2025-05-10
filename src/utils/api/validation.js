@@ -1,86 +1,95 @@
-export async function fetchTestingData() {
-  try {
-    const res = await fetch('/api/validation/testing-data');
-    const data = await res.json();
-    return { success: true, data };
-  } catch (error) {
-    console.error("Gagal mengambil data testing:", error);
-    return { success: false, error };
-  }
-}
+import { BASE_URL } from '../index';
 
-export async function processValidation() {
+export const classifySingleText = async (text) => {
   try {
-    const res = await fetch('/api/validation/process', { method: 'POST' });
-    const data = await res.json();
-    if (res.ok) {
-      return { success: true, data };
-    } else {
-      return { success: false, message: data.message };
+    const response = await fetch(`${BASE_URL}/validation/classify-single`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail);
     }
+
+    const data = await response.json();
+    return data; // { text, predicted_emotion }
   } catch (error) {
-    console.error("Gagal memproses data testing:", error);
-    return { success: false, error };
+    console.error('Error:', error.message);
+    return null;
   }
 }
 
-// Ambil semua data uji untuk validasi
-export async function fetchValidationData() {
+export const processValidationDataset = async (texts) => {
   try {
-    const res = await fetch('/api/validation/data');
-    const data = await res.json();
+    const response = await fetch(`${BASE_URL}/validation/classify-batch`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ texts })
+    });
 
-    return { success: true, data };
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail);
+    }
+
+    const data = await response.json();
+    return data; // Array of { text, predicted_emotion }
   } catch (error) {
-    console.error("Gagal mengambil data validasi:", error);
-    return { success: false, error };
+    console.error('Error:', error.message);
+    return [];
   }
 }
 
-// Kirim data manual atau CSV untuk validasi
-export async function submitValidationData(payload) {
+export const saveValidationData = async (dataArray) => {
   try {
-    const res = await fetch('/api/validation/submit', {
+    const response = await fetch(`${BASE_URL}/validation/save-correctness`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dataArray)
+    });
+
+    const data = await response.json();
+    return data.message; // "Validation data saved successfully."
+  } catch (error) {
+    console.error('Error:', error.message);
+    return null;
+  }
+}
+
+export const evaluateValidation = async (payload) => {
+  try {
+    const response = await fetch(`${BASE_URL}/validation/save-result`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    const result = await res.json();
+    const data = await response.json();
+    return data; // Sesuai ValidationResultResponse
+  } catch (error) {
+    console.error('Error:', error.message);
+    return null;
+  }
+}
 
-    if (res.ok) {
-      return { success: true, data: result };
-    } else {
-      return { success: false, message: result.message };
+export const fetchTestingData = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/validation/test-data`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail);
     }
+
+    const data = await response.json();
+    return data; // Array of ValidationDataSchema: { text, predicted_emotion, actual_emotion, ... }
   } catch (error) {
-    console.error("Gagal mengirim data validasi:", error);
-    return { success: false, error };
-  }
-}
-
-// Ambil confusion matrix
-export async function fetchConfusionMatrix() {
-  try {
-    const res = await fetch('/api/validation/confusion-matrix');
-    const data = await res.json();
-
-    return { success: true, data };
-  } catch (error) {
-    console.error("Gagal mengambil confusion matrix:", error);
-    return { success: false, error };
-  }
-}
-
-// Ambil evaluasi: akurasi, precision, recall
-export async function fetchEvaluationMetrics() {
-  try {
-    const res = await fetch('/api/validation/metrics');
-    const data = await res.json();
-
-    return { success: true, data };
-  } catch (error) {
-    console.error("Gagal mengambil metrik evaluasi:", error);
-    return { success: false, error };
+    console.error('Error:', error.message);
+    return [];
   }
 }

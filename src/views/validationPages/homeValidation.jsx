@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TabelProcessing from '../../components/validation/tabelValidation';
 import ButtonProcess from "../../components/validation/buttonProcess";
 
-import { fetchTestingData, processValidation } from "../../utils/api/validation";
+import { fetchTestingData, processValidationDataset } from "../../utils/api/validation";
 
 function HomeValidationPage() {
   const [testData, setTestData] = useState([]);
@@ -19,7 +19,7 @@ function HomeValidationPage() {
 
   const handleProcess = async () => {
     setIsProcessing(true);
-    const result = await processValidation();
+    const result = await processValidationDataset();
     if (result.success) {
       alert("Data berhasil divalidasi!");
       loadTestData(); // refresh tabel

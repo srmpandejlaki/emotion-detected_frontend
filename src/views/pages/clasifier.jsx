@@ -1,15 +1,27 @@
 import React, { useState } from "react";
 import InputText from "../../components/classifier/inputText";
 import OutputClassifier from "../../components/classifier/outputText";
-import { predict } from "../../utils/api/classification"; // sesuaikan dengan lokasi file predict.js
+import { classifySingleText, saveValidationData } from "../../utils/api/validation";
 
 function ClasifierPage() {
   const [result, setResult] = useState(null);
 
   const handleClassify = async ({ text }) => {
     try {
-      const response = await predict({ text });
-      setResult(response.prediction); // sesuaikan properti hasil dari backend
+      const response = await classifySingleText(text); // text saja, bukan { text }
+
+      // Tampilkan hasil klasifikasi ke UI
+      setResult(response.predicted_emotion); // sesuaikan properti dengan backend
+
+      // Simpan hasil klasifikasi ke backend
+      const validationData = [
+        {
+          text: response.text,
+          predicted_emotion: response.predicted_emotion,
+          actual_emotion: "" // Jika tidak diketahui, kosongkan atau isi nanti
+        }
+      ];
+      await saveValidationData(validationData);
     } catch (error) {
       console.error("Error during classification:", error);
       setResult("Error");
