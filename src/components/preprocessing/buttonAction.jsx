@@ -43,8 +43,8 @@ function ButtonAction({ id, onActionDone }) {
 
   return (
     <div className="buttons">
-      <button className="btn-change" onClick={handleChange}>Change</button>
-      <button className="btn-delete" onClick={handleDelete}>Delete</button>
+      <button className="btn-change" onClick={handleChange}>Ubah</button>
+      <button className="btn-delete" onClick={handleDelete}>Hapus</button>
     </div>
   );
 }

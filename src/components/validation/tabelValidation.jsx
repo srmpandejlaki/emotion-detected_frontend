@@ -7,10 +7,10 @@ function TabelValidation({ data = [] }) {
       <thead>
         <tr>
           <th className="nomor">No.</th>
-          <th className="text3">Preprocessing Result</th>
-          <th className="emotion2">Emotion</th>
-          <th className="emotion2">Emotion Predicted</th>
-          <th>Action</th>
+          <th className="text3">Hasil Pemrosesan</th>
+          <th className="emotion2">Emosi Manual</th>
+          <th className="emotion2">Emosi Prediksi</th>
+          <th>Aksi</th>
         </tr>
       </thead>
       <tbody>

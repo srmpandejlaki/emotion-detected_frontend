@@ -22,10 +22,10 @@ function ButtonChange({ item, onSave }) {
             className="input-edit"
           />
           <button onClick={handleSave} className="btn-save">Save</button>
-          <button onClick={() => setIsEditing(false)} className="btn-cancel">Cancel</button>
+          <button onClick={() => setIsEditing(false)} className="btn-cancel">Batal</button>
         </>
       ) : (
-        <button onClick={() => setIsEditing(true)} className="btn-change">Change</button>
+        <button onClick={() => setIsEditing(true)} className="btn-change">Ubah</button>
       )}
     </div>
   );

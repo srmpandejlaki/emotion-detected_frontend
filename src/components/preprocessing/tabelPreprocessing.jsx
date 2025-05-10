@@ -47,10 +47,10 @@ function TabelPreprocessing() {
             <thead>
               <tr>
                 <th className="nomor">No.</th>
-                <th className="text2">Text</th>
-                <th className="text2">Preprocessing Result</th>
-                <th className="emotion1">Emotion</th>
-                <th className="action">Action</th>
+                <th className="text2">Teks</th>
+                <th className="text2">Hasil Pra-Pemrosesan</th>
+                <th className="emotion1">Emosi</th>
+                <th className="action">Aksi</th>
               </tr>
             </thead>
             <tbody>
