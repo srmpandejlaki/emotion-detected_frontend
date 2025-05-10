@@ -5,7 +5,7 @@
   border-collapse: collapse;
 }
 
-.dataset th{
+.dataset th, td{
   border: 1px solid custom.$primary-color;
   padding-block: 0.3rem;
 }

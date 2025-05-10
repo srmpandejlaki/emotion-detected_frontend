@@ -26,12 +26,12 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
     <div className="tabel-dataset-wrapper">
       {hasData ? (
         <>
-          <table className="data-table">
+          <table className="dataset">
             <thead>
               <tr>
-                <th>No</th>
-                <th>Teks</th>
-                <th>Label Emosi</th>
+                <th className="nomor">No</th>
+                <th className="text1">Teks</th>
+                <th className="emotion1">Label Emosi</th>
               </tr>
             </thead>
             <tbody>
@@ -41,8 +41,8 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
 
                 return (
                   <tr key={item.id}>
-                    <td>{nomorTabel}</td>
-                    <td>
+                    <td className="align">{nomorTabel}</td>
+                    <td className="text">
                       {isEditable ? (
                         <input
                           type="text"
@@ -53,7 +53,7 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
                         <span>{item.text}</span>
                       )}
                     </td>
-                    <td>
+                    <td className="align">
                       {isEditable ? (
                         <select
                           value={item.label}

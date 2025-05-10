@@ -56,15 +56,15 @@ function TabelPreprocessing() {
             <tbody>
               {currentItems.map((item, index) => (
                 <tr key={item.id_process}>
-                  <td>{indexOfFirstItem + index + 1}</td>
-                  <td>{item.data?.text_data || "-"}</td>
-                  <td>{item.text_preprocessing}</td>
-                  <td>
+                  <td className="align">{indexOfFirstItem + index + 1}</td>
+                  <td className="text">{item.data?.text_data || "-"}</td>
+                  <td className="text">{item.text_preprocessing}</td>
+                  <td className="align">
                     {item.data?.emotion
                       ? `${item.data.emotion.emotion_name}`
                       : "-"}
                   </td>
-                  <td>
+                  <td className="align">
                     <ButtonAction
                       id={item.data?.id_data}
                       onActionDone={loadData}

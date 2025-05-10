@@ -22,6 +22,15 @@
   background-color: custom.$border-color;
 }
 
+.dataset {
+  .align {
+    text-align: center;
+  }
+  .text {
+    padding-left: 1rem;
+  }
+}
+
 .footer p {
   font-size: 0.7rem;
   padding-inline: 1rem;
