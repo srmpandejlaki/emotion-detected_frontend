@@ -18,7 +18,7 @@ export const runPreprocessing = async (payload) => {
     const response = await fetch(`${BASE_URL}/preprocessing/preprocess`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload), // hanya { id_data: 5 }
     });
 
     const data = await response.json();
@@ -28,6 +28,7 @@ export const runPreprocessing = async (payload) => {
     return { error: true };
   }
 };
+
 
 // Ambil data preprocessing berdasarkan ID
 export const getPreprocessingById = async (id) => {
