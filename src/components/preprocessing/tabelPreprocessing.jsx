@@ -1,77 +1,92 @@
-import React, { useEffect, useState } from "react";
-import ButtonAction from "../preprocessing/buttonAction";
-import { fetchAllPreprocessing } from "../../utils/api/preprocessing";
+import React, { useState } from "react";
 
-function TabelPreprocessing() {
-  const [data, setData] = useState([]);
+function TabelPreprocessing({ dataset = [], onUpdate = () => {}, labelList = [], onDelete = () => {} }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const loadData = async () => {
-    try {
-      const result = await fetchAllPreprocessing();
-      console.log("Hasil fetchAllPreprocessing:", result);
-      if (!result.error) {
-        setData(result.data?.preprocessing || []);
-      } else {
-        alert("Gagal memuat data preprocessing.");
-      }
-    } catch (error) {
-      console.error("Terjadi kesalahan:", error);
-      alert("Terjadi kesalahan saat memuat data.");
-    }
-  };
+  const hasData = dataset && dataset.length > 0;
+  const reversedDataset = [...dataset].reverse();
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const totalPages = Math.ceil(reversedDataset.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = reversedDataset.slice(indexOfFirstItem, indexOfLastItem);
 
-  const goToPreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
+  const goToPreviousPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+  const goToNextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
 
-  const goToNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  const getLabelName = (id_label) => {
+    const found = labelList.find(
+      (label) => String(label.id_label) === String(id_label)
+    );
+    return found ? found.emotion_name : id_label;
   };
 
   return (
-    <div className="table-wrapper">
-      {data.length > 0 ? (
+    <div className="tabel-dataset-wrapper">
+      {hasData ? (
         <>
           <table className="dataset">
             <thead>
               <tr>
-                <th className="nomor">No.</th>
-                <th className="text2">Teks</th>
-                <th className="text2">Hasil Pra-Pemrosesan</th>
+                <th className="nomor">No</th>
+                <th className="text1">Hasil Preprocessing</th>
                 <th className="emotion1">Emosi</th>
-                <th className="action">Aksi</th>
+                <th className="aksi">Aksi</th>
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((item, index) => (
-                <tr key={item.id_process}>
-                  <td className="align">{indexOfFirstItem + index + 1}</td>
-                  <td className="text">{item.data?.text_data || "-"}</td>
-                  <td className="text">{item.text_preprocessing}</td>
-                  <td className="align">
-                    {item.data?.emotion
-                      ? `${item.data.emotion.emotion_name}`
-                      : "-"}
-                  </td>
-                  <td className="align">
-                    <ButtonAction
-                      id={item.data?.id_data}
-                      onActionDone={loadData}
-                    />
-                  </td>
-                </tr>
-              ))}
+              {currentItems.map((item, index) => {
+                const nomorTabel = reversedDataset.length - (indexOfFirstItem + index);
+                const isEditable = item.isNew === true;
+
+                return (
+                  <tr key={item.id_process}>
+                    <td className="align">{nomorTabel}</td>
+                    <td className="text">
+                      {isEditable ? (
+                        <input
+                          type="text"
+                          value={item.hasil_preprocessing}
+                          onChange={(e) =>
+                            onUpdate(item.id_process, "hasil_preprocessing", e.target.value)
+                          }
+                        />
+                      ) : (
+                        <span>{item.hasil_preprocessing}</span>
+                      )}
+                    </td>
+                    <td className="align">
+                      {isEditable ? (
+                        <select
+                          value={item.id_label || ""}
+                          onChange={(e) =>
+                            onUpdate(item.id_process, "id_label", parseInt(e.target.value))
+                          }
+                        >
+                          <option value="">Pilih Emosi</option>
+                          {labelList.map((label) => (
+                            <option key={label.id_label} value={label.id_label}>
+                              {label.emotion_name}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <span>{getLabelName(item.id_label)}</span>
+                      )}
+                    </td>
+                    <td className="align">
+                      {isEditable ? (
+                        <button onClick={() => onUpdate(item.id_process, "save")}>
+                          Simpan
+                        </button>
+                      ) : (
+                        <button onClick={() => onDelete(item.id_process)}>Hapus</button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
 
@@ -99,7 +114,7 @@ function TabelPreprocessing() {
         </>
       ) : (
         <p className="no-data-message">
-          Belum ada data, silakan masukkan data baru.
+          Belum ada data preprocessing, silahkan mulai proses terlebih dahulu.
         </p>
       )}
     </div>

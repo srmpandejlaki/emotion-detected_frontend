@@ -13,12 +13,17 @@ export const fetchAllLabels = async () => {
 // Create manual dataset
 export const saveManualDataset = async (data) => {
   try {
+    const payload = data.map((item) => ({
+      text_data: item.text,
+      id_label: item.label,
+    }));
+
     const response = await fetch(`${BASE_URL}/dataset/manual`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data), // { text_data, id_label }
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -27,10 +32,11 @@ export const saveManualDataset = async (data) => {
 
     return await response.json();
   } catch (error) {
-    console.error("Error saving dataset:", error);
+    console.error("Save error:", error);
     throw error;
   }
 };
+
 
 // Upload dataset via CSV
 export const uploadCSV = async (file) => {

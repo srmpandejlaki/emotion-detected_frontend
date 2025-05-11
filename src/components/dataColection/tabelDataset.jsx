@@ -19,7 +19,28 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
     const found = labelList.find(
       (label) => String(label.id_label) === String(id_label)
     );
-    return found ? found.emotion_name : id_label;
+    return found ? found.emotion_name : "Label Tidak Ditemukan";
+  };
+
+  // Perbaikan fungsi onUpdate: bisa ditambahkan validasi di sini
+  const handleUpdate = (id, field, value) => {
+    if (field === "text") {
+      if (!value || value.trim() === "") {
+        alert("Teks tidak boleh kosong!");
+        return;
+      }
+    }
+    if (field === "label") {
+      if (field === "label") {
+        if (!value) {
+          alert("Pilih label emosi yang valid!");
+          return;
+        }
+        // Jangan parseInt!
+      }
+    }
+
+    onUpdate(id, field, value);
   };
 
   return (
@@ -46,8 +67,8 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
                       {isEditable ? (
                         <input
                           type="text"
-                          value={item.text}
-                          onChange={(e) => onUpdate(item.id, "text", e.target.value)}
+                          value={item.text || ""}
+                          onChange={(e) => handleUpdate(item.id, "text", e.target.value)}
                         />
                       ) : (
                         <span>{item.text}</span>
@@ -56,9 +77,9 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
                     <td className="align">
                       {isEditable ? (
                         <select
-                          value={item.label}
+                          value={item.label || ""}
                           onChange={(e) =>
-                            onUpdate(item.id, "label", parseInt(e.target.value))
+                            handleUpdate(item.id, "label", e.target.value)
                           }
                         >
                           <option value="">Pilih Emosi</option>

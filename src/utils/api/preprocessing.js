@@ -3,7 +3,7 @@ import { BASE_URL } from '../index';
 // Ambil semua data preprocessing
 export const fetchAllPreprocessing = async (page = 1, limit = 10) => {
   try {
-    const response = await fetch(`${BASE_URL}/preprocessing/list?page=${page}&limit=${limit}`);
+    const response = await fetch(`${BASE_URL}/preprocessing/?page=${page}&limit=${limit}`);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
@@ -12,14 +12,13 @@ export const fetchAllPreprocessing = async (page = 1, limit = 10) => {
   }
 };
 
-// Tambahkan data baru dan lakukan preprocessing
-export const runPreprocessing = async (payload) => {
-  console.log("Payload yang dikirim:", payload);
+// Buat preprocessing baru (bukan menjalankan proses)
+export const createPreprocessing = async (payload) => {
   try {
-    const response = await fetch(`${BASE_URL}/preprocessing/preprocess`, {
+    const response = await fetch(`${BASE_URL}/preprocessing/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload), // hanya { id_data: 5 }
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();
@@ -30,21 +29,36 @@ export const runPreprocessing = async (payload) => {
   }
 };
 
-export const runPreprocessingMany = async (idDataList) => {
+// Jalankan preprocessing untuk 1 data berdasarkan ID
+export const runPreprocessing = async (id_data) => {
   try {
-    // Ubah jadi array jika input-nya satu id
-    const payload = Array.isArray(idDataList) ? idDataList : [idDataList];
-
-    const response = await fetch(`${BASE_URL}/preprocessing/preprocess-many`, {
+    const response = await fetch(`${BASE_URL}/preprocessing/run/${id_data}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id_data_list: payload }),
     });
 
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error("Gagal preprocessing:", error);
+    console.error("Gagal run preprocessing:", error);
+    return { error: true };
+  }
+};
+
+// Jalankan preprocessing banyak data
+export const runPreprocessingMany = async (idDataList) => {
+  try {
+    const payload = { id_data_list: Array.isArray(idDataList) ? idDataList : [idDataList] };
+
+    const response = await fetch(`${BASE_URL}/preprocessing/run-many`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    return { error: false, data };
+  } catch (error) {
+    console.error("Gagal preprocessing banyak:", error);
     return { error: true };
   }
 };
@@ -52,7 +66,7 @@ export const runPreprocessingMany = async (idDataList) => {
 // Ambil data preprocessing berdasarkan ID
 export const getPreprocessingById = async (id) => {
   try {
-    const response = await fetch(`${BASE_URL}/preprocessing//${id}`);
+    const response = await fetch(`${BASE_URL}/preprocessing/${id}`);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
@@ -61,13 +75,13 @@ export const getPreprocessingById = async (id) => {
   }
 };
 
-// Update emosi di preprocessing
-export const updatePreprocessingEmotion = async (id, newEmotion) => {
+// Update hasil_preprocessing dan/atau emotion
+export const updatePreprocessing = async (id, payload) => {
   try {
     const response = await fetch(`${BASE_URL}/preprocessing/${id}`, {
-      method: "PATCH",
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ emotion: newEmotion }),
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();
@@ -79,14 +93,13 @@ export const updatePreprocessingEmotion = async (id, newEmotion) => {
 };
 
 // Hapus data preprocessing
-export const deletePreprocessingData = async (id) => {
+export const deletePreprocessing = async (id) => {
   try {
     const response = await fetch(`${BASE_URL}/preprocessing/${id}`, {
       method: "DELETE",
     });
 
     if (!response.ok) throw new Error("Gagal menghapus");
-
     return { error: false };
   } catch (error) {
     console.error("Gagal delete preprocessing:", error);

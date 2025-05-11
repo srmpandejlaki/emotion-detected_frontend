@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  updatePreprocessingEmotion,
-  deletePreprocessingData
+  updatePreprocessing,
+  deletePreprocessing
 } from '../../utils/api/preprocessing';
 
 function ButtonAction({ id, onActionDone }) {
@@ -10,7 +10,7 @@ function ButtonAction({ id, onActionDone }) {
     if (!newEmotion || !newEmotion.trim()) return;
 
     try {
-      const result = await updatePreprocessingEmotion(id, newEmotion.trim());
+      const result = await updatePreprocessing(id, newEmotion.trim());
       if (!result.error) {
         alert("Label berhasil diubah!");
         onActionDone?.();
@@ -28,7 +28,7 @@ function ButtonAction({ id, onActionDone }) {
     if (!confirmDelete) return;
 
     try {
-      const result = await deletePreprocessingData(id);
+      const result = await deletePreprocessing(id);
       if (!result.error) {
         alert("Data berhasil dihapus!");
         onActionDone?.();
