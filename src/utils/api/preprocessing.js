@@ -14,6 +14,7 @@ export const fetchAllPreprocessing = async (page = 1, limit = 10) => {
 
 // Tambahkan data baru dan lakukan preprocessing
 export const runPreprocessing = async (payload) => {
+  console.log("Payload yang dikirim:", payload);
   try {
     const response = await fetch(`${BASE_URL}/preprocessing/preprocess`, {
       method: "POST",
@@ -29,6 +30,24 @@ export const runPreprocessing = async (payload) => {
   }
 };
 
+export const runPreprocessingMany = async (idDataList) => {
+  try {
+    // Ubah jadi array jika input-nya satu id
+    const payload = Array.isArray(idDataList) ? idDataList : [idDataList];
+
+    const response = await fetch(`${BASE_URL}/preprocessing/preprocess-many`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id_data_list: payload }),
+    });
+
+    const data = await response.json();
+    return { error: false, data };
+  } catch (error) {
+    console.error("Gagal preprocessing:", error);
+    return { error: true };
+  }
+};
 
 // Ambil data preprocessing berdasarkan ID
 export const getPreprocessingById = async (id) => {

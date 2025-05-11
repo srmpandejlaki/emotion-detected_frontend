@@ -1,24 +1,38 @@
 import React, { useEffect, useState } from "react";
 import TabelPreprocessing from '../../components/preprocessing/tabelPreprocessing';
-import { runPreprocessing } from '../../utils/api/preprocessing';
+import { fetchAllPreprocessing, runPreprocessingMany } from '../../utils/api/preprocessing';
 
 function PreprocessingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [payload] = useState({}); // kalau perlu kirimkan parameter, masukkan di sini
 
   useEffect(() => {
     const start = async () => {
-      const result = await runPreprocessing(payload);
-      if (result.error) {
+      try {
+        const fetchResponse = await fetchAllPreprocessing();
+        const dataList = fetchResponse.data?.preprocessing || [];
+  
+        const idDataList = dataList
+          .filter(item => item.data?.id_data)
+          .map(item => item.data.id_data);
+  
+        if (idDataList.length > 0) {
+          const result = await runPreprocessingMany(idDataList);
+          if (result.error) {
+            setError("Gagal melakukan preprocessing");
+          }
+        }
+  
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error saat preprocessing:", error);
         setError("Gagal melakukan preprocessing");
+        setIsLoading(false);
       }
-      // kalau perlu simpan result.data, bisa set ke state di sini
-      setIsLoading(false);
     };
-
+  
     start();
-  }, [payload]);
+  }, []); 
 
   // Loading state
   if (isLoading) {
