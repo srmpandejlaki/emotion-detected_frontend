@@ -5,27 +5,19 @@ function TabelPreprocessing({
   labelList = [],
   onUpdate = () => {},
   onDelete = () => {},
+  pagination = {
+    currentPage: 1,
+    itemsPerPage: 10,
+    totalItems: 0,
+    totalPages: 1,
+  },
+  onPageChange = () => {},
 }) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
   const [editingId, setEditingId] = useState(null);
   const [editValues, setEditValues] = useState({});
 
   // Check if data exists
   const hasData = data && data.length > 0;
-
-  // Reverse dataset for display (newest first)
-  const reversedDataset = [...data].reverse();
-
-  // Pagination calculations
-  const totalPages = Math.ceil(reversedDataset.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = reversedDataset.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Pagination handlers
-  const goToPreviousPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
-  const goToNextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
 
   // Get emotion name from data structure
   const getEmotionName = (item) => {
@@ -45,7 +37,7 @@ function TabelPreprocessing({
     setEditingId(item.id_process);
     setEditValues({
       text_preprocessing: item.text_preprocessing || '',
-      id_label: item.data?.id_label || '',
+      id_label: String(item.data?.id_label) || '',
     });
   };
 
@@ -68,6 +60,11 @@ function TabelPreprocessing({
     setEditingId(null);
   };
 
+  // Calculate item numbers correctly
+  const calculateItemNumber = (index) => {
+    return pagination.totalItems - ((pagination.currentPage - 1) * pagination.itemsPerPage + index);
+  };
+
   return (
     <div className='tabel-dataset-wrapper'>
       {hasData ? (
@@ -83,13 +80,12 @@ function TabelPreprocessing({
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((item, index) => {
-                const nomorTabel = reversedDataset.length - (indexOfFirstItem + index);
+              {data.map((item, index) => {
                 const isEditing = editingId === item.id_process;
 
                 return (
                   <tr key={item.id_process}>
-                    <td className='align'>{nomorTabel}</td>
+                    <td className='align'>{calculateItemNumber(index)}</td>
                     <td className='text'>{item.data?.text_data || 'N/A'}</td>
                     <td className='text'>
                       {isEditing ? (
@@ -146,21 +142,21 @@ function TabelPreprocessing({
             </tbody>
           </table>
 
-          {totalPages > 1 && (
+          {pagination.totalPages > 1 && (
             <div className='pagination-controls'>
               <button
-                onClick={goToPreviousPage}
-                disabled={currentPage === 1}
+                onClick={() => onPageChange(pagination.currentPage - 1)}
+                disabled={pagination.currentPage === 1}
                 className='btn-pagination'
               >
                 &laquo; Previous
               </button>
               <span className='page-info'>
-                Page {currentPage} of {totalPages}
+                Page {pagination.currentPage} of {pagination.totalPages}
               </span>
               <button
-                onClick={goToNextPage}
-                disabled={currentPage === totalPages}
+                onClick={() => onPageChange(pagination.currentPage + 1)}
+                disabled={pagination.currentPage === pagination.totalPages}
                 className='btn-pagination'
               >
                 Next &raquo;

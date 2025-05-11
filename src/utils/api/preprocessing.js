@@ -77,8 +77,6 @@ export const getPreprocessingById = async (id) => {
 
 // Update hasil_preprocessing dan/atau emotion
 export const updatePreprocessing = async (id, payload) => {
-  console.log(payload);
-  console.log(id);
 
   try {
     const response = await fetch(`${BASE_URL}/preprocessing/${id}`, {
