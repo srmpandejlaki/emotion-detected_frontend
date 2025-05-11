@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 function TabelDataset({ dataset, onUpdate, labelList }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,24 +16,22 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
   const goToNextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
 
   const getLabelName = (id_label) => {
-    const found = labelList.find(
-      (label) => String(label.id_label) === String(id_label)
-    );
-    return found ? found.emotion_name : "Label Tidak Ditemukan";
+    const found = labelList.find((label) => String(label.id_label) === String(id_label));
+    return found ? found.emotion_name : 'Label Tidak Ditemukan';
   };
 
   // Perbaikan fungsi onUpdate: bisa ditambahkan validasi di sini
   const handleUpdate = (id, field, value) => {
-    if (field === "text") {
-      if (!value || value.trim() === "") {
-        alert("Teks tidak boleh kosong!");
+    if (field === 'text') {
+      if (!value || value.trim() === '') {
+        alert('Teks tidak boleh kosong!');
         return;
       }
     }
-    if (field === "label") {
-      if (field === "label") {
+    if (field === 'label') {
+      if (field === 'label') {
         if (!value) {
-          alert("Pilih label emosi yang valid!");
+          alert('Pilih label emosi yang valid!');
           return;
         }
         // Jangan parseInt!
@@ -44,15 +42,15 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
   };
 
   return (
-    <div className="tabel-dataset-wrapper">
+    <div className='tabel-dataset-wrapper'>
       {hasData ? (
         <>
-          <table className="dataset">
+          <table className='dataset'>
             <thead>
               <tr>
-                <th className="nomor">No</th>
-                <th className="text1">Teks</th>
-                <th className="emotion1">Label Emosi</th>
+                <th className='nomor'>No</th>
+                <th className='text1'>Teks</th>
+                <th className='emotion1'>Label Emosi</th>
               </tr>
             </thead>
             <tbody>
@@ -61,28 +59,26 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
                 const isEditable = item.isNew === true;
 
                 return (
-                  <tr key={item.id}>
-                    <td className="align">{nomorTabel}</td>
-                    <td className="text">
+                  <tr key={index}>
+                    <td className='align'>{nomorTabel}</td>
+                    <td className='text'>
                       {isEditable ? (
                         <input
-                          type="text"
-                          value={item.text || ""}
-                          onChange={(e) => handleUpdate(item.id, "text", e.target.value)}
+                          type='text'
+                          value={item.text || ''}
+                          onChange={(e) => handleUpdate(item.id, 'text', e.target.value)}
                         />
                       ) : (
                         <span>{item.text}</span>
                       )}
                     </td>
-                    <td className="align">
+                    <td className='align'>
                       {isEditable ? (
                         <select
-                          value={item.label || ""}
-                          onChange={(e) =>
-                            handleUpdate(item.id, "label", e.target.value)
-                          }
+                          value={item.label || ''}
+                          onChange={(e) => handleUpdate(item.id, 'label', e.target.value)}
                         >
-                          <option value="">Pilih Emosi</option>
+                          <option value=''>Pilih Emosi</option>
                           {labelList.map((label) => (
                             <option key={label.id_label} value={label.id_label}>
                               {label.emotion_name}
@@ -100,21 +96,21 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
           </table>
 
           {totalPages > 1 && (
-            <div className="pagination-controls">
+            <div className='pagination-controls'>
               <button
                 onClick={goToPreviousPage}
                 disabled={currentPage === 1}
-                className="btn-pagination"
+                className='btn-pagination'
               >
                 &laquo; Kembali
               </button>
-              <span className="page-info">
+              <span className='page-info'>
                 Halaman {currentPage} dari {totalPages}
               </span>
               <button
                 onClick={goToNextPage}
                 disabled={currentPage === totalPages}
-                className="btn-pagination"
+                className='btn-pagination'
               >
                 Selanjutnya &raquo;
               </button>
@@ -122,9 +118,7 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
           )}
         </>
       ) : (
-        <p className="no-data-message">
-          Belum ada data, silakan masukkan data baru.
-        </p>
+        <p className='no-data-message'>Belum ada data, silakan masukkan data baru.</p>
       )}
     </div>
   );
