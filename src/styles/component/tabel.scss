@@ -3,6 +3,7 @@
 
 .dataset{
   border-collapse: collapse;
+  width: 100%;
 }
 
 .dataset th, td{
@@ -52,8 +53,19 @@ th {
   border-radius: 4px;
 }
 
-.pagination {
-  margin-left: 5rem;
+.tabel-dataset-wrapper {
+  @include custom.columnGap();
+}
+
+.pagination-controls, .pagination {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
+}
+
+.aksi {
+  display: flex;
+  gap: 0.5rem;
+  padding-left: 0.2rem;
 }

@@ -69,17 +69,17 @@ function TabelPreprocessing({
   };
 
   return (
-    <div className='tabel-dataset-wrapper'>
+    <div>
       {hasData ? (
-        <>
+        <div className='tabel-dataset-wrapper'>
           <table className='dataset'>
             <thead>
               <tr>
                 <th className='nomor'>No</th>
-                <th className='text'>Original Text</th>
-                <th className='text'>Preprocessed Text</th>
-                <th className='emotion'>Emotion</th>
-                <th className='aksi'>Actions</th>
+                <th className='text'>Teks Asli</th>
+                <th className='text'>Hasil Pra-pemrosesan</th>
+                <th className='emotion'>Emosi</th>
+                <th className='aksi'>Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -108,7 +108,7 @@ function TabelPreprocessing({
                           value={editValues.id_label}
                           onChange={(e) => handleChange('id_label', e.target.value)}
                         >
-                          <option value=''>Select Emotion</option>
+                          <option value=''>Pilih Emosi</option>
                           {labelList.map((label) => (
                             <option key={label.id_label} value={label.id_label}>
                               {label.emotion_name}
@@ -123,19 +123,19 @@ function TabelPreprocessing({
                       {isEditing ? (
                         <>
                           <button onClick={() => handleSave(item.id_process)} className='btn-save'>
-                            Save
+                            Simpan
                           </button>
                           <button onClick={handleCancel} className='btn-cancel'>
-                            Cancel
+                            Batal
                           </button>
                         </>
                       ) : (
                         <>
                           <button onClick={() => handleEdit(item)} className='btn-edit'>
-                            Edit
+                            Ubah
                           </button>
                           <button onClick={() => onDelete(item.id_process)} className='btn-delete'>
-                            Delete
+                            Hapus
                           </button>
                         </>
                       )}
@@ -147,27 +147,27 @@ function TabelPreprocessing({
           </table>
 
           {totalPages > 1 && (
-            <div className='pagination-controls'>
+            <div className='pagination'>
               <button
                 onClick={goToPreviousPage}
                 disabled={currentPage === 1}
                 className='btn-pagination'
               >
-                &laquo; Previous
+                &laquo; Sebelumnya
               </button>
               <span className='page-info'>
-                Page {currentPage} of {totalPages}
+                Halaman {currentPage} dari {totalPages}
               </span>
               <button
                 onClick={goToNextPage}
                 disabled={currentPage === totalPages}
                 className='btn-pagination'
               >
-                Next &raquo;
+                Selanjutnya &raquo;
               </button>
             </div>
           )}
-        </>
+        </div>
       ) : (
         <p className='no-data-message'>
           No preprocessing data available. Please run the preprocessing first.
