@@ -14,8 +14,8 @@ export const fetchAllLabels = async () => {
 export const saveManualDataset = async (data) => {
   try {
     const payload = data.map((item) => ({
-      text_data: item.text,
-      id_label: item.label,
+      text_data: item.text_data,
+      id_label: item.id_label,
     }));
 
     const response = await fetch(`${BASE_URL}/dataset/manual`, {
