@@ -54,11 +54,6 @@ function TabelPreprocessing({
     setEditingId(null);
   };
 
-  // Calculate item numbers correctly
-  const calculateItemNumber = (index) => {
-    return pagination.totalItems - ((pagination.currentPage - 1) * pagination.itemsPerPage + index);
-  };
-
   return (
     <div>
       {hasData ? (
@@ -79,7 +74,9 @@ function TabelPreprocessing({
 
                 return (
                   <tr key={item.id_process}>
-                    <td className='align'>{calculateItemNumber(index)}</td>
+                    <td className='align'>
+                      {(pagination.currentPage - 1) * pagination.itemsPerPage + index + 1}
+                    </td>
                     <td className='text'>{item.data?.text_data || 'N/A'}</td>
                     <td className='text'>
                       {isEditing ? (

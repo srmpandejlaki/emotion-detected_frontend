@@ -98,6 +98,7 @@ function HomeProcessingPage() {
               totalData={totalData.total}
             />
             <RatioData
+              totalData={totalData.total}
               trainRatio={dataRatio.train}
               testRatio={dataRatio.test}
               onChangeRatio={setDataRatio}

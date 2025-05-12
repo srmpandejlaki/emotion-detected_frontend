@@ -40,16 +40,14 @@ function TabelProcessing({
             <th className='nomor'>No.</th>
             <th className='text3'>Hasil Pemrosesan</th>
             <th className='emotion2'>Emosi Manual</th>
-            <th className='emotion2'>Emosi Prediksi</th>
           </tr>
         </thead>
         <tbody>
           {data?.map((item, index) => (
             <tr key={index}>
-              <th>{index + 1}</th>
+              <th>{(pagination.currentPage - 1) * pagination.itemsPerPage + index + 1}</th>
               <th>{item.text_preprocessing}</th>
               <th>{item.data.emotion.emotion_name}</th>
-              <th>{item.automatic_emotion || '-'}</th>
             </tr>
           ))}
         </tbody>

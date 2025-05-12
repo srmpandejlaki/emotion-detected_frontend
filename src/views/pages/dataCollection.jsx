@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
-import TabelDataset from "../../components/dataColection/tabelDataset";
-import InputFile from "../../components/dataColection/inputCSV";
-import AddSave from "../../components/dataColection/addSave";
-import {
-  saveManualDataset,
-  fetchDatasets,
-  fetchAllLabels,
-} from "../../utils/api/dataCollection";
-import { v4 as uuidv4 } from "uuid";
+import React, { useState, useEffect } from 'react';
+import TabelDataset from '../../components/dataColection/tabelDataset';
+import InputFile from '../../components/dataColection/inputCSV';
+import AddSave from '../../components/dataColection/addSave';
+import { saveManualDataset, fetchDatasets, fetchAllLabels } from '../../utils/api/dataCollection';
+import { v4 as uuidv4 } from 'uuid';
 
 function DataCollectionPage() {
   const [dataset, setDataset] = useState([]);
@@ -20,7 +16,7 @@ function DataCollectionPage() {
         await loadDatasets();
         await loadLabels();
       } catch (error) {
-        console.error("Gagal mengambil data:", error);
+        console.error('Gagal mengambil data:', error);
       }
     };
     loadInitialData();
@@ -58,10 +54,7 @@ function DataCollectionPage() {
 
   const filterDuplicates = (data) =>
     data.filter((item) =>
-      existingData.some(
-        (existing) =>
-          existing.text === item.text && existing.label === item.label
-      )
+      existingData.some((existing) => existing.text === item.text && existing.label === item.label)
     );
 
   const handleSave = async () => {
@@ -69,16 +62,15 @@ function DataCollectionPage() {
     const uniqueData = dataset.filter(
       (item) =>
         !existingData.some(
-          (existing) =>
-            existing.text === item.text && existing.label === item.label
+          (existing) => existing.text === item.text && existing.label === item.label
         )
     );
 
     if (duplicates.length > 0) {
       alert(
         duplicates.length === 1
-          ? "Data sudah ada, silakan ubah kembali."
-          : "Ada beberapa data yang sudah ada sebelumnya."
+          ? 'Data sudah ada, silakan ubah kembali.'
+          : 'Ada beberapa data yang sudah ada sebelumnya.'
       );
 
       if (uniqueData.length === 0) return;
@@ -91,11 +83,11 @@ function DataCollectionPage() {
           id_label: item.label,
         }))
       );
-      alert("Data berhasil disimpan!");
+      alert('Data berhasil disimpan!');
       setDataset([]);
       await loadDatasets();
     } catch {
-      alert("Gagal menyimpan data.");
+      alert('Gagal menyimpan data.');
     }
   };
 
@@ -136,27 +128,22 @@ function DataCollectionPage() {
   };
 
   const handleUpdate = (id, field, value) => {
-    setDataset((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
-    );
+    setDataset((prev) => prev.map((item) => (item.id === id ? { ...item, [field]: value } : item)));
   };
 
   const handleAddRow = () => {
-    setDataset((prev) => [
-      ...prev,
-      { id: uuidv4(), text: "", label: "", isNew: true },
-    ]);
+    setDataset((prev) => [...prev, { id: uuidv4(), text: '', label: '', isNew: true }]);
   };
 
   const handleCancel = () => {
     setDataset([]); // Menghapus semua data yang baru dimasukkan
   };
-  
+
   return (
-    <div className="container">
+    <div className='container'>
       <h1>Dataset</h1>
       <section>
-        <div className="tabel">
+        <div className='tabel'>
           <TabelDataset
             dataset={[...existingData, ...dataset]}
             onUpdate={handleUpdate}
