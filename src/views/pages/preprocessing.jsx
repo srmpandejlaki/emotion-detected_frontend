@@ -49,7 +49,7 @@ function PreprocessingPage() {
     try {
       const response = await updatePreprocessing(id, {
         text_preprocessing: updates.text_preprocessing,
-        automatic_emotion: updates.id_label,
+        id_label: updates.id_label,
       });
 
       if (response.error) {
