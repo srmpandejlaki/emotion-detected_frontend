@@ -8,7 +8,7 @@ import MatricsValidationPage from "../validationPages/classMatrics";
 function ValidationPage() {
   return (
     <div className="container">
-      <h1>Validation</h1>
+      <h1>Validasi Data</h1>
       <NavValidation />
       <section>
         <Routes>

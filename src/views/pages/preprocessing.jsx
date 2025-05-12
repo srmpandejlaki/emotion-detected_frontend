@@ -108,8 +108,8 @@ function PreprocessingPage() {
   if (isLoading) {
     return (
       <div className='container'>
-        <h1>Preprocessing</h1>
-        <p>Please wait while loading data...</p>
+        <h1>Pra-Pemrosesan Data</h1>
+        <p className='loading-message'>Mohon tunggu sebentar, sedang memuat data...</p>
       </div>
     );
   }
@@ -117,7 +117,7 @@ function PreprocessingPage() {
   if (error) {
     return (
       <div className='container'>
-        <h1>Preprocessing</h1>
+        <h1>Pra-Pemrosesan Data</h1>
         <p style={{ color: 'red' }}>{error}</p>
       </div>
     );
@@ -125,7 +125,7 @@ function PreprocessingPage() {
 
   return (
     <div className='container'>
-      <h1>Preprocessing</h1>
+      <h1>Pra-Pemrosesan Data</h1>
       <div className='tabel'>
         <TabelPreprocessing
           data={preprocessingData}

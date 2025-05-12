@@ -20,7 +20,7 @@ function ClasifierPage() {
 
   return (
     <div className='container'>
-      <h1>Cari Tahu </h1>
+      <h1>Ayo Cari Tahu</h1>
       <section className='inputText'>
         <InputText classify={handleClassify} />
         <div className='outputContainer'>

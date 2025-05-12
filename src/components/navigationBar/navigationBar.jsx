@@ -16,7 +16,7 @@ function NavBar() {
       <Link to='/processing' className='navItems'>
         Pemrosesan
       </Link>
-      {/* <Link to="/validation" className="navItems">Validasi Model</Link> */}
+      <Link to="/validation" className="navItems">Validasi Model</Link>
     </div>
   );
 }

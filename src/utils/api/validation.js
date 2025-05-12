@@ -76,7 +76,7 @@ export const evaluateValidation = async (payload) => {
 
 export const fetchTestingData = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/validation/test-data`, {
+    const response = await fetch(`${BASE_URL}/validation/testing`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     });

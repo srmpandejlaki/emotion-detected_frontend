@@ -44,7 +44,7 @@ export async function fetchProcessingData(page = 1, limit = 10) {
 
 export async function processData(trainRatio, testRatio) {
   try {
-    const response = await fetch('/api/process', {
+    const response = await fetch(`${BASE_URL}/process`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ trainRatio, testRatio })

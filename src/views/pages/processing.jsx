@@ -13,7 +13,7 @@ class ProcessingPage extends React.Component {
   render() {
     return (
       <div className="container">
-        <h1>Processing</h1>
+        <h1>Pemrosesan Data</h1>
         <NavProcessing />
         <section>
           <Routes>
