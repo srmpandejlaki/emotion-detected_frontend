@@ -14,15 +14,23 @@ button,
   justify-content: end;
 }
 
-.btn-process {
+.button-container {
+  width: 100%;
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
+  align-items: 'center';
+}
+
+.btn-process {
+  position: fixed;
+  right: 2rem;
 }
 
 .btn-upload,
 .btn-add,
 .btn-preprocessing,
 .btn-process,
+.btn-process2,
 .btn-pagination {
   background-color: custom.$info-color;
 }

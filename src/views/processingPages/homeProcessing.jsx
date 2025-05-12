@@ -106,9 +106,9 @@ function HomeProcessingPage() {
           </div>
         </div>
       </section>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <ButtonProcess onProcess={handleProcess} />
+      <div className='button-container' >
         {isLoading && <p>Memuat data...</p>}
+        <ButtonProcess onProcess={handleProcess} />
       </div>
     </div>
   );

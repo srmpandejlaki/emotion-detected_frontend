@@ -157,7 +157,7 @@ function TabelPreprocessing({
         </div>
       ) : (
         <p className='no-data-message'>
-          No preprocessing data available. Please run the preprocessing first.
+          Tidak ada data pra-pemrosesan yang tersedia. Mohon tambah data terlebih dahulu kemudian lakukan tahap pra-pemrosesan kembali.
         </p>
       )}
     </div>

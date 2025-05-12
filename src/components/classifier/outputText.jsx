@@ -1,9 +1,13 @@
 import React from "react";
 
-function OutputClassifier({ result }) {
+function OutputClassifier({ result, isLoading }) {
   return (
     <div className="output">
-      <p>{result ? result : "Tidak ada hasil"}</p>
+      {isLoading ? (
+        <p>Mengklasifikasi...</p>
+      ) : (
+        <p>{result ? result : "Tidak ada hasil"}</p>
+      )}
     </div>
   );
 }
