@@ -30,20 +30,12 @@ export const trainModel = async (rawDatasetId, preprocessedDatasetId, name, spli
   }
 };
 
-export async function fetchProcessingData() {
+export async function fetchProcessingData(page = 1, limit = 10) {
   try {
-    const res = await fetch('/api/processing-data');
+    const res = await fetch(`${BASE_URL}/processing/all?page=${page}&limit=${limit}`);
     const data = await res.json();
 
-    return {
-      success: true,
-      data: {
-        newDataCount: data.newDataCount,
-        oldDataCount: data.oldDataCount,
-        totalDataCount: data.totalDataCount,
-        dataset: data.dataset
-      }
-    };
+    return data;
   } catch (error) {
     console.error("Gagal mengambil data:", error);
     return { success: false, error };
