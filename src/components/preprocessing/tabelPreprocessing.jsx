@@ -21,12 +21,6 @@ function TabelPreprocessing({
 
   // Get emotion name from data structure
   const getEmotionName = (item) => {
-    if (item.automatic_emotion !== null) {
-      const foundLabel = labelList.find(
-        (label) => label.id_label === Number(item.automatic_emotion)
-      );
-      return foundLabel ? foundLabel.emotion_name : item.automatic_emotion || 'N/A';
-    }
     if (item.data?.emotion?.emotion_name) return item.data.emotion.emotion_name;
     const foundLabel = labelList.find((label) => label.id_label === item.data?.id_label);
     return foundLabel ? foundLabel.emotion_name : item.data?.id_label || 'N/A';
