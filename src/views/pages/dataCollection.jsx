@@ -148,6 +148,10 @@ function DataCollectionPage() {
     ]);
   };
 
+  const handleCancel = () => {
+    setDataset([]); // Menghapus semua data yang baru dimasukkan
+  };
+  
   return (
     <div className="container">
       <h1>Dataset</h1>
@@ -158,7 +162,12 @@ function DataCollectionPage() {
             onUpdate={handleUpdate}
             labelList={labelList}
           />
-          <AddSave onAddData={handleAddRow} onSaveData={handleSave} />
+          <AddSave
+            onAddData={handleAddRow}
+            onSaveData={handleSave}
+            onCancel={handleCancel}
+            hasNewData={dataset.length > 0}
+          />
         </div>
         <InputFile onCSVParsed={handleCSVParsed} />
       </section>

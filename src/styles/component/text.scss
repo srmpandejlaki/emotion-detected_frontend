@@ -22,13 +22,12 @@
   background-color: custom.$border-color;
 }
 
-.dataset {
-  .align, .emotion {
-    text-align: center;
-  }
-  .text {
-    padding-left: 1rem;
-  }
+.align, .emotion, .aksi {
+  text-align: center;
+}
+
+.text {
+  padding-left: 1rem;
 }
 
 .footer p {

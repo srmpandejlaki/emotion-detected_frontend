@@ -115,7 +115,7 @@ function TabelPreprocessing({
                         <span>{getEmotionName(item)}</span>
                       )}
                     </td>
-                    <td className='aksi'>
+                    <td className='btn-aksi'>
                       {isEditing ? (
                         <>
                           <button onClick={() => handleSave(item.id_process)} className='btn-save'>
@@ -152,7 +152,7 @@ function TabelPreprocessing({
                 &laquo; Sebelumnya
               </button>
               <span className='page-info'>
-                Page {pagination.currentPage} of {pagination.totalPages}
+                Halaman {pagination.currentPage} dari {pagination.totalPages}
               </span>
               <button
                 onClick={() => onPageChange(pagination.currentPage + 1)}
