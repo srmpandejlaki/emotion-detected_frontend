@@ -62,8 +62,8 @@ function TabelPreprocessing({
             <thead>
               <tr>
                 <th className='nomor'>No</th>
-                <th className='text'>Teks Asli</th>
-                <th className='text'>Hasil Pra-pemrosesan</th>
+                <th className='text1'>Teks Asli</th>
+                <th className='text1'>Hasil Pra-pemrosesan</th>
                 <th className='emotion'>Emosi</th>
                 <th className='aksi'>Aksi</th>
               </tr>
@@ -106,7 +106,7 @@ function TabelPreprocessing({
                         <span>{getEmotionName(item)}</span>
                       )}
                     </td>
-                    <td className='btn-aksi'>
+                    <td className='aksi'>
                       {isEditing ? (
                         <>
                           <button onClick={() => handleSave(item.id_process)} className='btn-save'>

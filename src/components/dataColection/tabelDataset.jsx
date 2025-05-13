@@ -50,7 +50,7 @@ function TabelDataset({ dataset, onUpdate, labelList }) {
               <tr>
                 <th className='nomor'>No</th>
                 <th className='text1'>Teks</th>
-                <th className='emotion1'>Label Emosi</th>
+                <th className='emotion'>Label Emosi</th>
               </tr>
             </thead>
             <tbody>

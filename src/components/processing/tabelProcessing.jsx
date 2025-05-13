@@ -39,7 +39,7 @@ function TabelProcessing({
           <tr>
             <th className='nomor'>No.</th>
             <th className='text3'>Hasil Pemrosesan</th>
-            <th className='emotion2'>Emosi Manual</th>
+            <th className='emotion'>Emosi Manual</th>
           </tr>
         </thead>
         <tbody>
