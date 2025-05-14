@@ -12,7 +12,7 @@ function InputText({ classify }) {
   return (
     <form className="formClassifier" onSubmit={onSubmitHandler}>
       <input type="text" value={text} onChange={onTextChange} placeholder="Masukkan kalimatmu disini" />
-      <button className="btn-process2" type="submit">Mulai Klasifikasi</button>
+      <button className="btn-process2" type="submit">Klasifikasi</button>
     </form>
   );
 }
