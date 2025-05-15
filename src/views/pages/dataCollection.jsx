@@ -9,6 +9,7 @@ function DataCollectionPage() {
   const [dataset, setDataset] = useState([]);
   const [existingData, setExistingData] = useState([]);
   const [labelList, setLabelList] = useState([]);
+  const [isProcessing, setIsProcessing] = useState(false); // State untuk menandai proses backend
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -27,29 +28,39 @@ function DataCollectionPage() {
     let allData = [];
     let hasMore = true;
 
-    while (hasMore) {
-      const response = await fetchDatasets(page, 50);
-      if (response?.data?.length) {
-        allData = [...allData, ...response.data];
-        page += 1;
-      } else {
-        hasMore = false;
+    setIsProcessing(true); // Mulai proses
+    try {
+      while (hasMore) {
+        const response = await fetchDatasets(page, 50);
+        if (response?.data?.length) {
+          allData = [...allData, ...response.data];
+          page += 1;
+        } else {
+          hasMore = false;
+        }
       }
-    }
 
-    setExistingData(
-      allData.map((item) => ({
-        id: item.id,
-        text: item.text_data,
-        label: item.id_label,
-        isNew: false,
-      }))
-    );
+      setExistingData(
+        allData.map((item) => ({
+          id: item.id,
+          text: item.text_data,
+          label: item.id_label,
+          isNew: false,
+        }))
+      );
+    } finally {
+      setIsProcessing(false); // Selesai proses
+    }
   };
 
   const loadLabels = async () => {
-    const labels = await fetchAllLabels();
-    setLabelList(labels);
+    setIsProcessing(true); // Mulai proses
+    try {
+      const labels = await fetchAllLabels();
+      setLabelList(labels);
+    } finally {
+      setIsProcessing(false); // Selesai proses
+    }
   };
 
   const filterDuplicates = (data) =>
@@ -76,6 +87,7 @@ function DataCollectionPage() {
       if (uniqueData.length === 0) return;
     }
 
+    setIsProcessing(true); // Mulai proses
     try {
       await saveManualDataset(
         uniqueData.map((item) => ({
@@ -88,27 +100,24 @@ function DataCollectionPage() {
       await loadDatasets();
     } catch {
       alert('Gagal menyimpan data.');
+    } finally {
+      setIsProcessing(false); // Selesai proses
     }
   };
 
   const handleCSVParsed = (newData) => {
-    // const existingNames = labelList.map((label) =>
-    //   label.emotion_name.toLowerCase()
-    // );
     const updatedLabelList = [...labelList];
 
     const formattedData = newData.map((item) => {
       const labelName = item.label.trim().toLowerCase();
 
-      // Cek apakah label sudah ada di labelList
       let labelObj = updatedLabelList.find(
         (label) => label.emotion_name.toLowerCase() === labelName
       );
 
-      // Tambahkan label baru jika belum ada
       if (!labelObj) {
         labelObj = {
-          id_label: uuidv4(), // Ganti jika backend tidak pakai UUID
+          id_label: uuidv4(),
           emotion_name: labelName,
         };
         updatedLabelList.push(labelObj);
@@ -136,7 +145,7 @@ function DataCollectionPage() {
   };
 
   const handleCancel = () => {
-    setDataset([]); // Menghapus semua data yang baru dimasukkan
+    setDataset([]);
   };
 
   return (
@@ -154,9 +163,13 @@ function DataCollectionPage() {
             onSaveData={handleSave}
             onCancel={handleCancel}
             hasNewData={dataset.length > 0}
+            isProcessing={isProcessing} // Kirim state processing ke komponen AddSave
           />
         </div>
-        <InputFile onCSVParsed={handleCSVParsed} />
+        <InputFile 
+          onCSVParsed={handleCSVParsed} 
+          disabled={isProcessing} // Tambahkan disabled state untuk input file
+        />
       </section>
     </div>
   );
