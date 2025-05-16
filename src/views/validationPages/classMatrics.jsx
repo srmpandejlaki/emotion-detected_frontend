@@ -30,56 +30,56 @@ function MatricsValidationPage() {
   return (
     <div className="metrics-page">
       <h1 className="title">Evaluasi Model (Validation Result)</h1>
-
-      <div className="section">
-        <h2 className="section-title">Akurasi</h2>
-        <p className="value">{(metrics.accuracy * 100).toFixed(2)}%</p>
-      </div>
-
-      <div className="container-matrics">
-      <div className="section">
-        <h2 className="section-title">Precision & Recall per Emosi</h2>
-        <table className="metrics-table">
-          <thead>
-            <tr>
-              <th>Label</th>
-              <th>Precision</th>
-              <th>Recall</th>
-            </tr>
-          </thead>
-          <tbody>
-            {labels.map((label) => (
-              <tr key={label}>
-                <td>{label}</td>
-                <td>{(metrics.precision[label] * 100).toFixed(2)}%</td>
-                <td>{(metrics.recall[label] * 100).toFixed(2)}%</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="section">
-        <h2 className="section-title">Confusion Matrix</h2>
-        <table className="confusion-table">
-          <tbody>
-            {metrics.confusionMatrix.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {row.map((cell, colIndex) => (
-                  <td
-                    key={colIndex}
-                    className={`confusion-cell ${
-                      rowIndex === 0 || colIndex === 0 ? 'header-cell' : ''
-                    }`}
-                  >
-                    {cell}
-                  </td>
+      <div className="container2">
+        <div className="section">
+          <h2 className="section-title">Confusion Matrix</h2>
+          <table className="confusion-table">
+            <tbody>
+              {metrics.confusionMatrix.map((row, rowIndex) => (
+                <tr key={rowIndex}>
+                  {row.map((cell, colIndex) => (
+                    <td
+                      key={colIndex}
+                      className={`confusion-cell ${
+                        rowIndex === 0 || colIndex === 0 ? 'header-cell' : ''
+                      }`}
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        
+        <div className="container-matrics">
+          <div className="section">
+            <h2 className="section-title">Akurasi</h2>
+            <p className="value">{(metrics.accuracy * 100).toFixed(2)}%</p>
+          </div>
+          <div className="section">
+            <h2 className="section-title">Precision & Recall per Emosi</h2>
+            <table className="metrics-table">
+              <thead>
+                <tr>
+                  <th>Label</th>
+                  <th>Precision</th>
+                  <th>Recall</th>
+                </tr>
+              </thead>
+              <tbody>
+                {labels.map((label) => (
+                  <tr key={label}>
+                    <td>{label}</td>
+                    <td>{(metrics.precision[label] * 100).toFixed(2)}%</td>
+                    <td>{(metrics.recall[label] * 100).toFixed(2)}%</td>
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

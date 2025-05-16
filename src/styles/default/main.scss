@@ -32,6 +32,13 @@ main{
   gap: 1rem;
 }
 
+.container2 {
+  width: 60vw;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
 .sideContainer {
   @include custom.flexColumn();
   justify-content: space-between;
