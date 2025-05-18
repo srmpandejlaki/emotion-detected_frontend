@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import InputText from '../../components/classifier/inputText';
 import OutputClassifier from '../../components/classifier/outputText';
-import { classifySingleText } from '../../utils/api/validation';
+import { predictEmotion } from '../../utils/api/validation';
 
 function ClasifierPage() {
   const [result, setResult] = useState(null);
@@ -10,7 +10,7 @@ function ClasifierPage() {
   const handleClassify = async ({ text }) => {
     try {
       setIsLoading(true);
-      const response = await classifySingleText(text); // text saja, bukan { text }
+      const response = await predictEmotion(text);
 
       // Tampilkan hasil klasifikasi ke UI
       setResult(response.predicted_emotion);

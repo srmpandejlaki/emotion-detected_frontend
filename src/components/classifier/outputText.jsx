@@ -5,8 +5,10 @@ function OutputClassifier({ result, isLoading }) {
     <div className="output">
       {isLoading ? (
         <p>Mengklasifikasi...</p>
+      ) : result && result.Hybrid_Result ? (
+        <p>{result.Hybrid_Result}</p>
       ) : (
-        <p>{result ? result : "Tidak ada hasil"}</p>
+        <p>Tidak ada hasil</p>
       )}
     </div>
   );
