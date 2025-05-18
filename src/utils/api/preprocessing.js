@@ -1,85 +1,36 @@
 import { BASE_URL } from '../index';
 
-// Ambil semua data preprocessing
-export const fetchAllPreprocessing = async (page = 1, limit = 10) => {
+// Ambil semua data preprocessing (preprocessed)
+export const fetchPreprocessedData = async (page = 1, limit = 10) => {
   try {
-    const response = await fetch(`${BASE_URL}/preprocessing/?page=${page}&limit=${limit}`);
+    const response = await fetch(`${BASE_URL}/dataset/preprocessed/data?page=${page}&limit=${limit}`);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error("Gagal fetch preprocessing:", error);
+    console.error("Gagal fetch data preprocessed:", error);
     return { error: true, data: [] };
   }
 };
 
-// Buat preprocessing baru (bukan menjalankan proses)
-export const createPreprocessing = async (payload) => {
+// Jalankan preprocessing data baru
+export const runPreprocessNewData = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/preprocessing/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    return { error: false, data };
-  } catch (error) {
-    console.error("Gagal create preprocessing:", error);
-    return { error: true };
-  }
-};
-
-// Jalankan preprocessing untuk 1 data berdasarkan ID
-export const runPreprocessing = async (id_data) => {
-  try {
-    const response = await fetch(`${BASE_URL}/preprocessing/run/${id_data}`, {
+    const response = await fetch(`${BASE_URL}/dataset/preprocessed/process`, {
       method: "POST",
     });
 
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error("Gagal run preprocessing:", error);
+    console.error("Gagal menjalankan preprocessing data baru:", error);
     return { error: true };
   }
 };
 
-// Jalankan preprocessing banyak data
-export const runPreprocessingMany = async (idDataList) => {
+// Edit data baru (hasil_preprocessing dan/atau emotion)
+export const editPreprocessedData = async (id, payload) => {
   try {
-    const payload = { id_data_list: Array.isArray(idDataList) ? idDataList : [idDataList] };
-
-    const response = await fetch(`${BASE_URL}/preprocessing/run-many`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    return { error: false, data };
-  } catch (error) {
-    console.error("Gagal preprocessing banyak:", error);
-    return { error: true };
-  }
-};
-
-// Ambil data preprocessing berdasarkan ID
-export const getPreprocessingById = async (id) => {
-  try {
-    const response = await fetch(`${BASE_URL}/preprocessing/${id}`);
-    const data = await response.json();
-    return { error: false, data };
-  } catch (error) {
-    console.error("Gagal fetch preprocessing by ID:", error);
-    return { error: true };
-  }
-};
-
-// Update hasil_preprocessing dan/atau emotion
-export const updatePreprocessing = async (id, payload) => {
-
-  try {
-    const response = await fetch(`${BASE_URL}/preprocessing/${id}`, {
+    const response = await fetch(`${BASE_URL}/dataset/preprocessed/data/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -88,22 +39,37 @@ export const updatePreprocessing = async (id, payload) => {
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error("Gagal update preprocessing:", error);
+    console.error("Gagal edit data preprocessed:", error);
     return { error: true };
   }
 };
 
-// Hapus data preprocessing
-export const deletePreprocessing = async (id) => {
+// Hapus semua data baru
+export const deletePreprocessedData = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/preprocessing/${id}`, {
+    const response = await fetch(`${BASE_URL}/dataset/preprocessed/data`, {
       method: "DELETE",
     });
 
-    if (!response.ok) throw new Error("Gagal menghapus");
+    if (!response.ok) throw new Error("Gagal menghapus data preprocessed");
     return { error: false };
   } catch (error) {
-    console.error("Gagal delete preprocessing:", error);
+    console.error("Gagal delete data preprocessed:", error);
+    return { error: true };
+  }
+};
+
+// Tandai semua data sebagai sudah di-train
+export const markPreprocessedAsTrained = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/dataset/preprocessed/mark-trained`, {
+      method: "POST",
+    });
+
+    const data = await response.json();
+    return { error: false, data };
+  } catch (error) {
+    console.error("Gagal menandai data sebagai trained:", error);
     return { error: true };
   }
 };

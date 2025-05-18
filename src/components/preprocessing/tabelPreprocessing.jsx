@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 function TabelPreprocessing({
   data = [],
-  labelList = [],
   onUpdate = () => {},
   onDelete = () => {},
   pagination = {
@@ -16,26 +15,16 @@ function TabelPreprocessing({
   const [editingId, setEditingId] = useState(null);
   const [editValues, setEditValues] = useState({});
 
-  // Check if data exists
   const hasData = data && data.length > 0;
 
-  // Get emotion name from data structure
-  const getEmotionName = (item) => {
-    if (item.data?.emotion?.emotion_name) return item.data.emotion.emotion_name;
-    const foundLabel = labelList.find((label) => label.id_label === item.data?.id_label);
-    return foundLabel ? foundLabel.emotion_name : item.data?.id_label || 'N/A';
-  };
-
-  // Handle edit button click
   const handleEdit = (item) => {
-    setEditingId(item.id_process);
+    setEditingId(item.id);
     setEditValues({
-      text_preprocessing: item.text_preprocessing || '',
-      id_label: String(item.data?.id_label) || '',
+      preprocessed_text: item.preprocessed_text || '',
+      emotion: item.emotion || '',
     });
   };
 
-  // Handle input changes
   const handleChange = (field, value) => {
     setEditValues((prev) => ({
       ...prev,
@@ -43,13 +32,11 @@ function TabelPreprocessing({
     }));
   };
 
-  // Handle save
   const handleSave = (id) => {
     onUpdate(id, editValues);
     setEditingId(null);
   };
 
-  // Handle cancel
   const handleCancel = () => {
     setEditingId(null);
   };
@@ -70,46 +57,40 @@ function TabelPreprocessing({
             </thead>
             <tbody>
               {data.map((item, index) => {
-                const isEditing = editingId === item.id_process;
+                const isEditing = editingId === item.id;
 
                 return (
-                  <tr key={item.id_process}>
+                  <tr key={item.id}>
                     <td className='align'>
                       {(pagination.currentPage - 1) * pagination.itemsPerPage + index + 1}
                     </td>
-                    <td className='text'>{item.data?.text_data || 'N/A'}</td>
+                    <td className='text'>{item.text || 'N/A'}</td>
                     <td className='text'>
                       {isEditing ? (
                         <input
                           type='text'
-                          value={editValues.text_preprocessing}
-                          onChange={(e) => handleChange('text_preprocessing', e.target.value)}
+                          value={editValues.preprocessed_text}
+                          onChange={(e) => handleChange('preprocessed_text', e.target.value)}
                         />
                       ) : (
-                        <span>{item.text_preprocessing || 'N/A'}</span>
+                        <span>{item.preprocessed_text || 'N/A'}</span>
                       )}
                     </td>
                     <td className='emotion'>
                       {isEditing ? (
-                        <select
-                          value={editValues.id_label}
-                          onChange={(e) => handleChange('id_label', e.target.value)}
-                        >
-                          <option value=''>Pilih Emosi</option>
-                          {labelList.map((label) => (
-                            <option key={label.id_label} value={label.id_label}>
-                              {label.emotion_name}
-                            </option>
-                          ))}
-                        </select>
+                        <input
+                          type='text'
+                          value={editValues.emotion}
+                          onChange={(e) => handleChange('emotion', e.target.value)}
+                        />
                       ) : (
-                        <span>{getEmotionName(item)}</span>
+                        <span>{item.emotion || 'N/A'}</span>
                       )}
                     </td>
                     <td className='aksi'>
                       {isEditing ? (
                         <>
-                          <button onClick={() => handleSave(item.id_process)} className='btn-save'>
+                          <button onClick={() => handleSave(item.id)} className='btn-save'>
                             Simpan
                           </button>
                           <button onClick={handleCancel} className='btn-cancel'>
@@ -121,7 +102,7 @@ function TabelPreprocessing({
                           <button onClick={() => handleEdit(item)} className='btn-edit'>
                             Ubah
                           </button>
-                          <button onClick={() => onDelete(item.id_process)} className='btn-delete'>
+                          <button onClick={() => onDelete(item.id)} className='btn-delete'>
                             Hapus
                           </button>
                         </>

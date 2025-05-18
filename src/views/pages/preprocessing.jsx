@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import TabelPreprocessing from '../../components/preprocessing/tabelPreprocessing';
 import {
-  fetchAllPreprocessing,
-  updatePreprocessing,
-  deletePreprocessing,
+  fetchPreprocessedData,
+  runPreprocessNewData,
+  editPreprocessedData,
+  deletePreprocessedData,
 } from '../../utils/api/preprocessing';
-// import { fetchAllLabels } from '../../utils/api/dataCollection';
 
 function PreprocessingPage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isPreprocessing, setIsPreprocessing] = useState(false);
   const [error, setError] = useState(null);
   const [preprocessingData, setPreprocessingData] = useState([]);
-  // const [labelList, setLabelList] = useState([]);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     itemsPerPage: 10,
@@ -19,83 +19,81 @@ function PreprocessingPage() {
     totalPages: 0,
   });
 
-  // const loadLabels = async () => {
-  //   const labels = await fetchAllLabels();
-  //   setLabelList(labels);
-  // };
-
   const loadPreprocessingData = async (page, limit) => {
     try {
-      const response = await fetchAllPreprocessing(page, limit);
+      const response = await fetchPreprocessedData(page, limit);
       if (response.error) {
-        setError('Failed to load data');
+        setError('Gagal memuat data');
         return;
       }
 
-      setPreprocessingData(response.data?.preprocessing || []);
+      setPreprocessingData(response.data?.data || []);
       setPagination({
         currentPage: page,
         itemsPerPage: limit,
-        totalItems: response.data?.total_data || 0,
-        totalPages: Math.ceil(response.data?.total_pages) || 1,
+        totalItems: response.data?.total || 0,
+        totalPages: Math.ceil((response.data?.total || 1) / limit),
       });
     } catch (err) {
       console.error('Load error:', err);
-      setError('Failed to load data');
+      setError('Gagal memuat data');
     }
   };
 
   const handleUpdate = async (id, updates) => {
     try {
-      const response = await updatePreprocessing(id, {
-        text_preprocessing: updates.text_preprocessing,
-        id_label: updates.id_label,
+      const response = await editPreprocessedData(id, {
+        preprocessed_text: updates.preprocessed_text,
+        emotion: updates.emotion,
       });
 
       if (response.error) {
-        setError('Failed to update data');
+        setError('Gagal memperbarui data');
         return;
       }
 
-      // Refresh data with current pagination
       await loadPreprocessingData(pagination.currentPage, pagination.itemsPerPage);
     } catch (err) {
       console.error('Update error:', err);
-      setError('Failed to update data');
+      setError('Gagal memperbarui data');
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      const response = await deletePreprocessing(id);
-
+      const response = await deletePreprocessedData([id]); // kirim array berisi id
       if (response.error) {
-        setError('Failed to delete data');
+        setError('Gagal menghapus data');
         return;
       }
 
-      // Refresh data with current pagination
       await loadPreprocessingData(pagination.currentPage, pagination.itemsPerPage);
     } catch (err) {
       console.error('Delete error:', err);
-      setError('Failed to delete data');
+      setError('Gagal menghapus data');
     }
   };
 
   useEffect(() => {
     const startPreprocessing = async () => {
-      setIsLoading(true);
+      setIsPreprocessing(true);
       setError(null);
 
       try {
-        // await loadLabels();
-        await loadPreprocessingData(1, 10);
-        setIsLoading(false);
+        // Jalankan proses preprocessing baru
+        const result = await runPreprocessNewData();
+        if (result.error) {
+          setError('Gagal melakukan preprocessing data baru');
+        }
       } catch (err) {
-        console.error('Error during preprocessing:', err);
-        setError('Error during preprocessing');
-        setIsLoading(false);
+        console.error('Error saat preprocessing:', err);
+        setError('Terjadi kesalahan saat preprocessing');
       }
+
+      // Setelah selesai, load hasilnya
+      await loadPreprocessingData(1, 10);
+      setIsLoading(false);
+      setIsPreprocessing(false);
     };
 
     startPreprocessing();
@@ -105,11 +103,13 @@ function PreprocessingPage() {
     loadPreprocessingData(newPage, pagination.itemsPerPage);
   };
 
-  if (isLoading) {
+  if (isLoading || isPreprocessing) {
     return (
       <div className='container'>
         <h1>Pra-Pemrosesan Data</h1>
-        <p className='loading-message'>Mohon tunggu sebentar, sedang memuat data...</p>
+        <p className='loading-message'>
+          {isPreprocessing ? 'Tunggu sebentar, sedang melakukan preprocessing...' : 'Memuat data, mohon tunggu...'}
+        </p>
       </div>
     );
   }
@@ -131,7 +131,6 @@ function PreprocessingPage() {
           data={preprocessingData}
           onUpdate={handleUpdate}
           onDelete={handleDelete}
-          // labelList={labelList}
           pagination={pagination}
           onPageChange={handlePageChange}
         />
