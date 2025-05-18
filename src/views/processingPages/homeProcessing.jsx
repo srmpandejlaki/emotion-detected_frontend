@@ -4,7 +4,8 @@ import TotalData from '../../components/processing/totalData';
 import RatioData from '../../components/processing/ratioData';
 import ButtonProcess from '../../components/processing/buttonProcess';
 
-import { fetchProcessingData, processData } from '../../utils/api/processing';
+import { fetchPreprocessedData } from '../../utils/api/preprocessing';
+import { splitDataset, trainModel } from '../../utils/api/processing';
 
 function HomeProcessingPage() {
   const [totalData, setTotalData] = useState({ new: 0, old: 0, total: 0 });
@@ -20,16 +21,16 @@ function HomeProcessingPage() {
 
   const loadInitialData = async (page, limit) => {
     setIsLoading(true);
-    const result = await fetchProcessingData(page, limit);
+    const result = await fetchPreprocessedData(page, limit);
 
     if (!result.error) {
-      const data = result;
+      const data = result.data;
       setTotalData({
-        new: data.new_data,
-        old: data.old_data,
+        new: data.stats.total_new,
+        old: data.stats.total_old,
         total: data.total_data,
       });
-      setTableData(data.preprocessing);
+      setTableData(data.data);
       setPagination({
         currentPage: page,
         itemsPerPage: limit,
@@ -62,13 +63,34 @@ function HomeProcessingPage() {
 
   const handleProcess = async () => {
     setIsLoading(true);
-    const result = await processData(dataRatio.train, dataRatio.test);
+    const modelId = localStorage.getItem("selectedModelId");
 
-    if (result.success) {
-      alert('Proses berhasil!');
-      loadInitialData();
-    } else {
-      alert('Gagal memproses data: ' + (result.message || 'Terjadi kesalahan'));
+    const payload = {
+      model_id: modelId,
+      train_ratio: dataRatio.train,
+      test_ratio: dataRatio.test,
+    };
+
+    try {
+      // Step 1: Split Dataset
+      const splitResult = await splitDataset(payload);
+      if (splitResult.error) {
+        alert('Gagal membagi dataset: ' + (splitResult.message || 'Terjadi kesalahan'));
+        setIsLoading(false);
+        return;
+      }
+
+      // Step 2: Train Model
+      const trainResult = await trainModel({ model_id: modelId });
+      if (trainResult.error) {
+        alert('Gagal melatih model: ' + (trainResult.message || 'Terjadi kesalahan'));
+      } else {
+        alert('Proses pelatihan berhasil!');
+        loadInitialData(1, 10);
+      }
+
+    } catch (err) {
+      alert('Terjadi kesalahan: ' + err.message);
     }
 
     setIsLoading(false);

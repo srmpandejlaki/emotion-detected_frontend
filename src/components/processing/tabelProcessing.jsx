@@ -1,5 +1,4 @@
 import React from 'react';
-import ButtonChange from '../buttonChange';
 
 function TabelProcessing({
   data = [],
@@ -20,7 +19,6 @@ function TabelProcessing({
             <th className='nomor'>No.</th>
             <th className='text3'>Hasil Pemrosesan</th>
             <th className='emotion2'>Emosi Manual</th>
-            <th className='emotion2'>Emosi Prediksi</th>
           </tr>
         </thead>
         <tbody>
@@ -45,9 +43,9 @@ function TabelProcessing({
         <tbody>
           {data?.map((item, index) => (
             <tr key={index}>
-              <th>{(pagination.currentPage - 1) * pagination.itemsPerPage + index + 1}</th>
-              <th>{item.text_preprocessing}</th>
-              <th>{item.data.emotion.emotion_name}</th>
+              <td>{(pagination.currentPage - 1) * pagination.itemsPerPage + index + 1}</td>
+              <td>{item.preprocessed_text}</td>
+              <td>{item.emotion}</td>
             </tr>
           ))}
         </tbody>
