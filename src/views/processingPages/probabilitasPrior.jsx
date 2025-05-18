@@ -1,30 +1,60 @@
 import React, { useEffect, useState } from 'react';
+import { fetchProbPrior, getModels } from '../../utils/api/processing';
 
 function PriorPage() {
   const [priorData, setPriorData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [modelId, setModelId] = useState(null);
 
+  // Ambil model terakhir
   useEffect(() => {
-    // Data dummy untuk simulasi
-    const dummyData = [
-      { emotion: 'senang', count: 50, probability: 0.25 },
-      { emotion: 'marah', count: 30, probability: 0.15 },
-      { emotion: 'takut', count: 20, probability: 0.10 },
-      { emotion: 'sedih', count: 100, probability: 0.50 },
-    ];
-
-    // Simulasi delay seperti ambil data dari API
-    setTimeout(() => {
-      setPriorData(dummyData);
-    }, 500);
+    const loadLatestModel = async () => {
+      setLoading(true);
+      setError(null);
+      const result = await getModels();
+      if (!result.error && result.data.length > 0) {
+        const latestModel = result.data[result.data.length - 1];
+        setModelId(latestModel.id);
+      } else {
+        setError("Model tidak ditemukan");
+        setLoading(false);
+      }
+    };
+    loadLatestModel();
   }, []);
 
+  // Ambil data probabilitas prior
+  useEffect(() => {
+    const loadPriorData = async () => {
+      if (!modelId) return;
+
+      setLoading(true);
+      setError(null);
+      const result = await fetchProbPrior(modelId);
+      if (!result.error) {
+        if (Array.isArray(result.data) && result.data.length > 0) {
+          setPriorData(result.data);
+        } else {
+          setPriorData([]);
+          setError("Data probabilitas prior kosong");
+        }
+      } else {
+        setError("Gagal mengambil data probabilitas prior");
+      }
+      setLoading(false);
+    };
+    loadPriorData();
+  }, [modelId]);
+
   return (
-    <div className='section prior-page'>
+    <div className="section prior-page">
       <h1>Probabilitas Prior</h1>
-      {priorData.length === 0 ? (
-        <p>Memuat data...</p>
-      ) : (
-        <table className='prior-table'>
+      {loading && <p>Memuat data...</p>}
+      {!loading && error && <p style={{ color: "red" }}>{error}</p>}
+      {!loading && !error && priorData.length === 0 && <p>Data kosong</p>}
+      {!loading && !error && priorData.length > 0 && (
+        <table className="prior-table">
           <thead>
             <tr>
               <th>Emosi</th>
@@ -33,11 +63,11 @@ function PriorPage() {
             </tr>
           </thead>
           <tbody>
-            {priorData.map((item, index) => (
-              <tr key={index}>
+            {priorData.map((item) => (
+              <tr key={item.emotion}>
                 <td>{item.emotion}</td>
                 <td>{item.count}</td>
-                <td>{item.probability.toFixed(4)}</td>
+                <td>{Number(item.probability).toFixed(4)}</td>
               </tr>
             ))}
           </tbody>

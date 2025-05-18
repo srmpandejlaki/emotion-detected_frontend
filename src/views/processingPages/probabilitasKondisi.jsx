@@ -1,77 +1,88 @@
 import React, { useEffect, useState } from 'react';
-
-const dummyData = [
-  {
-    id: 1,
-    teks: 'Pelayanan sangat lambat',
-    probabilitas: {
-      marah: 0.4,
-      sedih: 0.4,
-      senang: 0.1,
-      takut: 0.1
-    },
-    prediksi: 'marah, sedih', // dua emosi dengan nilai sama
-    perluPengujianLanjutan: true
-  },
-  {
-    id: 2,
-    teks: 'Petugas sangat membantu',
-    probabilitas: {
-      marah: 0.1,
-      sedih: 0.05,
-      senang: 0.8,
-      takut: 0.05
-    },
-    prediksi: 'senang',
-    perluPengujianLanjutan: false
-  }
-];
+import { fetchProbCondition, getModels } from '../../utils/api/processing';
 
 function KondisiPage() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [modelId, setModelId] = useState(null);
 
+  // Ambil model terakhir
   useEffect(() => {
-    // Ganti dengan fetch ke backend-mu jika sudah tersedia
-    setData(dummyData);
+    const loadLatestModel = async () => {
+      setLoading(true);
+      setError(null);
+      const result = await getModels();
+      if (!result.error && result.data.length > 0) {
+        const latestModel = result.data[result.data.length - 1];
+        setModelId(latestModel.id);
+      } else {
+        setError("Model tidak ditemukan");
+        setLoading(false);
+      }
+    };
+    loadLatestModel();
   }, []);
+
+  // Ambil probabilitas kondisi setelah modelId ada
+  useEffect(() => {
+    const loadProbCondition = async () => {
+      if (!modelId) return;
+
+      setLoading(true);
+      setError(null);
+      const result = await fetchProbCondition(modelId);
+      if (!result.error) {
+        if (Array.isArray(result.data) && result.data.length > 0) {
+          setData(result.data);
+        } else {
+          setData([]);
+          setError("Data probabilitas kondisi kosong");
+        }
+      } else {
+        setError("Gagal mengambil data probabilitas kondisi");
+      }
+      setLoading(false);
+    };
+    loadProbCondition();
+  }, [modelId]);
 
   return (
     <div className="kondisi-page">
       <h1>Probabilitas Kondisi</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Teks</th>
-            <th>Probabilitas Emosi</th>
-            <th>Prediksi</th>
-            <th>Perlu Pengujian Lanjutan</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, idx) => (
-            <tr key={item.id}>
-              <td>{idx + 1}</td>
-              <td>{item.teks}</td>
-              <td>
-                {Object.entries(item.probabilitas).map(([emosi, nilai]) => (
-                  <div key={emosi}>
-                    <strong>{emosi}</strong>: {nilai.toFixed(2)}
-                  </div>
-                ))}
-              </td>
-              <td>{item.prediksi}</td>
-              <td>
-                {item.perluPengujianLanjutan ? (
-                  <span className="perlu-lanjutan">Ya</span>
-                ) : (
-                  <span className="tidak-perlu">Tidak</span>
-                )}
-              </td>
+      {loading && <p>Memuat data...</p>}
+      {!loading && error && <p style={{ color: "red" }}>{error}</p>}
+      {!loading && !error && data.length === 0 && (
+        <p>Data tidak tersedia</p>
+      )}
+      {!loading && !error && data.length > 0 && (
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Teks</th>
+              <th>Probabilitas Emosi</th>
+              <th>Prediksi</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((item, idx) => (
+              <tr key={item.id}>
+                <td>{idx + 1}</td>
+                <td>{item.teks}</td>
+                <td>
+                  {Object.entries(item.probabilitas).map(([emosi, nilai]) => (
+                    <div key={emosi}>
+                      <strong>{emosi}</strong>: {Number(nilai).toFixed(2)}
+                    </div>
+                  ))}
+                </td>
+                <td>{item.prediksi}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
