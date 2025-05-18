@@ -78,14 +78,14 @@ function HomeProcessingPage() {
       const { train_size, test_size } = splitResult.data;
       alert(`Dataset berhasil dibagi:\nTrain: ${train_size}\nTest: ${test_size}`);
   
-      const trainResult = await trainModel();
+      const trainResult = await trainModel(payload);
   
       if (trainResult.error) {
-        alert('Gagal melatih model: ' + (trainResult.message || 'Terjadi kesalahan'));
+        alert('Gagal melatih model: Terjadi kesalahan');
       } else {
         alert('Proses pelatihan berhasil!');
-        loadInitialData(1, 10);
-      }
+        // loadInitialData(1, 10);
+      }      
   
     } catch (err) {
       console.error(err);
