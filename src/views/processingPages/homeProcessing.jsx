@@ -37,10 +37,6 @@ function HomeProcessingPage() {
         totalItems: data.total_data || 0,
         totalPages: Math.ceil(data.total_pages) || 1,
       });
-      // setDataRatio({
-      //   train: data.train_ratio,
-      //   test: data.test_ratio,
-      // });
     }
     setIsLoading(false);
   };
