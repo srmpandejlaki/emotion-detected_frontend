@@ -53,21 +53,35 @@ function TabelProcessing({
       {pagination.totalPages > 1 && (
         <div className='pagination-controls'>
           <button
+            onClick={() => onPageChange(1)}
+            disabled={pagination.currentPage === 1}
+            className='btn-pagination'
+          >
+            &laquo; Halaman Pertama
+          </button>
+          <button
             onClick={() => onPageChange(pagination.currentPage - 1)}
             disabled={pagination.currentPage === 1}
             className='btn-pagination'
           >
-            &laquo; Previous
+            &laquo; Sebelumnya
           </button>
           <span className='page-info'>
-            Page {pagination.currentPage} of {pagination.totalPages}
+            Halaman {pagination.currentPage} dari {pagination.totalPages}
           </span>
           <button
             onClick={() => onPageChange(pagination.currentPage + 1)}
             disabled={pagination.currentPage === pagination.totalPages}
             className='btn-pagination'
           >
-            Next &raquo;
+            Berikutnya &raquo;
+          </button>
+          <button
+            onClick={() => onPageChange(pagination.totalPages)}
+            disabled={pagination.currentPage === pagination.totalPages}
+            className='btn-pagination'
+          >
+            Halaman Terakhir &raquo;
           </button>
         </div>
       )}
