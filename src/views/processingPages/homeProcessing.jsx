@@ -59,26 +59,27 @@ function HomeProcessingPage() {
 
   const handleProcess = async () => {
     setIsLoading(true);
-    const modelId = localStorage.getItem("selectedModelId");
   
     const payload = {
-      test_size: dataRatio.test / 100, // konversi persen ke desimal
+      test_size: dataRatio.test / 100,
     };
   
     try {
       const splitResult = await splitDataset(payload);
+      console.log(payload);
   
       if (splitResult.error) {
-        alert('Gagal membagi dataset: ' + splitResult.error);
+        alert('Gagal membagi dataset: ' + splitResult.message);
         setIsLoading(false);
         return;
       }
   
-      // Tampilkan hasil split
-      console.log('Split Result:', splitResult);
-      alert(`Dataset berhasil dibagi:\nTrain: ${splitResult.train_size}\nTest: ${splitResult.test_size}`);
+      // Ambil data dari splitResult.data
+      const { train_size, test_size } = splitResult.data;
+      alert(`Dataset berhasil dibagi:\nTrain: ${train_size}\nTest: ${test_size}`);
   
-      const trainResult = await trainModel({ model_id: modelId });
+      const trainResult = await trainModel();
+  
       if (trainResult.error) {
         alert('Gagal melatih model: ' + (trainResult.message || 'Terjadi kesalahan'));
       } else {
@@ -92,8 +93,8 @@ function HomeProcessingPage() {
     }
   
     setIsLoading(false);
-  };   
-
+  };
+  
   const handlePageChange = (newPage) => {
     loadInitialData(newPage, pagination.itemsPerPage);
   };
