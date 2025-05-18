@@ -1,137 +1,81 @@
 import { BASE_URL } from '../index';
 
-// Get all labels
-export const fetchAllLabels = async () => {
+// Get paginated list of datasets
+export const fetchDatasets = async (page = 1, limit = 10) => {
   try {
-    const response = await fetch(`${BASE_URL}/dataset/label`);
-    return await response.json();
-  } catch {
-    return { error: "Failed to fetch labels." };
-  }
-};
-
-// Create manual dataset
-export const saveManualDataset = async (data) => {
-  try {
-    const payload = data.map((item) => ({
-      text_data: item.text_data,
-      id_label: item.id_label,
-    }));
-
-    const response = await fetch(`${BASE_URL}/dataset/manual`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
+    const response = await fetch(`${BASE_URL}/dataset?page=${page}&limit=${limit}`);
     if (!response.ok) {
-      throw new Error("Failed to save dataset");
+      throw new Error('Failed to fetch datasets');
     }
-
     return await response.json();
   } catch (error) {
-    console.error("Save error:", error);
+    console.error("Fetch datasets error:", error);
     throw error;
   }
 };
 
-
-// Upload dataset via CSV
-export const uploadCSV = async (file) => {
+// Upload dataset (CSV file)
+export const uploadDataset = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
 
   try {
-    const response = await fetch(`${BASE_URL}/dataset/csv`, {
+    const response = await fetch(`${BASE_URL}/dataset/upload`, {
       method: "POST",
       body: formData,
     });
 
     if (!response.ok) {
-      throw new Error("Failed to upload CSV");
+      throw new Error("Failed to upload dataset");
     }
 
     return await response.json();
   } catch (error) {
-    console.error("Error uploading CSV:", error);
+    console.error("Error uploading dataset:", error);
     throw error;
   }
 };
 
-// Get paginated list of datasets
-export const fetchDatasets = async (page = 1, limit = 10) => {
+// Add data to dataset
+export const addDatasetData = async (data) => {
   try {
-    const response = await fetch(`${BASE_URL}/dataset/list?page=${page}&limit=${limit}`);
-    return await response.json();
-  } catch {
-    return { error: 'Failed to fetch datasets.' };
-  }
-};
-
-// Get a single dataset by ID
-export const fetchDatasetById = async (id_data) => {
-  try {
-    const response = await fetch(`${BASE_URL}/dataset/${id_data}`);
-    return await response.json();
-  } catch {
-    return { error: 'Failed to fetch dataset.' };
-  }
-};
-
-// Update dataset by ID
-export const updateDataset = async (id_data, updatedData) => {
-  try {
-    const response = await fetch(`${BASE_URL}/dataset/${id_data}`, {
-      method: 'PUT',
+    const response = await fetch(`${BASE_URL}/dataset/data`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedData), // { text_data, id_label }
+      body: JSON.stringify(data),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to update dataset");
+      throw new Error("Failed to add data to dataset");
     }
 
     return await response.json();
   } catch (error) {
-    console.error("Error updating dataset:", error);
+    console.error("Add data error:", error);
     throw error;
   }
 };
 
-// Delete a single dataset
-export const deleteDataset = async (datasetId) => {
+// Delete data from dataset
+export const deleteDatasetData = async (dataIds) => {
   try {
-    const response = await fetch(`${BASE_URL}/dataset/${datasetId}`, {
-      method: 'DELETE',
+    const response = await fetch(`${BASE_URL}/dataset/data`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ids: dataIds }),
     });
-    return await response.json();
-  } catch {
-    return { error: 'Failed to delete dataset.' };
-  }
-};
 
-// Delete all datasets
-export const deleteAllDatasets = async () => {
-  try {
-    const response = await fetch(`${BASE_URL}/dataset/all`, {
-      method: 'DELETE',
-    });
-    return await response.json();
-  } catch {
-    return { error: 'Failed to delete all datasets.' };
-  }
-};
+    if (!response.ok) {
+      throw new Error("Failed to delete data");
+    }
 
-// Get label name by id_label
-export const fetchLabelDatasetById = async (id_label) => {
-  try {
-    const response = await fetch(`${BASE_URL}/dataset/${id_label}`);
     return await response.json();
-  } catch {
-    return { error: 'Failed to fetch dataset.' };
+  } catch (error) {
+    console.error("Delete data error:", error);
+    throw error;
   }
 };

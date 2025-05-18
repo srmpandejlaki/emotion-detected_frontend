@@ -1,33 +1,45 @@
-import React from "react";
-import Papa from "papaparse";
+// UploadCSV.js
+import React from 'react';
+import Papa from 'papaparse';
 
-function InputFile({ onCSVParsed }) {
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
+const InputCSV = ({ onDataParsed }) => {
+  const validEmotions = {
+    joy: 'senang',
+    trust: 'trust',
+    shock: 'shock',
+    netral: 'netral',
+    fear: 'fear',
+    sadness: 'sadness',
+    anger: 'anger',
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
     if (!file) return;
 
     Papa.parse(file, {
+      header: true,
       skipEmptyLines: true,
-      complete: function (results) {
-        // Skip baris pertama (header), ambil kolom 0 dan 1 dari setiap baris
-        const parsedData = results.data.slice(1).map((row) => {
-          return {
-            text: row[0] || "", // kolom pertama
-            label: row[1] || "", // kolom kedua
-          };
-        });
+      transformHeader: (header) => header.trim().toLowerCase(),
+      complete: (results) => {
+        const raw = results.data;
 
-        // Panggil fungsi parent
-        onCSVParsed(parsedData);
+        const parsedData = raw.map((row, index) => ({
+          id: index + 1,
+          text: row.text?.trim() || '',
+          emotion: validEmotions[row.emotion?.toLowerCase().trim()] || '',
+        })).filter(item => item.text !== '');
+
+        onDataParsed(parsedData);
       },
     });
   };
 
   return (
-    <div>
+    <div style={{ marginBottom: '1rem' }}>
       <input type="file" accept=".csv" onChange={handleFileUpload} />
     </div>
   );
-}
+};
 
-export default InputFile;
+export default InputCSV;

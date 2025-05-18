@@ -5,13 +5,13 @@ import {
   updatePreprocessing,
   deletePreprocessing,
 } from '../../utils/api/preprocessing';
-import { fetchAllLabels } from '../../utils/api/dataCollection';
+// import { fetchAllLabels } from '../../utils/api/dataCollection';
 
 function PreprocessingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [preprocessingData, setPreprocessingData] = useState([]);
-  const [labelList, setLabelList] = useState([]);
+  // const [labelList, setLabelList] = useState([]);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     itemsPerPage: 10,
@@ -19,10 +19,10 @@ function PreprocessingPage() {
     totalPages: 0,
   });
 
-  const loadLabels = async () => {
-    const labels = await fetchAllLabels();
-    setLabelList(labels);
-  };
+  // const loadLabels = async () => {
+  //   const labels = await fetchAllLabels();
+  //   setLabelList(labels);
+  // };
 
   const loadPreprocessingData = async (page, limit) => {
     try {
@@ -88,7 +88,7 @@ function PreprocessingPage() {
       setError(null);
 
       try {
-        await loadLabels();
+        // await loadLabels();
         await loadPreprocessingData(1, 10);
         setIsLoading(false);
       } catch (err) {
@@ -131,7 +131,7 @@ function PreprocessingPage() {
           data={preprocessingData}
           onUpdate={handleUpdate}
           onDelete={handleDelete}
-          labelList={labelList}
+          // labelList={labelList}
           pagination={pagination}
           onPageChange={handlePageChange}
         />

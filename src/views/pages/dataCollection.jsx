@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import TabelDataset from '../../components/dataColection/tabelDataset';
-import InputFile from '../../components/dataColection/inputCSV';
+import InputCSV from '../../components/dataColection/inputCSV';
 import AddSave from '../../components/dataColection/addSave';
-import { saveManualDataset, fetchDatasets, fetchAllLabels } from '../../utils/api/dataCollection';
-import { v4 as uuidv4 } from 'uuid';
+import { addDatasetData, fetchDatasets, deleteDatasetData } from '../../utils/api/dataCollection';
 
-function DataCollectionPage() {
-  const [dataset, setDataset] = useState([]);
-  const [existingData, setExistingData] = useState([]);
-  const [labelList, setLabelList] = useState([]);
-  const [isProcessing, setIsProcessing] = useState(false); // State untuk menandai proses backend
+function DataCollectionPage({ onUpdate }) {
+  const [existingData, setExistingData] = useState([]); // data dari API
+  const [dataset, setDataset] = useState([]);           // data baru dari CSV atau input manual
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isAddingNew, setIsAddingNew] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // Gabungkan existingData dan dataset untuk ditampilkan
+  const combinedData = [...existingData, ...dataset];
 
   useEffect(() => {
     const loadInitialData = async () => {
       try {
         await loadDatasets();
-        await loadLabels();
       } catch (error) {
-        console.error('Gagal mengambil data:', error);
+        console.error('Failed to load data:', error);
       }
     };
     loadInitialData();
@@ -28,7 +31,7 @@ function DataCollectionPage() {
     let allData = [];
     let hasMore = true;
 
-    setIsProcessing(true); // Mulai proses
+    setIsProcessing(true);
     try {
       while (hasMore) {
         const response = await fetchDatasets(page, 50);
@@ -43,109 +46,112 @@ function DataCollectionPage() {
       setExistingData(
         allData.map((item) => ({
           id: item.id,
-          text: item.text_data,
-          label: item.id_label,
+          text: item.text,
+          emotion: item.emotion,
+          inserted_at: item.inserted_at,
           isNew: false,
         }))
       );
     } finally {
-      setIsProcessing(false); // Selesai proses
+      setIsProcessing(false);
     }
   };
-
-  const loadLabels = async () => {
-    setIsProcessing(true); // Mulai proses
-    try {
-      const labels = await fetchAllLabels();
-      setLabelList(labels);
-    } finally {
-      setIsProcessing(false); // Selesai proses
-    }
-  };
-
-  const filterDuplicates = (data) =>
-    data.filter((item) =>
-      existingData.some((existing) => existing.text === item.text && existing.label === item.label)
-    );
 
   const handleSave = async () => {
-    const duplicates = filterDuplicates(dataset);
-    const uniqueData = dataset.filter(
-      (item) =>
-        !existingData.some(
-          (existing) => existing.text === item.text && existing.label === item.label
-        )
+    const newData = dataset.filter(item => 
+      !existingData.some(existing => 
+        existing.text === item.text && existing.emotion === item.emotion
+      )
     );
 
-    if (duplicates.length > 0) {
-      alert(
-        duplicates.length === 1
-          ? 'Data sudah ada, silakan ubah kembali.'
-          : 'Ada beberapa data yang sudah ada sebelumnya.'
-      );
-
-      if (uniqueData.length === 0) return;
+    if (newData.length === 0) {
+      alert('No new data to save!');
+      return;
     }
 
-    setIsProcessing(true); // Mulai proses
+    setIsProcessing(true);
     try {
-      await saveManualDataset(
-        uniqueData.map((item) => ({
-          text_data: item.text,
-          id_label: item.label,
+      await addDatasetData(
+        newData.map(item => ({
+          text: item.text,
+          emotion: item.emotion
         }))
       );
-      alert('Data berhasil disimpan!');
+      alert('Data saved successfully!');
       setDataset([]);
+      setIsAddingNew(false);
+      setCurrentPage(1);
       await loadDatasets();
-    } catch {
-      alert('Gagal menyimpan data.');
+    } catch (error) {
+      console.error('Save error:', error);
+      alert('Failed to save data');
     } finally {
-      setIsProcessing(false); // Selesai proses
+      setIsProcessing(false);
     }
   };
 
-  const handleCSVParsed = (newData) => {
-    const updatedLabelList = [...labelList];
-
-    const formattedData = newData.map((item) => {
-      const labelName = item.label.trim().toLowerCase();
-
-      let labelObj = updatedLabelList.find(
-        (label) => label.emotion_name.toLowerCase() === labelName
-      );
-
-      if (!labelObj) {
-        labelObj = {
-          id_label: uuidv4(),
-          emotion_name: labelName,
-        };
-        updatedLabelList.push(labelObj);
-      }
-
-      return {
-        id: uuidv4(),
-        text: item.text,
-        label: labelObj.id_label,
-        label_name: labelObj.emotion_name,
-        isNew: true,
-      };
-    });
-
-    setLabelList(updatedLabelList);
-    setDataset((prev) => [...prev, ...formattedData]);
+  const handleDelete = async (ids) => {
+    if (!window.confirm('Are you sure you want to delete selected data?')) return;
+    
+    setIsProcessing(true);
+    try {
+      await deleteDatasetData(ids);
+      alert('Data deleted successfully!');
+      await loadDatasets();
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Failed to delete data');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
+  // Fungsi update untuk dataset baru (input manual atau CSV)
   const handleUpdate = (id, field, value) => {
-    setDataset((prev) => prev.map((item) => (item.id === id ? { ...item, [field]: value } : item)));
+    // Cek dulu apakah id ada di dataset baru
+    const indexInDataset = dataset.findIndex(item => item.id === id);
+    if (indexInDataset >= 0) {
+      const updatedDataset = [...dataset];
+      updatedDataset[indexInDataset] = {
+        ...updatedDataset[indexInDataset],
+        [field]: value,
+      };
+      setDataset(updatedDataset);
+    } else {
+      // Bisa dikembangkan untuk edit existingData jika perlu
+      // atau alert bahwa hanya data baru yang bisa diedit
+      alert('Hanya data baru yang bisa diedit!');
+      return;
+    }
+
+    // Validasi input
+    if (field === 'text' && (!value || value.trim() === '')) {
+      alert('Teks tidak boleh kosong!');
+      return;
+    }
+    if (field === 'emotion' && !value) {
+      alert('Pilih emosi yang valid!');
+      return;
+    }
+
+    onUpdate && onUpdate(id, field, value);
   };
 
-  const handleAddRow = () => {
-    setDataset((prev) => [...prev, { id: uuidv4(), text: '', label: '', isNew: true }]);
+  const handleAddNewData = () => {
+    const newItem = {
+      id: Date.now(),
+      text: '',
+      emotion: '',
+      isNew: true,
+    };
+    setDataset(prev => [...prev, newItem]);
+    setIsAddingNew(true);
+    setCurrentPage(1); // halaman tidak pindah
   };
 
   const handleCancel = () => {
     setDataset([]);
+    setIsAddingNew(false);
   };
 
   return (
@@ -154,22 +160,23 @@ function DataCollectionPage() {
       <section>
         <div className='tabel'>
           <TabelDataset
-            dataset={[...existingData, ...dataset]}
+            dataset={combinedData}
             onUpdate={handleUpdate}
-            labelList={labelList}
+            onDelete={handleDelete}
+            isProcessing={isProcessing}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            itemsPerPage={itemsPerPage}
           />
           <AddSave
-            onAddData={handleAddRow}
+            onAddData={handleAddNewData}
             onSaveData={handleSave}
             onCancel={handleCancel}
             hasNewData={dataset.length > 0}
-            isProcessing={isProcessing} // Kirim state processing ke komponen AddSave
+            isProcessing={isProcessing}
           />
         </div>
-        <InputFile 
-          onCSVParsed={handleCSVParsed} 
-          disabled={isProcessing} // Tambahkan disabled state untuk input file
-        />
+        <InputCSV onDataParsed={setDataset} />
       </section>
     </div>
   );
