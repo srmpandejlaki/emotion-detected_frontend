@@ -74,7 +74,7 @@ function HomeProcessingPage() {
         return;
       }
   
-      // ✅ Tampilkan hasil split
+      // Tampilkan hasil split
       console.log('Split Result:', splitResult);
       alert(`Dataset berhasil dibagi:\nTrain: ${splitResult.train_size}\nTest: ${splitResult.test_size}`);
   
