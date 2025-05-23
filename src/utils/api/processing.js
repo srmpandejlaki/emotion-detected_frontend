@@ -39,6 +39,7 @@ export const getModels = async () => {
   try {
     const response = await fetch(`${BASE_URL}/process/models/`);
     const data = await response.json();
+    console.log(data);
     return { error: false, data };
   } catch (error) {
     console.error("Gagal mengambil daftar model:", error);
@@ -59,28 +60,37 @@ export const getModel = async (modelId) => {
 };
 
 // Ambil evaluasi model
-export const getModelEvaluation = async (modelId) => {
+export async function getModelEvaluation(modelId) {
   try {
     const response = await fetch(`${BASE_URL}/process/model/evaluation/${modelId}`);
-    const data = await response.json();
-    return { error: false, data };
+    const result = await response.json();
+
+    if (!response.ok) {
+      return { error: result.error || "Unknown error" };
+    }
+
+    return { data: result };
   } catch (error) {
-    console.error(`Gagal mengambil evaluasi model ${modelId}:`, error);
+    return { error: error.message || "Network error" };
+  }
+}
+
+
+// Ambil statistik TF-IDF model
+export const fetchTfidfStats = async (modelId, page = 1, limit = 10) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/process/model/tfidf-stats/${modelId}?page=${page}&limit=${limit}`
+    );
+    if (!response.ok) throw new Error("Gagal mengambil data TF-IDF");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("TF-IDF error:", error.message);
     return { error: true };
   }
 };
 
-// Ambil statistik TF-IDF model
-export const fetchTfidfStats = async (modelId) => {
-  try {
-    const response = await fetch(`${BASE_URL}/process/model/tfidf-stats/${modelId}`);
-    const data = await response.json();
-    return { error: false, data };
-  } catch (error) {
-    console.error(`Gagal mengambil TF-IDF stats model ${modelId}:`, error);
-    return { error: true };
-  }
-};
 
 // Ambil probabilitas prior model
 export const fetchProbPrior = async (modelId) => {

@@ -22,11 +22,12 @@ function MetrixPage() {
         const modelId = latestModel.id;
 
         const evaluationResult = await getModelEvaluation(modelId);
-        if (evaluationResult.error) {
+        if (evaluationResult.error || !evaluationResult.data) {
           setError(true);
         } else {
-          setMetrics(evaluationResult.data);
+          setMetrics(evaluationResult.data); // data langsung berisi objek JSON evaluasi
         }
+        
       } catch (e) {
         console.error("Terjadi kesalahan saat mengambil evaluasi model:", e);
         setError(true);

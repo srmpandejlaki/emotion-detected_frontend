@@ -1,27 +1,30 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { fetchPredictResults } from '../../utils/api/processing'; // sesuaikan path-nya kalau berbeda
+import { getModels } from '../../utils/api/processing'; // sesuaikan path-nya kalau berbeda
 
-const ResultPage = ({ modelId }) => {
+const ResultPage = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const getResults = useCallback(async () => {
     setLoading(true);
-    const response = await fetchPredictResults(modelId);
+    const response = await getModels();
+    console.log(response);
     if (!response.error) {
-      setResults(response.data);
+      setResults(response.data.models);
     } else {
       setResults([]);
     }
     setLoading(false);
-  }, [modelId]);
+  }, []);
 
   useEffect(() => {
-    console.log("modelId: ", modelId);
-    if (modelId) {
-      getResults();
-    }
-  }, [modelId, getResults]);
+    // console.log("modelId: ", modelId);
+    getResults();
+  }, []);
+
+  if (results.length === 0) {
+    return null;
+  }
 
   return (
     <div style={{ padding: '1rem' }}>
