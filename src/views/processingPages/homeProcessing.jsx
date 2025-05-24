@@ -4,12 +4,14 @@ import TotalData from '../../components/processing/totalData';
 import RatioData from '../../components/processing/ratioData';
 import ButtonProcess from '../../components/processing/buttonProcess';
 
-import { fetchPreprocessedData } from '../../utils/api/preprocessing';
-import { splitDataset, trainModel } from '../../utils/api/processing';
+import { splitDataset, trainModel, fetchProcessedData } from '../../utils/api/processing';
 
 function HomeProcessingPage() {
   const [totalData, setTotalData] = useState({ new: 0, old: 0, total: 0 });
-  const [dataRatio, setDataRatio] = useState({ train: 0.8, test: 0.2 });
+  const [dataRatio, setDataRatio] = useState({
+    testRatio: 0, // Hanya menyimpan ratio yang dipilih
+  });
+  const [splitResult, setSplitResult] = useState(null); // State untuk menyimpan hasil split
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pagination, setPagination] = useState({
@@ -21,7 +23,7 @@ function HomeProcessingPage() {
 
   const loadInitialData = async (page, limit) => {
     setIsLoading(true);
-    const result = await fetchPreprocessedData(page, limit);
+    const result = await fetchProcessedData(page, limit);
 
     if (!result.error) {
       const data = result.data;
@@ -44,7 +46,6 @@ function HomeProcessingPage() {
   useEffect(() => {
     const startPreprocessing = async () => {
       setIsLoading(true);
-
       try {
         await loadInitialData(1, 10);
         setIsLoading(false);
@@ -57,39 +58,35 @@ function HomeProcessingPage() {
     startPreprocessing();
   }, []);
 
+  const handleRatioChange = async (newTestRatio) => {
+    const response = await splitDataset(newTestRatio);
+    if (response.error) {
+      alert('Gagal membagi dataset: ' + response.message);
+    } else {
+      setSplitResult(response.data);
+    }
+    setDataRatio({
+      testRatio: newTestRatio,
+    });
+  };
+
   const handleProcess = async () => {
     setIsLoading(true);
     try {
-      const testSize = dataRatio.test / (dataRatio.train + dataRatio.test); // hitung rasio data uji
-  
-      const splitResult = await splitDataset(testSize);
-  
-      if (splitResult.error) {
-        alert('Gagal membagi dataset: ' + splitResult.message);
-        setIsLoading(false);
-        return;
-      }
-  
-      const { train_size, test_size } = splitResult.data;
-      console.log(train_size);
-      alert(`Dataset berhasil dibagi:\nTrain: ${train_size}\nTest: ${test_size}`);
-  
-      const trainResult = await trainModel(testSize);
-  
+      const trainResult = await trainModel(dataRatio.testRatio);
+
       if (trainResult.error) {
         alert('Gagal melatih model: Terjadi kesalahan');
       } else {
         alert('Proses pelatihan berhasil!');
       }
-  
     } catch (err) {
       console.error(err);
       alert('Terjadi kesalahan: ' + err.message);
     }
-  
     setIsLoading(false);
-  };  
-  
+  };
+
   const handlePageChange = (newPage) => {
     loadInitialData(newPage, pagination.itemsPerPage);
   };
@@ -114,15 +111,15 @@ function HomeProcessingPage() {
               totalData={totalData.total}
             />
             <RatioData
-              totalData={totalData.total}
-              trainRatio={dataRatio.train}
-              testRatio={dataRatio.test}
-              onChangeRatio={setDataRatio}
+              testRatio={dataRatio.testRatio}
+              onChangeRatio={handleRatioChange}
+              trainCount={splitResult?.train_size || 0}
+              testCount={splitResult?.test_size || 0}
             />
           </div>
         </div>
       </section>
-      <div className='button-container' >
+      <div className='button-container'>
         {isLoading && <p>Memuat data...</p>}
         <ButtonProcess onProcess={handleProcess} />
       </div>

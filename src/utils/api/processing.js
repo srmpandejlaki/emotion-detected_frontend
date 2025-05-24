@@ -1,6 +1,17 @@
 import { BASE_URL } from '../index';
 
 // Split dataset (latih & uji)
+
+export const fetchProcessedData = async (page = 1, limit = 10, filter = 'all') => {
+  try {
+    const response = await fetch(`${BASE_URL}/dataset/preprocessed/data?page=${page}&limit=${limit}&filter=${filter}`);
+    const data = await response.json();
+    return { error: false, data };
+  } catch (error) {
+    console.error("Gagal fetch data preprocessed:", error);
+    return { error: true, data: [] };
+  }
+};
 export const splitDataset = async (testsize) => {
   try {
     const response = await fetch(`${BASE_URL}/process/split`, {
