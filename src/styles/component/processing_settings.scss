@@ -2,6 +2,13 @@
 
 .settings {
   width: 30%;
+  @include custom.flexColumn();
+  gap: 1rem;
+  padding: 1rem;
+
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .data {
@@ -15,4 +22,45 @@
 
 .ratioData {
   @include custom.columnGap();
+  margin-bottom: 1rem;
+
+  label {
+    font-size: 1.15rem;
+    margin-right: 0.5rem;
+  }
+
+  option {
+    padding: 0.5rem;
+    border-radius: 4px;
+    background-color: custom.$primary-color;
+    color: custom.$white-color;
+  }
+  select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    // background-color: custom.$primary-color;
+    // color: custom.$white-color;
+    border: none;
+    font-size: 1rem;
+  }
+  option:hover {
+    background-color: custom.$primary-color;
+    color: custom.$white-color;
+  }
+  option:focus {
+    background-color: custom.$primary-color;
+    color: custom.$white-color;
+  }
+  option:active {
+    background-color: custom.$primary-color;
+    color: custom.$white-color;
+  }
+}
+
+.count-summary, .totalDataProcessing {
+  p {
+    font-size: 1.1rem;
+    margin: 0.5rem;
+  }
 }

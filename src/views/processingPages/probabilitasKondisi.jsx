@@ -33,13 +33,13 @@ function KondisiPage() {
   }, []);
 
   return (
-    <div className='kondisi-page'>
+    <div className='section prior-page'>
       <h1>Probabilitas Kondisi</h1>
       {loading && <p>Memuat data...</p>}
       {!loading && error && <p style={{ color: 'red' }}>{error}</p>}
       {!loading && !error && data.length === 0 && <p>Data tidak tersedia</p>}
       {!loading && !error && data.length > 0 && (
-        <table>
+        <table className='prior-table'>
           <thead>
             <tr>
               <th>No</th>

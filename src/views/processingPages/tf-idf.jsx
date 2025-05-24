@@ -32,7 +32,7 @@ function TfIdfPage() {
   };
 
   return (
-    <div>
+    <div className='section prior-page'>
       <h2>Statistik TF-IDF</h2>
       {loading ? (
         <p>Memuat data...</p>
@@ -40,7 +40,7 @@ function TfIdfPage() {
         <p>Tidak ada data TF-IDF tersedia.</p>
       ) : (
         <>
-          <table border='1' cellPadding='6'>
+          <table className='prior-table'>
             <thead>
               <tr>
                 <th>No</th>

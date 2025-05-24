@@ -35,7 +35,7 @@ function TabelProcessing({
 
   return (
     <>
-      <table className='dataset'>
+      <table className='prior-table'>
         <thead>
           <tr>
             <th className='nomor'>No.</th>

@@ -94,7 +94,7 @@ function HomeProcessingPage() {
   return (
     <div className='container'>
       <section>
-        <div className='tabel'>
+        <div className='section prior-page'>
           <TabelProcessing
             data={tableData}
             pagination={pagination}
@@ -117,12 +117,12 @@ function HomeProcessingPage() {
               testCount={splitResult?.test_size || 0}
             />
           </div>
+          <div className='button-container'>
+            {isLoading && <p>Memuat data...</p>}
+            <ButtonProcess onProcess={handleProcess} />
+          </div>
         </div>
       </section>
-      <div className='button-container'>
-        {isLoading && <p>Memuat data...</p>}
-        <ButtonProcess onProcess={handleProcess} />
-      </div>
     </div>
   );
 }

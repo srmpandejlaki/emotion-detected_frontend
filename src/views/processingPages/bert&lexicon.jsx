@@ -37,7 +37,7 @@ function BertLexiconPage() {
   };
 
   return (
-    <div className='bert-lexicon-page'>
+    <div className='bert-lexicon-page prior-page'>
       <section className='output-info'>
         <h2>Hasil Klasifikasi Ganda (Naive Bayes dan BERT + Lexicon)</h2>
         {loading && <p>Memuat data...</p>}
@@ -46,7 +46,7 @@ function BertLexiconPage() {
 
         {!loading && !error && data.length > 0 && (
           <>
-            <table border='1' cellPadding='8'>
+            <table className='prior-table'>
               <thead>
                 <tr>
                   <th>No</th>
