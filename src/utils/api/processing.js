@@ -1,12 +1,12 @@
 import { BASE_URL } from '../index';
 
 // Split dataset (latih & uji)
-export const splitDataset = async (payload) => {
+export const splitDataset = async (testsize) => {
   try {
     const response = await fetch(`${BASE_URL}/process/split`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ test_size : testsize }),
     });
 
     const data = await response.json();
@@ -18,12 +18,12 @@ export const splitDataset = async (payload) => {
 };
 
 // Latih model baru
-export const trainModel = async (payload) => {
+export const trainModel = async (testSize, nbThreshold = 0) => {
   try {
     const response = await fetch(`${BASE_URL}/process/train`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ test_size: testSize, nb_threshold: nbThreshold }),
     });
 
     const data = await response.json();
@@ -37,7 +37,10 @@ export const trainModel = async (payload) => {
 // Ambil daftar semua model
 export const getModels = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/process/models/`);
+    const response = await fetch(`${BASE_URL}/process/models/`, {
+      method: "GET",
+    });
+
     const data = await response.json();
     console.log(data);
     return { error: false, data };
@@ -50,7 +53,10 @@ export const getModels = async () => {
 // Ambil detail 1 model berdasarkan ID
 export const getModel = async (modelId) => {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/${modelId}`);
+    const response = await fetch(`${BASE_URL}/process/model/${modelId}`, {
+      method: "GET",
+    });
+    
     const data = await response.json();
     return { error: false, data };
   } catch (error) {

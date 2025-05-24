@@ -9,7 +9,7 @@ import { splitDataset, trainModel } from '../../utils/api/processing';
 
 function HomeProcessingPage() {
   const [totalData, setTotalData] = useState({ new: 0, old: 0, total: 0 });
-  const [dataRatio, setDataRatio] = useState({ train: 70, test: 30 });
+  const [dataRatio, setDataRatio] = useState({ train: 0.8, test: 0.2 });
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pagination, setPagination] = useState({
@@ -59,14 +59,11 @@ function HomeProcessingPage() {
 
   const handleProcess = async () => {
     setIsLoading(true);
-  
-    const payload = {
-      test_size: dataRatio.test / 100,
-    };
-  
     try {
-      const splitResult = await splitDataset(payload);
-      console.log(payload);
+      const testSize = dataRatio.test / (dataRatio.train + dataRatio.test); // hitung rasio data uji
+  
+      const splitResult = await splitDataset(testSize);
+      console.log(testSize);
   
       if (splitResult.error) {
         alert('Gagal membagi dataset: ' + splitResult.message);
@@ -74,18 +71,16 @@ function HomeProcessingPage() {
         return;
       }
   
-      // Ambil data dari splitResult.data
       const { train_size, test_size } = splitResult.data;
       alert(`Dataset berhasil dibagi:\nTrain: ${train_size}\nTest: ${test_size}`);
   
-      const trainResult = await trainModel(payload);
+      const trainResult = await trainModel(testSize);
   
       if (trainResult.error) {
         alert('Gagal melatih model: Terjadi kesalahan');
       } else {
         alert('Proses pelatihan berhasil!');
-        // loadInitialData(1, 10);
-      }      
+      }
   
     } catch (err) {
       console.error(err);
@@ -93,7 +88,7 @@ function HomeProcessingPage() {
     }
   
     setIsLoading(false);
-  };
+  };  
   
   const handlePageChange = (newPage) => {
     loadInitialData(newPage, pagination.itemsPerPage);
