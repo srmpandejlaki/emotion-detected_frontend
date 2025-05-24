@@ -11,9 +11,10 @@ function ClasifierPage() {
     try {
       setIsLoading(true);
       const response = await predictEmotion(text);
+      console.log('Classification Response:', response);
 
       // Tampilkan hasil klasifikasi ke UI
-      setResult(response.predicted_emotion);
+      setResult(response.Hybrid_Result);
       setIsLoading(false);
     } catch (error) {
       console.error('Error during classification:', error);
@@ -27,7 +28,7 @@ function ClasifierPage() {
       <section className='inputText'>
         <InputText classify={handleClassify} />
         <div className='outputContainer'>
-          <OutputClassifier result={result} isLoading={isLoading}/>
+          <OutputClassifier result={result} isLoading={isLoading} />
         </div>
       </section>
     </div>

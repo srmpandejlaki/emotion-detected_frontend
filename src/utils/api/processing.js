@@ -62,24 +62,24 @@ export const getModels = async () => {
 };
 
 // Ambil detail 1 model berdasarkan ID
-export const getModel = async (modelId) => {
+export const getModel = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/${modelId}`, {
+    const response = await fetch(`${BASE_URL}/process/model`, {
       method: "GET",
     });
 
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error(`Gagal mengambil model ${modelId}:`, error);
+    console.error(`Gagal mengambil model:`, error);
     return { error: true };
   }
 };
 
 // Ambil evaluasi model
-export async function getModelEvaluation(modelId) {
+export async function getModelEvaluation() {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/evaluation/${modelId}`);
+    const response = await fetch(`${BASE_URL}/process/model/evaluation`);
     const result = await response.json();
 
     if (!response.ok) {
@@ -94,10 +94,10 @@ export async function getModelEvaluation(modelId) {
 
 
 // Ambil statistik TF-IDF model
-export const fetchTfidfStats = async (modelId, page = 1, limit = 10) => {
+export const fetchTfidfStats = async (page = 1, limit = 10) => {
   try {
     const response = await fetch(
-      `${BASE_URL}/process/model/tfidf-stats/${modelId}?page=${page}&limit=${limit}`
+      `${BASE_URL}/process/model/tfidf-stats?page=${page}&limit=${limit}`
     );
     const result = await response.json();
 
@@ -118,49 +118,51 @@ export const fetchTfidfStats = async (modelId, page = 1, limit = 10) => {
 };
 
 // Ambil probabilitas prior model
-export const fetchProbPrior = async (modelId) => {
+export const fetchProbPrior = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/fetch-prob-prior/${modelId}`);
+    const response = await fetch(`${BASE_URL}/process/model/fetch-prob-prior`);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error(`Gagal mengambil prior probability model ${modelId}:`, error);
+    console.error(`Gagal mengambil prior probability model:`, error);
     return { error: true };
   }
 };
 
 // Ambil probabilitas kondisi model
-export const fetchProbCondition = async (modelId) => {
+export const fetchProbCondition = async (page = 1, limit = 10) => {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/fetch-prob-condition/${modelId}`);
+    const response = await fetch(`${BASE_URL}/process/model/fetch-prob-condition?page=${page}&limit=${limit}`);
+    console.log(response);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error(`Gagal mengambil conditional probability model ${modelId}:`, error);
+    console.error(`Gagal mengambil conditional probability model:`, error);
     return { error: true };
   }
 };
 
 // Ambil hasil prediksi dari model (berisi info klasifikasi)
-export const fetchPredictResults = async (modelId) => {
+export const fetchPredictResults = async (page = 1, limit = 10) => {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/predict-results/${modelId}`);
+    const response = await fetch(`${BASE_URL}/process/model/predict-results?page=${page}&limit=${limit}`);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error(`Gagal mengambil hasil prediksi model ${modelId}:`, error);
+    console.error(`Gagal mengambil hasil prediksi model:`, error);
     return { error: true };
   }
 };
 
 // Ambil hasil proses BERT + leksikon untuk model tertentu
-export const fetchBertLexicon = async (modelId) => {
+export const fetchBertLexicon = async (page = 1, limit = 10) => {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/fetch-bert-lexicon/${modelId}`);
+    const response = await fetch(`${BASE_URL}/process/model/fetch-bert-lexicon?page=${page}&limit=${limit}`);
     const data = await response.json();
+
     return { error: false, data };
   } catch (error) {
-    console.error(`Gagal mengambil data BERT + leksikon untuk model ${modelId}:`, error);
+    console.error(`Gagal mengambil data BERT + leksikon untuk model:`, error);
     return { error: true };
   }
 };
