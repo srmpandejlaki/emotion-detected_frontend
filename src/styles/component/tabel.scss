@@ -65,27 +65,3 @@ th {
   gap: 1rem;
   margin-top: 1rem;
 }
-
-// tf-idf
-
-.tfidf {
-  @include custom.flexColumn();
-  gap: 1rem;
-  width: 100%;
-}
-.tfidf th, td {
-  border: 1px solid custom.$primary-color;
-  padding-block: 0.3rem;
-}
-.tfidf th {
-  padding-inline: 0.2rem;
-}
-.nomor-tfidf {
-  width: 1rem;
-}
-.tf-tfidf {
-  width: 2rem;
-}
-.kata-tfidf {
-  width: 13rem;
-}

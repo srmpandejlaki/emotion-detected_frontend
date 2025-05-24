@@ -31,9 +31,6 @@
 
   option {
     padding: 0.5rem;
-    border-radius: 4px;
-    background-color: custom.$primary-color;
-    color: custom.$white-color;
   }
   select {
     width: 100%;
@@ -41,7 +38,7 @@
     border-radius: 4px;
     // background-color: custom.$primary-color;
     // color: custom.$white-color;
-    border: none;
+    border: 1px solid black;
     font-size: 1rem;
   }
   option:hover {

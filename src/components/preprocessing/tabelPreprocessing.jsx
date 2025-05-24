@@ -45,8 +45,8 @@ function TabelPreprocessing({
   return (
     <div>
       {hasData ? (
-        <div className='tabel-dataset-wrapper'>
-          <table className='dataset'>
+        <div className='section prior-page'>
+          <table className='prior-table'>
             <thead>
               <tr>
                 <th className='nomor'>No</th>

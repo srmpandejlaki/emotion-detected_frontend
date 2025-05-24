@@ -22,17 +22,17 @@ function TabelDataset({
     labelList && labelList.length > 0
       ? labelList
       : [
-          { emotion_name: 'senang' },
-          { emotion_name: 'percaya' },
-          { emotion_name: 'terkejut' },
+          { emotion_name: 'joy' },
+          { emotion_name: 'trust' },
+          { emotion_name: 'shock' },
           { emotion_name: 'netral' },
-          { emotion_name: 'takut' },
-          { emotion_name: 'sedih' },
-          { emotion_name: 'marah' },
+          { emotion_name: 'fear' },
+          { emotion_name: 'sadness' },
+          { emotion_name: 'angers' },
         ];
 
   return (
-    <div className='prior-page'>
+    <div className='section prior-page'>
       {dataset.length > 0 ? (
         <>
           <table className='prior-table'>
