@@ -18,12 +18,12 @@ export const splitDataset = async (testsize) => {
 };
 
 // Latih model baru
-export const trainModel = async (testSize, nbThreshold = 0) => {
+export const trainModel = async (testSize) => {
   try {
     const response = await fetch(`${BASE_URL}/process/train`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ test_size: testSize, nb_threshold: nbThreshold }),
+      body: JSON.stringify({ test_size: testSize}),
     });
 
     const data = await response.json();
@@ -56,7 +56,7 @@ export const getModel = async (modelId) => {
     const response = await fetch(`${BASE_URL}/process/model/${modelId}`, {
       method: "GET",
     });
-    
+
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
@@ -88,15 +88,23 @@ export const fetchTfidfStats = async (modelId, page = 1, limit = 10) => {
     const response = await fetch(
       `${BASE_URL}/process/model/tfidf-stats/${modelId}?page=${page}&limit=${limit}`
     );
-    if (!response.ok) throw new Error("Gagal mengambil data TF-IDF");
-    const data = await response.json();
-    return data;
+    const result = await response.json();
+
+    if (!response.ok) {
+      return { error: result.error || "Gagal mengambil data TF-IDF" };
+    }
+
+    return {
+      error: false,
+      data: result.data,
+      total_pages: result.total_pages,
+      current_page: result.current_page,
+    };
   } catch (error) {
     console.error("TF-IDF error:", error.message);
     return { error: true };
   }
 };
-
 
 // Ambil probabilitas prior model
 export const fetchProbPrior = async (modelId) => {

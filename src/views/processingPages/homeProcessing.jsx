@@ -63,7 +63,6 @@ function HomeProcessingPage() {
       const testSize = dataRatio.test / (dataRatio.train + dataRatio.test); // hitung rasio data uji
   
       const splitResult = await splitDataset(testSize);
-      console.log(testSize);
   
       if (splitResult.error) {
         alert('Gagal membagi dataset: ' + splitResult.message);
@@ -72,6 +71,7 @@ function HomeProcessingPage() {
       }
   
       const { train_size, test_size } = splitResult.data;
+      console.log(train_size);
       alert(`Dataset berhasil dibagi:\nTrain: ${train_size}\nTest: ${test_size}`);
   
       const trainResult = await trainModel(testSize);
