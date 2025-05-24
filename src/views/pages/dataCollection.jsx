@@ -6,7 +6,7 @@ import { addDatasetData, fetchDatasets, deleteDatasetData } from '../../utils/ap
 
 function DataCollectionPage({ onUpdate }) {
   const [existingData, setExistingData] = useState([]); // data dari API
-  const [dataset, setDataset] = useState([]);           // data baru dari CSV atau input manual
+  const [dataset, setDataset] = useState([]); // data baru dari CSV atau input manual
   const [isProcessing, setIsProcessing] = useState(false);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,10 +58,11 @@ function DataCollectionPage({ onUpdate }) {
   };
 
   const handleSave = async () => {
-    const newData = dataset.filter(item => 
-      !existingData.some(existing => 
-        existing.text === item.text && existing.emotion === item.emotion
-      )
+    const newData = dataset.filter(
+      (item) =>
+        !existingData.some(
+          (existing) => existing.text === item.text && existing.emotion === item.emotion
+        )
     );
 
     if (newData.length === 0) {
@@ -72,9 +73,9 @@ function DataCollectionPage({ onUpdate }) {
     setIsProcessing(true);
     try {
       await addDatasetData(
-        newData.map(item => ({
+        newData.map((item) => ({
           text: item.text,
-          emotion: item.emotion
+          emotion: item.emotion,
         }))
       );
       alert('Data saved successfully!');
@@ -92,7 +93,7 @@ function DataCollectionPage({ onUpdate }) {
 
   const handleDelete = async (ids) => {
     if (!window.confirm('Are you sure you want to delete selected data?')) return;
-    
+
     setIsProcessing(true);
     try {
       await deleteDatasetData(ids);
@@ -109,7 +110,7 @@ function DataCollectionPage({ onUpdate }) {
   // Fungsi update untuk dataset baru (input manual atau CSV)
   const handleUpdate = (id, field, value) => {
     // Cek dulu apakah id ada di dataset baru
-    const indexInDataset = dataset.findIndex(item => item.id === id);
+    const indexInDataset = dataset.findIndex((item) => item.id === id);
     if (indexInDataset >= 0) {
       const updatedDataset = [...dataset];
       updatedDataset[indexInDataset] = {
@@ -144,7 +145,7 @@ function DataCollectionPage({ onUpdate }) {
       emotion: '',
       isNew: true,
     };
-    setDataset(prev => [...prev, newItem]);
+    setDataset((prev) => [...prev, newItem]);
     setIsAddingNew(true);
     setCurrentPage(1); // halaman tidak pindah
   };

@@ -4,7 +4,7 @@ import Papa from 'papaparse';
 
 const InputCSV = ({ onDataParsed }) => {
   const validEmotions = {
-    joy: 'senang',
+    joy: 'joy',
     trust: 'trust',
     shock: 'shock',
     netral: 'netral',
@@ -24,11 +24,13 @@ const InputCSV = ({ onDataParsed }) => {
       complete: (results) => {
         const raw = results.data;
 
-        const parsedData = raw.map((row, index) => ({
-          id: index + 1,
-          text: row.text?.trim() || '',
-          emotion: validEmotions[row.emotion?.toLowerCase().trim()] || '',
-        })).filter(item => item.text !== '');
+        const parsedData = raw
+          .map((row, index) => ({
+            id: index + 1,
+            text: row.text?.trim() || '',
+            emotion: validEmotions[row.emotion?.toLowerCase().trim()] || '',
+          }))
+          .filter((item) => item.text !== '');
 
         onDataParsed(parsedData);
       },
@@ -36,8 +38,9 @@ const InputCSV = ({ onDataParsed }) => {
   };
 
   return (
-    <div style={{ marginBottom: '1rem' }}>
-      <input type="file" accept=".csv" onChange={handleFileUpload} />
+    <div className='input-csv'>
+      <h2>Upload CSV File</h2>
+      <input type='file' accept='.csv' onChange={handleFileUpload} />
     </div>
   );
 };
