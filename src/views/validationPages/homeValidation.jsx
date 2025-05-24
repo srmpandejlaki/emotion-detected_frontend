@@ -37,7 +37,7 @@ function HomeValidationPage() {
   }
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div className='section prior-page'>
       <h2>Prediction Results</h2>
       {loading ? (
         <p>Loading...</p>
@@ -45,7 +45,7 @@ function HomeValidationPage() {
         <p>No results available.</p>
       ) : (
         <>
-          <table border='1' cellPadding='8' style={{ borderCollapse: 'collapse', width: '100%' }}>
+          <table className='prior-table'>
             <thead>
               <tr>
                 <th>No</th>

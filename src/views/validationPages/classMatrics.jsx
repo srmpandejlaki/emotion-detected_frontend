@@ -73,10 +73,10 @@ function MatricsValidationPage() {
 
         <div className='container-matrics'>
           <div className='section'>
-            <h2 className='section-title'>Akurasi</h2>
-            <p className='value'>{(metrics.accuracy * 100).toFixed(2)}%</p>
-          </div>
-          <div className='section'>
+            <div className='setting'>
+              <h2 className='section-title'>Akurasi</h2>
+              <p>{(metrics.accuracy * 100).toFixed(2)}%</p>
+            </div>
             <h2 className='section-title'>Precision & Recall per Emosi</h2>
             <table className='metrics-table'>
               <thead>
