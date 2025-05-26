@@ -5,15 +5,15 @@ import AddSave from '../../components/dataColection/addSave';
 import { addDatasetData, fetchDatasets, deleteDatasetData } from '../../utils/api/dataCollection';
 
 function DataCollectionPage({ onUpdate }) {
-  const [existingData, setExistingData] = useState([]); // data dari API
-  const [dataset, setDataset] = useState([]); // data baru dari CSV atau input manual
+  const [existingData, setExistingData] = useState([]);
+  const [dataset, setDataset] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Gabungkan existingData dan dataset untuk ditampilkan
   const combinedData = [...existingData, ...dataset];
+  const totalData = combinedData.length;
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -107,9 +107,7 @@ function DataCollectionPage({ onUpdate }) {
     }
   };
 
-  // Fungsi update untuk dataset baru (input manual atau CSV)
   const handleUpdate = (id, field, value) => {
-    // Cek dulu apakah id ada di dataset baru
     const indexInDataset = dataset.findIndex((item) => item.id === id);
     if (indexInDataset >= 0) {
       const updatedDataset = [...dataset];
@@ -119,13 +117,10 @@ function DataCollectionPage({ onUpdate }) {
       };
       setDataset(updatedDataset);
     } else {
-      // Bisa dikembangkan untuk edit existingData jika perlu
-      // atau alert bahwa hanya data baru yang bisa diedit
       alert('Hanya data baru yang bisa diedit!');
       return;
     }
 
-    // Validasi input
     if (field === 'text' && (!value || value.trim() === '')) {
       alert('Teks tidak boleh kosong!');
       return;
@@ -175,6 +170,7 @@ function DataCollectionPage({ onUpdate }) {
             onCancel={handleCancel}
             hasNewData={dataset.length > 0}
             isProcessing={isProcessing}
+            setTotalData={totalData}
           />
         </div>
         <InputCSV onDataParsed={setDataset} />
