@@ -1,26 +1,36 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { getModels } from '../../utils/api/processing'; // sesuaikan path-nya kalau berbeda
+import React, { useEffect, useState } from 'react';
+import { fetchPredictResults } from '../../utils/api/processing'; // sesuaikan path-nya kalau berbeda
+import NewPagination from '../../components/base/NewPagination';
 
 const ResultPage = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const getResults = useCallback(async () => {
+  const loadData = async (pageToLoad = 1) => {
     setLoading(true);
-    const response = await getModels();
-    console.log(response);
-    if (!response.error) {
-      setResults(response.data.models);
-    } else {
-      setResults([]);
+    const predictRes = await fetchPredictResults(pageToLoad);
+    console.log('Prediction Results Response:', predictRes);
+    if (!predictRes.error && predictRes.data) {
+      setResults(predictRes.data.data);
+      setTotalPages(predictRes.data.total_pages);
+      setPage(predictRes.data.current_page);
     }
     setLoading(false);
-  }, []);
+  };
 
   useEffect(() => {
-    // console.log("modelId: ", modelId);
-    getResults();
+    const loadResults = async () => {
+      await loadData(1);
+    };
+
+    loadResults();
   }, []);
+
+  const handlePageChange = (newPage) => {
+    loadData(newPage);
+  };
 
   if (results.length === 0) {
     return null;
@@ -34,32 +44,35 @@ const ResultPage = () => {
       ) : results.length === 0 ? (
         <p>No results available.</p>
       ) : (
-        <table
-          border="1"
-          cellPadding="8"
-          style={{ borderCollapse: 'collapse', width: '100%' }}
-        >
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Text</th>
-              <th>True Label</th>
-              <th>Predicted Label</th>
-              <th>Prediction Source</th>
-            </tr>
-          </thead>
-          <tbody>
-            {results.map((item, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{item.text}</td>
-                <td>{item.true_label}</td>
-                <td>{item.predicted_label}</td>
-                <td>{item.pred_source}</td>
+        <>
+          <table border='1' cellPadding='8' style={{ borderCollapse: 'collapse', width: '100%' }}>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Text</th>
+                <th>Actual Label</th>
+                <th>Predicted Label</th>
+                <th>Prediction Source</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {results.map((item, index) => (
+                <tr key={index}>
+                  <td>{(page - 1) * 10 + index + 1}</td>
+                  <td>{item.text}</td>
+                  <td>{item.true_label}</td>
+                  <td>{item.predicted_label}</td>
+                  <td>{item.pred_source}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <NewPagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
     </div>
   );

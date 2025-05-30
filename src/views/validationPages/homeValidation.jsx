@@ -1,49 +1,81 @@
-// import React, { useState, useEffect } from "react";
-// import TabelProcessing from '../../components/validation/tabelValidation';
-// import ButtonProcess from "../../components/validation/buttonProcess";
-
-// import { fetchTestingData, processValidationDataset } from "../../utils/api/validation";
+import React, { useEffect, useState } from 'react';
+import { fetchPredictResults } from '../../utils/api/processing'; // sesuaikan path-nya kalau berbeda
+import NewPagination from '../../components/base/NewPagination';
 
 function HomeValidationPage() {
-  // const [testData, setTestData] = useState([]);
-  // const [isProcessing, setIsProcessing] = useState(false);
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  // const loadTestData = async () => {
-  //   const result = await fetchTestingData();
-  //   if (result.success) {
-  //     setTestData(result.data);
-  //   } else {
-  //     alert("Gagal memuat data testing.");
-  //   }
-  // };
+  const loadData = async (pageToLoad = 1) => {
+    setLoading(true);
+    const predictRes = await fetchPredictResults(pageToLoad);
+    console.log('Prediction Results Response:', predictRes);
+    if (!predictRes.error && predictRes.data) {
+      setResults(predictRes.data.data);
+      setTotalPages(predictRes.data.total_pages);
+      setPage(predictRes.data.current_page);
+    }
+    setLoading(false);
+  };
 
-  // const handleProcess = async () => {
-  //   setIsProcessing(true);
-  //   const result = await processValidationDataset();
-  //   if (result.success) {
-  //     alert("Data berhasil divalidasi!");
-  //     loadTestData(); // refresh tabel
-  //   } else {
-  //     alert("Gagal memproses: " + (result.message || "Terjadi kesalahan."));
-  //   }
-  //   setIsProcessing(false);
-  // };
+  useEffect(() => {
+    const loadResults = async () => {
+      await loadData(1);
+    };
 
-  // useEffect(() => {
-  //   loadTestData();
-  // }, []);
+    loadResults();
+  }, []);
 
-  // return (
-  //   <div className="container">
-  //     <h1>Data Testing</h1>
-  //     <section>
-  //       <div className="tabel">
-  //         <TabelProcessing data={testData} />
-  //       </div>
-  //     </section>
-  //     <ButtonProcess onClick={handleProcess} disabled={isProcessing} />
-  //   </div>
-  // );
+  const handlePageChange = (newPage) => {
+    loadData(newPage);
+  };
+
+  if (results.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className='section prior-page'>
+      <h2>Prediction Results</h2>
+      {loading ? (
+        <p>Loading...</p>
+      ) : results.length === 0 ? (
+        <p>No results available.</p>
+      ) : (
+        <>
+          <table className='prior-table'>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Text</th>
+                <th>Actual Label</th>
+                <th>Predicted Label</th>
+                <th>Prediction Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {results.map((item, index) => (
+                <tr key={index}>
+                  <td>{(page - 1) * 10 + index + 1}</td>
+                  <td>{item.text}</td>
+                  <td>{item.true_label}</td>
+                  <td>{item.predicted_label}</td>
+                  <td>{item.pred_source}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <NewPagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
+    </div>
+  );
 }
 
 export default HomeValidationPage;
