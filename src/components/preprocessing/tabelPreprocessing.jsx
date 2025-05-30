@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import NewPagination from '../base/NewPagination';
 
 function TabelPreprocessing({
   data = [],
@@ -44,8 +45,8 @@ function TabelPreprocessing({
   return (
     <div>
       {hasData ? (
-        <div className='tabel-dataset-wrapper'>
-          <table className='dataset'>
+        <div className='section prior-page'>
+          <table className='prior-table'>
             <thead>
               <tr>
                 <th className='nomor'>No</th>
@@ -115,30 +116,17 @@ function TabelPreprocessing({
           </table>
 
           {pagination.totalPages > 1 && (
-            <div className='pagination-controls'>
-              <button
-                onClick={() => onPageChange(pagination.currentPage - 1)}
-                disabled={pagination.currentPage === 1}
-                className='btn-pagination'
-              >
-                &laquo; Sebelumnya
-              </button>
-              <span className='page-info'>
-                Halaman {pagination.currentPage} dari {pagination.totalPages}
-              </span>
-              <button
-                onClick={() => onPageChange(pagination.currentPage + 1)}
-                disabled={pagination.currentPage === pagination.totalPages}
-                className='btn-pagination'
-              >
-                Selanjutnya &raquo;
-              </button>
-            </div>
+            <NewPagination
+              currentPage={pagination.currentPage}
+              totalPages={pagination.totalPages}
+              onPageChange={onPageChange}
+            />
           )}
         </div>
       ) : (
         <p className='no-data-message'>
-          Tidak ada data pra-pemrosesan yang tersedia. Mohon tambah data terlebih dahulu kemudian lakukan tahap pra-pemrosesan kembali.
+          Tidak ada data pra-pemrosesan yang tersedia. Mohon tambah data terlebih dahulu kemudian
+          lakukan tahap pra-pemrosesan kembali.
         </p>
       )}
     </div>
