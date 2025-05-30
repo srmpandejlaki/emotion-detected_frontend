@@ -117,10 +117,8 @@ function HomeProcessingPage() {
               testCount={splitResult?.test_size || 0}
             />
           </div>
-          <div className='button-container'>
-            {isLoading && <p>Memuat data...</p>}
-            <ButtonProcess onProcess={handleProcess} />
-          </div>
+          {isLoading && <p>Memuat data...</p>}
+          <ButtonProcess onProcess={handleProcess} />
         </div>
       </section>
     </div>
