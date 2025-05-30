@@ -19,6 +19,9 @@ function NavProcessing() {
       <Link to='/processing/bert-lexicon' className='navItem'>
         Bert&Lexicon
       </Link>
+      <Link to='/processing/metrix-processing' className='navItem'>
+        Hasil Pemrosesan
+      </Link>
     </div>
   );
 }

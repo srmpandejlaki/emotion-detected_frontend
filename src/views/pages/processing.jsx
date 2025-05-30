@@ -8,6 +8,7 @@ import TfIdfPage from '../processingPages/tf-idf';
 import PriorPage from '../processingPages/probabilitasPrior';
 import KondisiPage from '../processingPages/probabilitasKondisi';
 import BertLexiconPage from '../processingPages/bert&lexicon';
+import MatricsProcessingPage from '../processingPages/confusionMetrix';
 
 class ProcessingPage extends React.Component {
   render() {
@@ -22,6 +23,7 @@ class ProcessingPage extends React.Component {
             <Route path='prob-prior' element={<PriorPage />} />
             <Route path='prob-kondisi' element={<KondisiPage />} />
             <Route path='bert-lexicon' element={<BertLexiconPage />} />
+            <Route path='metrix-processing' element={<MatricsProcessingPage />} />
           </Routes>
         </section>
       </div>
