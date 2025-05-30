@@ -1,5 +1,4 @@
 import React from 'react';
-import NewPagination from '../base/NewPagination';
 
 function TabelProcessing({
   data = [],
@@ -24,9 +23,7 @@ function TabelProcessing({
         </thead>
         <tbody>
           <tr>
-            <td colSpan='4' className='align'>
-              Tidak ada data tersedia.
-            </td>
+            <td colSpan='4' className='align' >Tidak ada data tersedia.</td>
           </tr>
         </tbody>
       </table>
@@ -35,7 +32,7 @@ function TabelProcessing({
 
   return (
     <>
-      <table className='prior-table'>
+      <table className='dataset'>
         <thead>
           <tr>
             <th className='nomor'>No.</th>
@@ -46,9 +43,7 @@ function TabelProcessing({
         <tbody>
           {data?.map((item, index) => (
             <tr key={index}>
-              <td className='align'>
-                {(pagination.currentPage - 1) * pagination.itemsPerPage + index + 1}
-              </td>
+              <td className='align'>{(pagination.currentPage - 1) * pagination.itemsPerPage + index + 1}</td>
               <td className='text'>{item.preprocessed_text}</td>
               <td className='emotion'>{item.emotion}</td>
             </tr>
@@ -56,11 +51,39 @@ function TabelProcessing({
         </tbody>
       </table>
       {pagination.totalPages > 1 && (
-        <NewPagination
-          currentPage={pagination.currentPage}
-          totalPages={pagination.totalPages}
-          onPageChange={onPageChange}
-        />
+        <div className='pagination-controls'>
+          <button
+            onClick={() => onPageChange(1)}
+            disabled={pagination.currentPage === 1}
+            className='btn-pagination'
+          >
+            &laquo; Halaman Pertama
+          </button>
+          <button
+            onClick={() => onPageChange(pagination.currentPage - 1)}
+            disabled={pagination.currentPage === 1}
+            className='btn-pagination'
+          >
+            &laquo; Sebelumnya
+          </button>
+          <span className='page-info'>
+            Halaman {pagination.currentPage} dari {pagination.totalPages}
+          </span>
+          <button
+            onClick={() => onPageChange(pagination.currentPage + 1)}
+            disabled={pagination.currentPage === pagination.totalPages}
+            className='btn-pagination'
+          >
+            Berikutnya &raquo;
+          </button>
+          <button
+            onClick={() => onPageChange(pagination.totalPages)}
+            disabled={pagination.currentPage === pagination.totalPages}
+            className='btn-pagination'
+          >
+            Halaman Terakhir &raquo;
+          </button>
+        </div>
       )}
     </>
   );

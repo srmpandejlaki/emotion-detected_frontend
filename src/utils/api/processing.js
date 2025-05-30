@@ -1,17 +1,6 @@
 import { BASE_URL } from '../index';
 
 // Split dataset (latih & uji)
-
-export const fetchProcessedData = async (page = 1, limit = 10, filter = 'all') => {
-  try {
-    const response = await fetch(`${BASE_URL}/dataset/preprocessed/data?page=${page}&limit=${limit}&filter=${filter}`);
-    const data = await response.json();
-    return { error: false, data };
-  } catch (error) {
-    console.error("Gagal fetch data preprocessed:", error);
-    return { error: true, data: [] };
-  }
-};
 export const splitDataset = async (testsize) => {
   try {
     const response = await fetch(`${BASE_URL}/process/split`, {
@@ -29,12 +18,12 @@ export const splitDataset = async (testsize) => {
 };
 
 // Latih model baru
-export const trainModel = async (testSize) => {
+export const trainModel = async (testSize, nbThreshold = 0) => {
   try {
     const response = await fetch(`${BASE_URL}/process/train`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ test_size: testSize}),
+      body: JSON.stringify({ test_size: testSize, nb_threshold: nbThreshold }),
     });
 
     const data = await response.json();
@@ -62,24 +51,24 @@ export const getModels = async () => {
 };
 
 // Ambil detail 1 model berdasarkan ID
-export const getModel = async () => {
+export const getModel = async (modelId) => {
   try {
-    const response = await fetch(`${BASE_URL}/process/model`, {
+    const response = await fetch(`${BASE_URL}/process/model/${modelId}`, {
       method: "GET",
     });
-
+    
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error(`Gagal mengambil model:`, error);
+    console.error(`Gagal mengambil model ${modelId}:`, error);
     return { error: true };
   }
 };
 
 // Ambil evaluasi model
-export async function getModelEvaluation() {
+export async function getModelEvaluation(modelId) {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/evaluation`);
+    const response = await fetch(`${BASE_URL}/process/model/evaluation/${modelId}`);
     const result = await response.json();
 
     if (!response.ok) {
@@ -94,75 +83,65 @@ export async function getModelEvaluation() {
 
 
 // Ambil statistik TF-IDF model
-export const fetchTfidfStats = async (page = 1, limit = 10) => {
+export const fetchTfidfStats = async (modelId, page = 1, limit = 10) => {
   try {
     const response = await fetch(
-      `${BASE_URL}/process/model/tfidf-stats?page=${page}&limit=${limit}`
+      `${BASE_URL}/process/model/tfidf-stats/${modelId}?page=${page}&limit=${limit}`
     );
-    const result = await response.json();
-
-    if (!response.ok) {
-      return { error: result.error || "Gagal mengambil data TF-IDF" };
-    }
-
-    return {
-      error: false,
-      data: result.data,
-      total_pages: result.total_pages,
-      current_page: result.current_page,
-    };
+    if (!response.ok) throw new Error("Gagal mengambil data TF-IDF");
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("TF-IDF error:", error.message);
     return { error: true };
   }
 };
 
+
 // Ambil probabilitas prior model
-export const fetchProbPrior = async () => {
+export const fetchProbPrior = async (modelId) => {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/fetch-prob-prior`);
+    const response = await fetch(`${BASE_URL}/process/model/fetch-prob-prior/${modelId}`);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error(`Gagal mengambil prior probability model:`, error);
+    console.error(`Gagal mengambil prior probability model ${modelId}:`, error);
     return { error: true };
   }
 };
 
 // Ambil probabilitas kondisi model
-export const fetchProbCondition = async (page = 1, limit = 10) => {
+export const fetchProbCondition = async (modelId) => {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/fetch-prob-condition?page=${page}&limit=${limit}`);
-    console.log(response);
+    const response = await fetch(`${BASE_URL}/process/model/fetch-prob-condition/${modelId}`);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error(`Gagal mengambil conditional probability model:`, error);
+    console.error(`Gagal mengambil conditional probability model ${modelId}:`, error);
     return { error: true };
   }
 };
 
 // Ambil hasil prediksi dari model (berisi info klasifikasi)
-export const fetchPredictResults = async (page = 1, limit = 10) => {
+export const fetchPredictResults = async (modelId) => {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/predict-results?page=${page}&limit=${limit}`);
+    const response = await fetch(`${BASE_URL}/process/model/predict-results/${modelId}`);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
-    console.error(`Gagal mengambil hasil prediksi model:`, error);
+    console.error(`Gagal mengambil hasil prediksi model ${modelId}:`, error);
     return { error: true };
   }
 };
 
 // Ambil hasil proses BERT + leksikon untuk model tertentu
-export const fetchBertLexicon = async (page = 1, limit = 10) => {
+export const fetchBertLexicon = async (modelId) => {
   try {
-    const response = await fetch(`${BASE_URL}/process/model/fetch-bert-lexicon?page=${page}&limit=${limit}`);
+    const response = await fetch(`${BASE_URL}/process/model/fetch-bert-lexicon/${modelId}`);
     const data = await response.json();
-
     return { error: false, data };
   } catch (error) {
-    console.error(`Gagal mengambil data BERT + leksikon untuk model:`, error);
+    console.error(`Gagal mengambil data BERT + leksikon untuk model ${modelId}:`, error);
     return { error: true };
   }
 };

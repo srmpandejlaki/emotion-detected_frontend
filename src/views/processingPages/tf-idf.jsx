@@ -1,38 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { fetchTfidfStats } from '../../utils/api/processing';
-import NewPagination from '../../components/base/NewPagination';
+import { fetchTfidfStats, getModels } from '../../utils/api/processing';
 
 function TfIdfPage() {
   const [tfidfData, setTfidfData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modelId, setModelId] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const loadData = async (pageToLoad = 1) => {
+  const loadData = async (modelIdToUse, pageToLoad = 1) => {
     setLoading(true);
-    const tfidfRes = await fetchTfidfStats(pageToLoad);
+    const tfidfRes = await fetchTfidfStats(modelIdToUse, pageToLoad);
     if (!tfidfRes.error && tfidfRes.data) {
       setTfidfData(tfidfRes.data);
       setTotalPages(tfidfRes.total_pages);
-      setPage(tfidfRes.current_page);
     }
     setLoading(false);
   };
 
   useEffect(() => {
     const loadModelAndTfidf = async () => {
-      await loadData(1, 10);
+      const modelRes = await getModels();
+      if (!modelRes.error && modelRes.data.length > 0) {
+        const latestModel = modelRes.data[modelRes.data.length - 1];
+        setModelId(latestModel.id);
+        await loadData(latestModel.id, 1);
+      }
     };
 
     loadModelAndTfidf();
   }, []);
 
   const handlePageChange = (newPage) => {
-    loadData(newPage);
+    setPage(newPage);
+    loadData(modelId, newPage);
   };
 
   return (
-    <div className='section prior-page'>
+    <div>
       <h2>Statistik TF-IDF</h2>
       {loading ? (
         <p>Memuat data...</p>
@@ -40,7 +45,7 @@ function TfIdfPage() {
         <p>Tidak ada data TF-IDF tersedia.</p>
       ) : (
         <>
-          <table className='prior-table'>
+          <table border="1" cellPadding="6">
             <thead>
               <tr>
                 <th>No</th>
@@ -54,7 +59,7 @@ function TfIdfPage() {
               {tfidfData.map((item, index) => (
                 <tr key={index}>
                   <td>{(page - 1) * 10 + index + 1}</td>
-                  <td>{item.kata}</td>
+                  <td>{item.word}</td>
                   <td>{item.tf.toFixed(4)}</td>
                   <td>{item.idf.toFixed(4)}</td>
                   <td>{item.tfidf.toFixed(4)}</td>
@@ -63,11 +68,23 @@ function TfIdfPage() {
             </tbody>
           </table>
 
-          <NewPagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+          <div style={{ marginTop: '1rem' }}>
+            <button
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page <= 1}
+            >
+              Prev
+            </button>
+            <span style={{ margin: '0 10px' }}>
+              Halaman {page} dari {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page >= totalPages}
+            >
+              Next
+            </button>
+          </div>
         </>
       )}
     </div>

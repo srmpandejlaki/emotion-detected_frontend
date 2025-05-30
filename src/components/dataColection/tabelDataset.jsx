@@ -18,29 +18,28 @@ function TabelDataset({
   const goToPreviousPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
   const goToNextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
 
-  const emotionOptions =
-    labelList && labelList.length > 0
-      ? labelList
-      : [
-          { emotion_name: 'joy' },
-          { emotion_name: 'trust' },
-          { emotion_name: 'shock' },
-          { emotion_name: 'netral' },
-          { emotion_name: 'fear' },
-          { emotion_name: 'sadness' },
-          { emotion_name: 'angers' },
-        ];
+  const emotionOptions = labelList && labelList.length > 0
+    ? labelList
+    : [
+        { emotion_name: "senang" },
+        { emotion_name: "percaya" },
+        { emotion_name: "terkejut" },
+        { emotion_name: "netral" },
+        { emotion_name: "takut" },
+        { emotion_name: "sedih" },
+        { emotion_name: "marah" },
+      ];
 
   return (
-    <div className='section prior-page'>
+    <div className='tabel-dataset-wrapper'>
       {dataset.length > 0 ? (
         <>
-          <table className='prior-table'>
+          <table className='dataset'>
             <thead>
               <tr>
-                <th>No</th>
-                <th>Teks</th>
-                <th>Emosi</th>
+                <th className='nomor'>No</th>
+                <th className='text1'>Teks</th>
+                <th className='emotion'>Emosi</th>
               </tr>
             </thead>
             <tbody>
@@ -50,8 +49,8 @@ function TabelDataset({
 
                 return (
                   <tr key={item.id}>
-                    <td>{nomorTabel}</td>
-                    <td>
+                    <td className='align'>{nomorTabel}</td>
+                    <td className='text'>
                       {isNewItem ? (
                         <input
                           type='text'
@@ -63,7 +62,7 @@ function TabelDataset({
                         <span>{item.text}</span>
                       )}
                     </td>
-                    <td>
+                    <td className='align'>
                       {isNewItem ? (
                         <select
                           value={item.emotion}
@@ -105,9 +104,7 @@ function TabelDataset({
                 Sebelumnya
               </button>
 
-              <span>
-                Halaman {currentPage} dari {totalPages}
-              </span>
+              <span>Halaman {currentPage} dari {totalPages}</span>
 
               <button
                 onClick={goToNextPage}
@@ -126,6 +123,7 @@ function TabelDataset({
               </button>
             </div>
           )}
+
         </>
       ) : (
         <p>Data belum tersedia</p>

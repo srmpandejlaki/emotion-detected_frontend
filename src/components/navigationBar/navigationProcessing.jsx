@@ -7,17 +7,13 @@ function NavProcessing() {
       <Link to='/processing' className='navItem'>
         Dataset
       </Link>
-      <Link to='/processing/tf-idf' className='navItem'>
-        TF-IDF
-      </Link>
-      <Link to='/processing/prob-prior' className='navItem'>
-        Probabilitas Prior
-      </Link>
-      <Link to='/processing/prob-kondisi' className='navItem'>
-        Probabilitas Kondisi
-      </Link>
-      <Link to='/processing/bert-lexicon' className='navItem'>
-        Bert&Lexicon
+      <Link to="/processing/tf-idf" className="navItem">TF-IDF</Link>
+      <Link to="/processing/prob-prior" className="navItem">Probabilitas Prior</Link>
+      <Link to="/processing/prob-kondisi" className="navItem">Probabilitas Kondisi</Link>
+      <Link to="/processing/bert-lexicon" className="navItem">Bert&Lexicon</Link>
+      <Link to="/processing/results" className="navItem">Results</Link>
+      <Link to='/processing/confusion-metrix' className='navItem'>
+        Class Matrics
       </Link>
     </div>
   );

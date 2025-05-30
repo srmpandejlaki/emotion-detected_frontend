@@ -1,25 +1,28 @@
 @use '../default/custom.scss';
 
 .bert-lexicon-page {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  flex: 1;
-  min-width: 300px;
+  // padding: 2rem;
+  // max-width: 800px;
+  // margin: 0 auto;
+
+  @include custom.columnGap();
 
   h1 {
     font-size: 2rem;
     margin-bottom: 1.5rem;
+    color: #2c3e50;
   }
 
   h2 {
     font-size: 1.5rem;
+    margin-top: 1.5rem;
+    color: #34495e;
   }
 
   p, li {
     font-size: 1rem;
     line-height: 1.6;
+    color: #444;
   }
 
   ol, ul {
@@ -32,9 +35,4 @@
     border-left: 4px solid #f39c12;
     margin-top: 1.5rem;
   }
-}
-
-.output-info {
-  display: flex;
-  flex-direction: column;
 }

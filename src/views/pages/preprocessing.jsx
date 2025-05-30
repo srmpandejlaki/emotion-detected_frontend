@@ -31,8 +31,8 @@ function PreprocessingPage() {
       setPagination({
         currentPage: page,
         itemsPerPage: limit,
-        totalItems: response.data?.total_data || 0,
-        totalPages: response.data?.total_pages || 0,
+        totalItems: response.data?.total || 0,
+        totalPages: Math.ceil((response.data?.total || 1) / limit),
       });
     } catch (err) {
       console.error('Load error:', err);
@@ -41,12 +41,10 @@ function PreprocessingPage() {
   };
 
   const handleUpdate = async (id, updates) => {
-    console.log(updates);
-    console.log(id);
     try {
       const response = await editPreprocessedData(id, {
-        new_text: updates.preprocessed_text,
-        new_emotion: updates.emotion,
+        preprocessed_text: updates.preprocessed_text,
+        emotion: updates.emotion,
       });
 
       if (response.error) {
@@ -63,7 +61,7 @@ function PreprocessingPage() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await deletePreprocessedData(id); // kirim array berisi id
+      const response = await deletePreprocessedData([id]); // kirim array berisi id
       if (response.error) {
         setError('Gagal menghapus data');
         return;
@@ -110,9 +108,7 @@ function PreprocessingPage() {
       <div className='container'>
         <h1>Pra-Pemrosesan Data</h1>
         <p className='loading-message'>
-          {isPreprocessing
-            ? 'Tunggu sebentar, sedang melakukan preprocessing...'
-            : 'Memuat data, mohon tunggu...'}
+          {isPreprocessing ? 'Tunggu sebentar, sedang melakukan preprocessing...' : 'Memuat data, mohon tunggu...'}
         </p>
       </div>
     );

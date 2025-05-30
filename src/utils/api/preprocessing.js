@@ -1,9 +1,9 @@
 import { BASE_URL } from '../index';
 
 // Ambil semua data preprocessing (preprocessed)
-export const fetchPreprocessedData = async (page = 1, limit = 10, filter = 'new') => {
+export const fetchPreprocessedData = async (page = 1, limit = 10) => {
   try {
-    const response = await fetch(`${BASE_URL}/dataset/preprocessed/data?page=${page}&limit=${limit}&filter=${filter}`);
+    const response = await fetch(`${BASE_URL}/dataset/preprocessed/data?page=${page}&limit=${limit}`);
     const data = await response.json();
     return { error: false, data };
   } catch (error) {
@@ -45,12 +45,10 @@ export const editPreprocessedData = async (id, payload) => {
 };
 
 // Hapus semua data baru
-export const deletePreprocessedData = async (id) => {
+export const deletePreprocessedData = async () => {
   try {
     const response = await fetch(`${BASE_URL}/dataset/preprocessed/data`, {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify([id]),
     });
 
     if (!response.ok) throw new Error("Gagal menghapus data preprocessed");
