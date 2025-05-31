@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { fetchPredictResults } from '../../utils/api/processing'; // sesuaikan path-nya kalau berbeda
 import NewPagination from '../../components/base/NewPagination';
-import InputCSV from '../../components/dataColection/inputCSV';
 
-function HomeValidationPage() {
+function ValidationResultPage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -40,7 +39,6 @@ function HomeValidationPage() {
   return (
     <div className='section prior-page'>
       <h2>Prediction Results</h2>
-      <InputCSV />
       {loading ? (
         <p>Loading...</p>
       ) : results.length === 0 ? (
@@ -80,4 +78,4 @@ function HomeValidationPage() {
   );
 }
 
-export default HomeValidationPage;
+export default ValidationResultPage;
