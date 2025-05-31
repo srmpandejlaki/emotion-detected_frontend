@@ -5,7 +5,7 @@ function NavValidation() {
   return (
     <div className='navValidation'>
       <Link to='/validation' className='navItem'>
-        Predict Results
+        Home Validation
       </Link>
       <Link to='/validation/results' className='navItem'>
         Validation Results

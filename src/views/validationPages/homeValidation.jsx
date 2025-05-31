@@ -25,7 +25,7 @@ function HomeValidationPage() {
     try {
       const response = await fetchDatasets(pageNumber, 10); // 10 per halaman
       const data = response?.data || [];
-      const total = response?.total || 0; // pastikan backend mengirim total
+      const total = response?.total_data || 0; // pastikan backend mengirim total
   
       setDatas(
         data.map((item) => ({
@@ -33,7 +33,7 @@ function HomeValidationPage() {
           text: item.text,
           emotion: item.emotion,
           inserted_at: item.inserted_at,
-          isNew: false,
+          isNew: true,
         }))
       );
   
@@ -57,38 +57,40 @@ function HomeValidationPage() {
   return (
     <div className='section prior-page'>
       <h2>Prediction Results</h2>
-      <InputCSV />
-      {loading ? (
-        <p>Loading...</p>
-      ) : datas.length === 0 ? (
-        <p>No results available.</p>
-      ) : (
-        <>
-          <table className='prior-table'>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Text</th>
-                <th>Actual Label</th>
-              </tr>
-            </thead>
-            <tbody>
-              {datas.map((item, index) => (
-                <tr key={index}>
-                  <td>{(page - 1) * 10 + index + 1}</td>
-                  <td>{item.text}</td>
-                  <td>{item.emotion}</td>
+      <section>
+        {loading ? (
+          <p>Loading...</p>
+        ) : datas.length === 0 ? (
+          <p>No data available.</p>
+        ) : (
+          <div className='prior-page'>
+            <table className='prior-table'>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Text</th>
+                  <th>Actual Label</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <NewPagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </>
-      )}
+              </thead>
+              <tbody>
+                {datas.map((item, index) => (
+                  <tr key={index}>
+                    <td>{(page - 1) * 10 + index + 1}</td>
+                    <td>{item.text}</td>
+                    <td>{item.emotion}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <NewPagination
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
+        <InputCSV />        
+      </section>
     </div>
   );
 }

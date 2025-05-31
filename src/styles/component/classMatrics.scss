@@ -1,5 +1,12 @@
 .metrics-page {
+  background: white;
   padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex: 1;
+  min-width: 300px;
+  font-size: medium;
+  
 
   .title {
     font-size: 24px;

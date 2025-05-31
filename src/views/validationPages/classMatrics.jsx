@@ -49,9 +49,9 @@ function MatricsValidationPage() {
     <div className='metrics-page'>
       <h1 className='title'>Evaluasi Model (Validation Result)</h1>
       <div className='container2'>
-        <div className='section'>
+        <div className='section prior-page'>
           <h2 className='section-title'>Confusion Matrix</h2>
-          <table className='confusion-table'>
+          <table className='prior-table'>
             <tbody>
               {formattedConfusionMatrix.map((row, rowIndex) => (
                 <tr key={rowIndex}>
@@ -72,7 +72,7 @@ function MatricsValidationPage() {
         </div>
 
         <div className='container-matrics'>
-          <div className='section'>
+          <div className='section prior-page'>
             <div className='setting'>
               <h2 className='section-title'>Akurasi</h2>
               <p>{(metrics.accuracy * 100).toFixed(2)}%</p>
