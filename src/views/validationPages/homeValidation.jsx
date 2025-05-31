@@ -20,38 +20,55 @@ function HomeValidationPage() {
     loadInitialData();
   }, []);
 
+  const isToday = (dateString) => {
+    if (!dateString) return false;
+    const date = new Date(dateString);
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  };
+
   const loadDatasets = async (pageNumber = 1) => {
     setLoading(true);
     try {
       const response = await fetchDatasets(pageNumber, 10); // 10 per halaman
       const data = response?.data || [];
-      const total = response?.total_data || 0; // pastikan backend mengirim total
-  
+
+      const filteredData = data.filter((item) => isToday(item.inserted_at));
+
       setDatas(
-        data.map((item) => ({
+        filteredData.map((item) => ({
           id: item.id,
           text: item.text,
           emotion: item.emotion,
           inserted_at: item.inserted_at,
-          isNew: true,
         }))
       );
-  
+
       setPage(pageNumber);
-      setTotalPages(Math.ceil(total / 10));
+      setTotalPages(Math.ceil(filteredData.length / 10)); // hitung dari hasil filter
     } catch (error) {
       console.error("Failed to load datasets:", error);
     } finally {
       setLoading(false);
     }
   };
-    
+
   const handlePageChange = (newPage) => {
     loadDatasets(newPage);
   };
 
   if (datas.length === 0) {
-    return null;
+    return (
+      <div className='section prior-page'>
+        <h2>Prediction Results</h2>
+        <p>No data available today.</p>
+        <InputCSV />
+      </div>
+    );
   }
 
   return (
@@ -60,8 +77,6 @@ function HomeValidationPage() {
       <section>
         {loading ? (
           <p>Loading...</p>
-        ) : datas.length === 0 ? (
-          <p>No data available.</p>
         ) : (
           <div className='prior-page'>
             <table className='prior-table'>
@@ -89,7 +104,7 @@ function HomeValidationPage() {
             />
           </div>
         )}
-        <InputCSV />        
+        <InputCSV />
       </section>
     </div>
   );
