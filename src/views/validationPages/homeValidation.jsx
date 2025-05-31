@@ -1,39 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { fetchPredictResults } from '../../utils/api/processing'; // sesuaikan path-nya kalau berbeda
+import { fetchDatasets } from '../../utils/api/dataCollection'; 
 import NewPagination from '../../components/base/NewPagination';
 import InputCSV from '../../components/dataColection/inputCSV';
 
 function HomeValidationPage() {
-  const [results, setResults] = useState([]);
+  const [datas, setDatas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const loadData = async (pageToLoad = 1) => {
-    setLoading(true);
-    const predictRes = await fetchPredictResults(pageToLoad);
-    console.log('Prediction Results Response:', predictRes);
-    if (!predictRes.error && predictRes.data) {
-      setResults(predictRes.data.data);
-      setTotalPages(predictRes.data.total_pages);
-      setPage(predictRes.data.current_page);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
-    const loadResults = async () => {
-      await loadData(1);
+    const loadInitialData = async () => {
+      try {
+        await loadDatasets();
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      }
     };
-
-    loadResults();
+    loadInitialData();
   }, []);
 
+  const loadDatasets = async (pageNumber = 1) => {
+    setLoading(true);
+    try {
+      const response = await fetchDatasets(pageNumber, 10); // 10 per halaman
+      const data = response?.data || [];
+      const total = response?.total || 0; // pastikan backend mengirim total
+  
+      setDatas(
+        data.map((item) => ({
+          id: item.id,
+          text: item.text,
+          emotion: item.emotion,
+          inserted_at: item.inserted_at,
+          isNew: false,
+        }))
+      );
+  
+      setPage(pageNumber);
+      setTotalPages(Math.ceil(total / 10));
+    } catch (error) {
+      console.error("Failed to load datasets:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+    
   const handlePageChange = (newPage) => {
-    loadData(newPage);
+    loadDatasets(newPage);
   };
 
-  if (results.length === 0) {
+  if (datas.length === 0) {
     return null;
   }
 
@@ -43,7 +60,7 @@ function HomeValidationPage() {
       <InputCSV />
       {loading ? (
         <p>Loading...</p>
-      ) : results.length === 0 ? (
+      ) : datas.length === 0 ? (
         <p>No results available.</p>
       ) : (
         <>
@@ -53,18 +70,14 @@ function HomeValidationPage() {
                 <th>No</th>
                 <th>Text</th>
                 <th>Actual Label</th>
-                <th>Predicted Label</th>
-                <th>Prediction Source</th>
               </tr>
             </thead>
             <tbody>
-              {results.map((item, index) => (
+              {datas.map((item, index) => (
                 <tr key={index}>
                   <td>{(page - 1) * 10 + index + 1}</td>
                   <td>{item.text}</td>
-                  <td>{item.true_label}</td>
-                  <td>{item.predicted_label}</td>
-                  <td>{item.pred_source}</td>
+                  <td>{item.emotion}</td>
                 </tr>
               ))}
             </tbody>
