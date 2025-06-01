@@ -3,7 +3,7 @@ import { predictBatchEmotion } from '../../utils/api/validation';
 import NewPagination from '../../components/base/NewPagination';
 import InputCSV from '../../components/dataColection/inputCSV';
 
-function HomeValidationPage() {
+function HomeValidationPage({ setPredictResults, setEvaluationMetrics }) {
   const [datas, setDatas] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -75,6 +75,8 @@ function HomeValidationPage() {
       }));
   
       setDatas(updated);
+      setPredictResults(result.predict_results);
+      setEvaluationMetrics(result.evaluation_metrics);
     } catch (error) {
       console.error('Error processing data:', error);
     } finally {
@@ -107,7 +109,6 @@ function HomeValidationPage() {
                     <th>No</th>
                     <th>Text</th>
                     <th>Actual Label</th>
-                    <th>Predicted Label</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -146,7 +147,6 @@ function HomeValidationPage() {
                           item.emotion
                         )}
                       </td>
-                      <td>{item.predictedEmotion || '-'}</td>
                     </tr>
                   ))}
                 </tbody>

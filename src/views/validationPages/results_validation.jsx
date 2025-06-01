@@ -1,81 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { fetchPredictResults } from '../../utils/api/processing'; // sesuaikan path-nya kalau berbeda
-import NewPagination from '../../components/base/NewPagination';
-
-function ValidationResultPage() {
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-
-  const loadData = async (pageToLoad = 1) => {
-    setLoading(true);
-    const predictRes = await fetchPredictResults(pageToLoad);
-    console.log('Prediction Results Response:', predictRes);
-    if (!predictRes.error && predictRes.data) {
-      setResults(predictRes.data.data);
-      setTotalPages(predictRes.data.total_pages);
-      setPage(predictRes.data.current_page);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    const loadResults = async () => {
-      await loadData(1);
-    };
-
-    loadResults();
-  }, []);
-
-  const handlePageChange = (newPage) => {
-    loadData(newPage);
-  };
-
-  if (results.length === 0) {
-    return null;
-  }
-
+const ValidationResultPage = ({ data }) => {
   return (
-    <div className='section prior-page'>
-      <h2>Prediction Results</h2>
-      {loading ? (
-        <p>Loading...</p>
-      ) : results.length === 0 ? (
-        <p>No results available.</p>
-      ) : (
-        <>
-          <table className='prior-table'>
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Text</th>
-                <th>Actual Label</th>
-                <th>Predicted Label</th>
-                <th>Prediction Source</th>
-              </tr>
-            </thead>
-            <tbody>
-              {results.map((item, index) => (
-                <tr key={index}>
-                  <td>{(page - 1) * 10 + index + 1}</td>
-                  <td>{item.text}</td>
-                  <td>{item.true_label}</td>
-                  <td>{item.predicted_label}</td>
-                  <td>{item.pred_source}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <NewPagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </>
-      )}
+    <div>
+      <h2>Hasil Prediksi</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Teks</th>
+            <th>Label Asli</th>
+            <th>Prediksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((d, i) => (
+            <tr key={i}>
+              <td>{i + 1}</td>
+              <td>{d.text}</td>
+              <td>{d.true_label}</td>
+              <td>{d.predicted_emotion}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
 
 export default ValidationResultPage;
