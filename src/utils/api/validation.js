@@ -22,3 +22,26 @@ export const predictEmotion = async (text) => {
     return null;
   }
 }
+
+// Untuk prediksi batch (dengan data text dan emotion)
+export const predictBatchEmotion = async (data) => {
+  try {
+    const response = await fetch(`${BASE_URL}/predict/batch`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ data })
+    });
+
+    if (!response.ok) {
+      throw new Error("Gagal memproses batch prediksi");
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Batch prediction error:", error.message);
+    return null;
+  }
+};
