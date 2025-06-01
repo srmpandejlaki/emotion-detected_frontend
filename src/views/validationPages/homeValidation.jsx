@@ -10,7 +10,7 @@ function HomeValidationPage() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const itemsPerPage = 10;
-  const emotionOptions = ['senang', 'percaya', 'terkejut', 'netral', 'takut', 'sedih', 'marah'];
+  const emotionOptions = ['joy', 'trust', 'shock', 'netral', 'fear', 'sadness', 'anger'];
 
   // Handle data dari file CSV
   const handleCSVUpload = (parsedData) => {
@@ -60,18 +60,27 @@ function HomeValidationPage() {
     setIsProcessing(true);
     try {
       const texts = datas.map((d) => d.text);
-      const predictions = await predictBatchEmotion(texts);
+      const trueLabels = datas.map((d) => d.emotion);
+  
+      const result = await predictBatchEmotion(texts, trueLabels);
+  
+      if (!result || result.error) {
+        console.error('Gagal memproses batch prediksi:', result?.error || 'Unknown error');
+        return;
+      }
+  
       const updated = datas.map((item, index) => ({
         ...item,
-        predictedEmotion: predictions[index],
+        predictedEmotion: result.predict_results[index].predicted_emotion
       }));
+  
       setDatas(updated);
     } catch (error) {
       console.error('Error processing data:', error);
     } finally {
       setIsProcessing(false);
     }
-  };
+  };  
 
   // Get current page data
   const currentData = datas.slice(
@@ -85,80 +94,84 @@ function HomeValidationPage() {
 
       <section>
         {datas.length === 0 ? (
-          <div>
+          <div className='section2'>
             <p>No data uploaded.</p>
-            <InputCSV onUpload={handleCSVUpload} />
+            <InputCSV onDataParsed={handleCSVUpload} />
           </div>
         ) : (
-          <div>
-            <table className='prior-table'>
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Text</th>
-                  <th>Actual Label</th>
-                  <th>Predicted Label</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentData.map((item, index) => (
-                  <tr key={item.id}>
-                    <td>{(page - 1) * itemsPerPage + index + 1}</td>
-                    <td>
-                      {item.isNew ? (
-                        <input
-                          type='text'
-                          value={item.text}
-                          onChange={(e) =>
-                            handleInputChange(item.id, 'text', e.target.value)
-                          }
-                        />
-                      ) : (
-                        item.text
-                      )}
-                    </td>
-                    <td>
-                      {item.isNew ? (
-                        <select
-                          value={item.emotion}
-                          onChange={(e) =>
-                            handleInputChange(item.id, 'emotion', e.target.value)
-                          }
-                        >
-                          <option value=''>--Pilih Emosi--</option>
-                          {emotionOptions.map((opt) => (
-                            <option key={opt} value={opt}>
-                              {opt}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        item.emotion
-                      )}
-                    </td>
-                    <td>{item.predictedEmotion || '-'}</td>
+          <div className='section2'>
+            <div className="section prior-page">
+              <table className='prior-table'>
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Text</th>
+                    <th>Actual Label</th>
+                    <th>Predicted Label</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {currentData.map((item, index) => (
+                    <tr key={item.id}>
+                      <td>{(page - 1) * itemsPerPage + index + 1}</td>
+                      <td>
+                        {item.isNew ? (
+                          <input
+                            type='text'
+                            value={item.text}
+                            onChange={(e) =>
+                              handleInputChange(item.id, 'text', e.target.value)
+                            }
+                          />
+                        ) : (
+                          item.text
+                        )}
+                      </td>
+                      <td>
+                        {item.isNew ? (
+                          <select
+                            value={item.emotion}
+                            onChange={(e) =>
+                              handleInputChange(item.id, 'emotion', e.target.value)
+                            }
+                          >
+                            <option value=''>--Pilih Emosi--</option>
+                            {emotionOptions.map((opt) => (
+                              <option key={opt} value={opt}>
+                                {opt}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          item.emotion
+                        )}
+                      </td>
+                      <td>{item.predictedEmotion || '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-            <NewPagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+              <NewPagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
 
-            <div className="btn-container">
-              <InputCSV onUpload={handleCSVUpload} />
-              <button onClick={handleProcessData} disabled={isProcessing}>
-                {isProcessing ? 'Memproses...' : 'Proses Data'}
-              </button>
-              <button onClick={handleAddNewData}>Tambah Data</button>
-              {datas.length > 0 && (
-                <button onClick={handleCancel} className="btn-cancel">
-                  Batal
+            <div>
+              <InputCSV onDataParsed={handleCSVUpload} />
+              <div className="button-container">
+                <button onClick={handleProcessData} disabled={isProcessing} className='btn-process'>
+                  {isProcessing ? 'Memproses...' : 'Proses Data'}
                 </button>
-              )}
+                <button onClick={handleAddNewData} className='btn-save'>Tambah Data</button>
+                {datas.length > 0 && (
+                  <button onClick={handleCancel} className="btn-cancel">
+                    Batal
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}

@@ -24,14 +24,17 @@ export const predictEmotion = async (text) => {
 }
 
 // Untuk prediksi batch (dengan data text dan emotion)
-export const predictBatchEmotion = async (data) => {
+export const predictBatchEmotion = async (texts, trueLabels) => {
   try {
     const response = await fetch(`${BASE_URL}/predict/batch`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ data })
+      body: JSON.stringify({
+        texts: texts,
+        true_labels: trueLabels
+      })
     });
 
     if (!response.ok) {

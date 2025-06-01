@@ -20,7 +20,7 @@ button,
   display: flex;
   justify-content: space-between;
   align-items: 'center';
-  
+  margin-top: 0.5rem;
 }
 
 // .btn-process {
@@ -46,8 +46,10 @@ button,
   background-color: custom.$error-color;
 }
 
-.btn-delete, .btn-cancel {
-  margin: 0.2rem;
+.aksi {
+  .btn-delete, .btn-cancel {
+    margin: 0.2rem;
+  }
 }
 
 .input-csv {
