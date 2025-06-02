@@ -97,7 +97,7 @@ function HomeValidationPage({ setPredictResults, setEvaluationMetrics }) {
       <section>
         {datas.length === 0 ? (
           <div className='section2'>
-            <div>
+            <div className='text2'>
               <p>No data uploaded.</p>
               <p>*Catatan: Format file harus .csv dan minimal ada 7 data yang mewakili seluruh kategori emosi</p>
             </div>

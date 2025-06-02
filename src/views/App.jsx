@@ -7,15 +7,32 @@ import PreprocessingPage from './pages/preprocessing';
 import ProcessingPage from './pages/processing';
 import ValidationPage from './pages/validation';
 import ClasifierPage from './pages/clasifier';
+import LocaleContext, { LocaleProvider } from '../contexts/localeContext';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      localeContext: {
+        locale: 'id',
+        toggleLocale: () => {
+          this.setState((prevState) => {
+            return {
+              localeContext: {
+                ...prevState.localeContext,
+                locale: prevState.localeContext.locale === 'id' ? 'en' : 'id'
+              }
+            }
+          })
+        }
+      }
+    };
   };
 
   render() {
     return (
-      <>
+      <LocaleProvider value={this.state.localeContext}>
         <HeaderBar />
         <div className="main">
           <SideContainer />
@@ -29,7 +46,7 @@ class App extends React.Component {
             </Routes>
           </main>
         </div>
-      </>
+      </LocaleProvider>
     );
   };
 }
