@@ -2,7 +2,8 @@ const ValidationResultPage = ({ data }) => {
   return (
     <div>
       <h2>Hasil Prediksi</h2>
-      <table>
+      <div className="section prior-page">
+      <table className="prior-table">
         <thead>
           <tr>
             <th>No</th>
@@ -22,6 +23,7 @@ const ValidationResultPage = ({ data }) => {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 };
